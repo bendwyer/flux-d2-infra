@@ -1,0 +1,12 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/fluxcd-community/flux2-schemas/refs/heads/main/ocirepository-source-v1beta2.json
+apiVersion: source.toolkit.fluxcd.io/v1beta2
+kind: OCIRepository
+metadata:
+  name: cert-manager
+  namespace: cert-manager
+spec:
+  interval: 1h
+  url: oci://quay.io/jetstack-charts/cert-manager
+  ref:
+    semver: "1.19.x"
