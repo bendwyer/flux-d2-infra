@@ -25,9 +25,11 @@ spec:
     connect:
       credentials_base64: "" # set via valuesFrom
     operator:
+      autoRestart: true
       create: true
       token:
         value: "" # set via valuesFrom
+      pollingInterval: 60
   valuesFrom:
     - kind: Secret
       name: onepassword-credentials
