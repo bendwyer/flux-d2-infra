@@ -1,0 +1,73 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: prometheus-proxy
+  namespace: vpa
+  labels:
+    app.kubernetes.io/name: prometheus-proxy
+    app.kubernetes.io/component: vpa
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: prometheus-proxy
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: prometheus-proxy
+    spec:
+      containers:
+        - name: nginx
+          image: nginx:stable-alpine-slim
+          ports:
+            - containerPort: 9090
+              name: http
+          env:
+            - name: GRAFANA_CLOUD_PROM_URL
+              value: ""
+            - name: GRAFANA_CLOUD_BASIC_AUTH
+              valueFrom:
+                secretKeyRef:
+                  name: grafana-cloud-prometheus-auth
+                  key: metrics-proxy-basic-auth
+          volumeMounts:
+            - name: nginx-config
+              mountPath: /etc/nginx/templates
+          resources:
+            requests:
+              cpu: 5m
+              memory: 8Mi
+            limits:
+              memory: 16Mi
+          livenessProbe:
+            httpGet:
+              path: /
+              port: 9090
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          readinessProbe:
+            httpGet:
+              path: /
+              port: 9090
+            initialDelaySeconds: 5
+            periodSeconds: 5
+      volumes:
+        - name: nginx-config
+          configMap:
+            name: prometheus-proxy-config
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: prometheus-proxy
+  namespace: vpa
+  labels:
+    app.kubernetes.io/name: prometheus-proxy
+spec:
+  selector:
+    app.kubernetes.io/name: prometheus-proxy
+  ports:
+    - port: 9090
+      targetPort: 9090
+      name: http
