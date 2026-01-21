@@ -16,6 +16,10 @@ spec:
         name: fairwinds-stable
         namespace: vertical-pod-autoscaler
   values:
+    admissionController:
+      enabled: false
+    updater:
+      enabled: false
     recommender:
       extraArgs:
         prometheus-address: http://prometheus-proxy.vertical-pod-autoscaler.svc.cluster.local:9090
