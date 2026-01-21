@@ -3,7 +3,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: prometheus-proxy
-  namespace: vpa
+  namespace: vertical-pod-autoscaler
 spec:
   template:
     spec:
