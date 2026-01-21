@@ -2,7 +2,7 @@
 apiVersion: v1
 kind: Namespace
 metadata:
-  name: vpa
+  name: vertical-pod-autoscaler
   labels:
     goldilocks.fairwinds.com/enabled: "true"
-    name: vpa
+    name: vertical-pod-autoscaler
