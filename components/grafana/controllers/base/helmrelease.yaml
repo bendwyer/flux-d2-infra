@@ -1,0 +1,139 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/fluxcd-community/flux2-schemas/refs/heads/main/helmrelease-helm-v2.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: grafana-k8s-monitoring
+  namespace: grafana
+spec:
+  interval: 1h
+  chart:
+    spec:
+      chart: k8s-monitoring
+      interval: 5m
+      sourceRef:
+        kind: HelmRepository
+        name: grafana
+        namespace: grafana
+      version: "^3.7.0"
+  # install:
+  #   remediation:
+  #     retries: 3
+  # interval: 10m
+  # upgrade:
+  #   cleanupOnFail: true
+  #   remediation:
+  #     retries: 3
+  values:
+    cluster:
+      name: my-cluster
+    destinations:
+      - name: grafana-cloud-metrics
+        type: prometheus
+        url: https://prometheus-prod-24-prod-eu-west-2.grafana.net./api/prom/push
+        auth:
+          type: basic
+          usernameKey: metrics-username
+          passwordKey: credential
+        secret:
+          create: false
+          name: grafana-access-policy-token
+          namespace: grafana
+      - name: grafana-cloud-logs
+        type: loki
+        url: https://logs-prod-012.grafana.net./loki/api/v1/push
+        auth:
+          type: basic
+          usernameKey: logs-username
+          passwordKey: credential
+        secret:
+          create: false
+          name: grafana-access-policy-token
+          namespace: grafana
+      - name: gc-otlp-endpoint
+        type: otlp
+        url: https://otlp-gateway-prod-eu-west-2.grafana.net./otlp
+        protocol: http
+        auth:
+          type: basic
+          usernameKey: otlp-username
+          passwordKey: credential
+        secret:
+          create: false
+          name: grafana-access-policy-token
+          namespace: grafana
+        metrics:
+          enabled: true
+        logs:
+          enabled: true
+        traces:
+          enabled: true
+      - name: grafana-cloud-profiles
+        type: pyroscope
+        url: https://profiles-prod-002.grafana.net.:443
+        auth:
+          type: basic
+          usernameKey: otlp-username
+          passwordKey: credential
+        secret:
+          create: false
+          name: grafana-access-policy-token
+          namespace: grafana
+    clusterMetrics:
+      enabled: true
+      kepler:
+        enabled: true
+    clusterEvents:
+      enabled: true
+    podLogs:
+      enabled: true
+    applicationObservability:
+      enabled: true
+      receivers:
+        otlp:
+          grpc:
+            enabled: true
+            port: 4317
+          http:
+            enabled: true
+            port: 4318
+        zipkin:
+          enabled: true
+          port: 9411
+    profiling:
+      enabled: true
+    integrations:
+      alloy:
+        instances:
+          - name: alloy
+            labelSelectors:
+              app.kubernetes.io/name:
+                - alloy-metrics
+                - alloy-singleton
+                - alloy-logs
+                - alloy-receiver
+                - alloy-profiles
+    alloy-metrics:
+      enabled: true
+    alloy-singleton:
+      enabled: true
+    alloy-logs:
+      enabled: true
+    alloy-receiver:
+      enabled: true
+      alloy:
+        extraPorts:
+          - name: otlp-grpc
+            port: 4317
+            targetPort: 4317
+            protocol: TCP
+          - name: otlp-http
+            port: 4318
+            targetPort: 4318
+            protocol: TCP
+          - name: zipkin
+            port: 9411
+            targetPort: 9411
+            protocol: TCP
+    alloy-profiles:
+      enabled: true
