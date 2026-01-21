@@ -28,6 +28,7 @@ jobs:
         component:
           # add additional components here
           - cert-manager
+          - goldilocks
           - grafana
           - kubelet-serving-cert-approver
           - metrics-server
