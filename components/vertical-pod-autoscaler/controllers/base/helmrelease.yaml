@@ -3,8 +3,8 @@
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
-  name: vpa
-  namespace: vpa
+  name: vertical-pod-autoscaler
+  namespace: vertical-pod-autoscaler
 spec:
   interval: 1h
   chart:
@@ -14,9 +14,9 @@ spec:
       sourceRef:
         kind: HelmRepository
         name: fairwinds-stable
-        namespace: vpa
+        namespace: vvertical-pod-autoscaler
   values:
     recommender:
       extraArgs:
-        prometheus-address: http://prometheus-proxy.vpa.svc.cluster.local:9090
+        prometheus-address: http://prometheus-proxy.vertical-pod-autoscaler.svc.cluster.local:9090
         storage: prometheus
