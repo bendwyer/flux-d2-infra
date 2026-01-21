@@ -1,0 +1,11 @@
+---
+apiVersion: source.toolkit.fluxcd.io/v1
+kind: GitRepository
+metadata:
+  name: kubelet-serving-cert-approver
+  namespace: kubelet-serving-cert-approver
+spec:
+  interval: 1h
+  url: https://github.com/alex1989hu/kubelet-serving-cert-approver
+  ref:
+    commit: 073043b35b2aa6fed7330406fcf06d9497137c6c  # v0.10.2
