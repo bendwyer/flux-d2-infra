@@ -30,6 +30,7 @@ jobs:
           - cert-manager
           - grafana
           - kubelet-serving-cert-approver
+          - metrics-server
           - onepassword
     steps:
       - name: Checkout
