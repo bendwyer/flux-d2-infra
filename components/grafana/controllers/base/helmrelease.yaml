@@ -85,6 +85,9 @@ spec:
       kube-state-metrics:
         metricLabelsAllowlist:
           - pods=[app,name,k8s-app,app.kubernetes.io/name,app.kubernetes.io/instance,app.kubernetes.io/component]
+        metricsTuning:
+          includeMetrics:
+            - kube_pod_labels
     clusterEvents:
       enabled: true
     podLogs:
