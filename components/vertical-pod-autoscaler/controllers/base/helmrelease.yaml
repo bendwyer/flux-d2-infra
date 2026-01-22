@@ -24,3 +24,6 @@ spec:
       extraArgs:
         prometheus-address: http://prometheus-proxy.vertical-pod-autoscaler.svc.cluster.local:9090
         storage: prometheus
+        prometheus-cadvisor-job-name: "integrations/kubernetes/cadvisor"
+        history-length: "8d"
+        history-resolution: "1h"
