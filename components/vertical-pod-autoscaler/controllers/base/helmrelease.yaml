@@ -27,3 +27,6 @@ spec:
         prometheus-cadvisor-job-name: "integrations/kubernetes/cadvisor"
         history-length: "8d"
         history-resolution: "1h"
+        container-pod-name-label: "pod"
+        container-name-label: "container"
+        container-namespace-label: "namespace"
