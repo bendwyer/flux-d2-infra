@@ -82,6 +82,9 @@ spec:
       enabled: true
       kepler:
         enabled: true
+      kube-state-metrics:
+        metricLabelsAllowlist:
+          - pods=[app,name,k8s-app,app.kubernetes.io/name,app.kubernetes.io/instance,app.kubernetes.io/component]
     clusterEvents:
       enabled: true
     podLogs:
