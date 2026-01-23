@@ -1,0 +1,30 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/fluxcd-community/flux2-schemas/refs/heads/main/helmrelease-helm-v2.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: longhorn
+  namespace: longhorn
+spec:
+  interval: 1h
+  chart:
+    spec:
+      chart: longhorn
+      version: "^1.10.0"      
+      sourceRef:
+        kind: HelmRepository
+        name: longhorn
+        namespace: longhorn
+  # install:
+  #   remediation:
+  #     retries: 3
+  # interval: 10m
+  # upgrade:
+  #   remediation:
+  #     retries: 3
+  values:
+    defaultSettings:
+      allowCollectingLonghornUsageMetrics: false
+      defaultDataPath: /var/mnt/longhorn
+      deletingConfirmationFlag: true
+      storageReservedPercentageForDefaultDisk: 0
