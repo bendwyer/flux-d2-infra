@@ -31,6 +31,7 @@ jobs:
           - goldilocks
           - grafana
           - kubelet-serving-cert-approver
+          - longhorn
           - metrics-server
           - onepassword
           - vertical-pod-autoscaler
