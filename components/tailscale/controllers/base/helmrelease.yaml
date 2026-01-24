@@ -23,6 +23,9 @@ spec:
   #   remediation:
   #     retries: 3
   values:
+    operatorConfig:
+      defaultTags:
+        - tag:k8s-service
     oauthSecretVolume:
       secret:
         secretName: tailscale
