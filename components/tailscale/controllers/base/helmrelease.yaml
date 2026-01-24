@@ -23,15 +23,11 @@ spec:
   #   remediation:
   #     retries: 3
   values:
-    oauth:
-      clientId: ""      # Set via valuesFrom
-      clientSecret: ""  # Set via valuesFrom
-  valuesFrom:
-    - kind: Secret
-      name: tailscale
-      valuesKey: username
-      targetPath: oauth.clientId
-    - kind: Secret
-      name: tailscale
-      valuesKey: credential
-      targetPath: oauth.clientSecret
+    oauthSecretVolume:
+      secret:
+        secretName: tailscale
+        items:
+          - key: username
+            path: client_id
+          - key: credential
+            path: client_secret
