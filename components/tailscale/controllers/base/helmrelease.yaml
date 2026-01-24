@@ -27,8 +27,7 @@ spec:
       defaultTags:
         - tag:k8s-operator
     proxyConfig:
-      defaultTags:
-        - tag:k8s-service
+      defaultTags: "tag:k8s-service"
     oauthSecretVolume:
       secret:
         secretName: tailscale
