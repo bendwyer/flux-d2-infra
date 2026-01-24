@@ -36,6 +36,7 @@ jobs:
           - metrics-server
           - onepassword
           - tailscale
+          - tsidp
           - vertical-pod-autoscaler
     steps:
       - name: Checkout
