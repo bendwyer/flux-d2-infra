@@ -6,4 +6,4 @@ metadata:
   labels:
     goldilocks.fairwinds.com/enabled: "true"
     name: tailscale
-    pod-security.kubernetes.io/enforce: privileged
+    # pod-security.kubernetes.io/enforce set in flux-d2-fleet ResourceSet
