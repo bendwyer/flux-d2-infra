@@ -27,6 +27,7 @@ jobs:
       matrix:
         component:
           # add additional components here
+          - bjw-s
           - cert-manager
           - goldilocks
           - grafana
