@@ -19,6 +19,13 @@ spec:
   #   remediation:
   #     retries: 3
   values:
+    defaultPodOptions:
+      securityContext:
+        fsGroup: 1000
+        fsGroupChangePolicy: OnRootMismatch
+        supplementalGroups: [1000]
+        seccompProfile:
+          type: RuntimeDefault
     controllers:
       tsidp:
         containers:
@@ -64,10 +71,8 @@ spec:
                   periodSeconds: 10
     persistence:
       data:
-        enabled: true
-        type: persistentVolumeClaim
-        accessMode: ReadWriteOnce
-        size: 1Gi
-        storageClass: longhorn
-        globalMounts:
-          - path: /data
+        existingClaim: tsidp-data
+        advancedMounts:
+          tsidp:
+            app:
+              - path: /data
