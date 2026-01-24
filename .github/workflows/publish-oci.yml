@@ -35,6 +35,7 @@ jobs:
           - longhorn
           - metrics-server
           - onepassword
+          - tailscale
           - vertical-pod-autoscaler
     steps:
       - name: Checkout
