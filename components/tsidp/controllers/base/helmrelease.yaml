@@ -57,19 +57,11 @@ spec:
                 memory: 256Mi
             probes:
               liveness:
-                enabled: true
-                type: TCP
-                port: 443
-                spec:
-                  initialDelaySeconds: 60
-                  periodSeconds: 30
+                enabled: false
               readiness:
-                enabled: true
-                type: TCP
-                port: 443
-                spec:
-                  initialDelaySeconds: 30
-                  periodSeconds: 10
+                enabled: false
+              startup:
+                enabled: false
     persistence:
       data:
         existingClaim: tsidp-data
