@@ -6,3 +6,4 @@ metadata:
   labels:
     goldilocks.fairwinds.com/enabled: "true"
     name: tailscale
+    pod-security.kubernetes.io/enforce: privileged
