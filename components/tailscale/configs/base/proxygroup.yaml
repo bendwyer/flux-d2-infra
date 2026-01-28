@@ -3,10 +3,22 @@
 apiVersion: tailscale.com/v1alpha1
 kind: ProxyGroup
 metadata:
-  name: home-ingress
+  name: shared-ingress
 spec:
   type: ingress
   replicas: 2
-  hostnamePrefix: home-ingress
+  hostnamePrefix: shared-ingress
   tags:
-    - tag:k8s-service
+    - tag:k8s-shared
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/CustomResourceDefinition/catalog/refs/heads/main/schema/tailscale.com/proxygroup_v1alpha1.json
+apiVersion: tailscale.com/v1alpha1
+kind: ProxyGroup
+metadata:
+  name: private-ingress
+spec:
+  type: ingress
+  replicas: 1
+  hostnamePrefix: private-ingress
+  tags:
+    - tag:k8s-private
