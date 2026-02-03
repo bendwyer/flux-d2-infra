@@ -26,3 +26,5 @@ spec:
     dashboard:
       flags:
         enable-cost: false
+    image:
+      tag: "v4.14.9"
