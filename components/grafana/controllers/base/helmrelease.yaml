@@ -49,63 +49,13 @@ spec:
           create: false
           name: grafana-access-policy-token
           namespace: grafana
-      - name: gc-otlp-endpoint
-        type: otlp
-        url: https://otlp-gateway-prod-eu-west-2.grafana.net./otlp
-        protocol: http
-        auth:
-          type: basic
-          usernameKey: otlp-username
-          passwordKey: credential
-        secret:
-          create: false
-          name: grafana-access-policy-token
-          namespace: grafana
-        metrics:
-          enabled: true
-        logs:
-          enabled: true
-        traces:
-          enabled: true
-      - name: grafana-cloud-profiles
-        type: pyroscope
-        url: https://profiles-prod-002.grafana.net.:443
-        auth:
-          type: basic
-          usernameKey: otlp-username
-          passwordKey: credential
-        secret:
-          create: false
-          name: grafana-access-policy-token
-          namespace: grafana
     clusterMetrics:
       enabled: true
       kepler:
         enabled: true
-      kube-state-metrics:
-        metricLabelsAllowlist:
-          - pods=[app,name,k8s-app,app.kubernetes.io/name,app.kubernetes.io/instance,app.kubernetes.io/component]
-        metricsTuning:
-          includeMetrics:
-            - kube_pod_labels
     clusterEvents:
       enabled: true
     podLogs:
-      enabled: true
-    applicationObservability:
-      enabled: true
-      receivers:
-        otlp:
-          grpc:
-            enabled: true
-            port: 4317
-          http:
-            enabled: true
-            port: 4318
-        zipkin:
-          enabled: true
-          port: 9411
-    profiling:
       enabled: true
     integrations:
       alloy:
@@ -116,29 +66,9 @@ spec:
                 - alloy-metrics
                 - alloy-singleton
                 - alloy-logs
-                - alloy-receiver
-                - alloy-profiles
     alloy-metrics:
       enabled: true
     alloy-singleton:
       enabled: true
     alloy-logs:
-      enabled: true
-    alloy-receiver:
-      enabled: true
-      alloy:
-        extraPorts:
-          - name: otlp-grpc
-            port: 4317
-            targetPort: 4317
-            protocol: TCP
-          - name: otlp-http
-            port: 4318
-            targetPort: 4318
-            protocol: TCP
-          - name: zipkin
-            port: 9411
-            targetPort: 9411
-            protocol: TCP
-    alloy-profiles:
       enabled: true
