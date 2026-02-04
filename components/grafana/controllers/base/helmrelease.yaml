@@ -53,6 +53,18 @@ spec:
       enabled: true
       kepler:
         enabled: true
+      kube-state-metrics:
+        metricsTuning:
+          useIntegrationAllowList: true
+      node-exporter:
+        metricsTuning:
+          useIntegrationAllowList: true
+      kubelet:
+        metricsTuning:
+          useIntegrationAllowList: true
+      cadvisor:
+        metricsTuning:
+          useIntegrationAllowList: true
     clusterEvents:
       enabled: true
     podLogs:
