@@ -55,15 +55,19 @@ spec:
         enabled: true
       kube-state-metrics:
         metricsTuning:
+          useDefaultAllowList: false
           useIntegrationAllowList: true
       node-exporter:
         metricsTuning:
+          useDefaultAllowList: false
           useIntegrationAllowList: true
       kubelet:
         metricsTuning:
+          useDefaultAllowList: false
           useIntegrationAllowList: true
       cadvisor:
         metricsTuning:
+          useDefaultAllowList: false
           useIntegrationAllowList: true
     clusterEvents:
       enabled: true
