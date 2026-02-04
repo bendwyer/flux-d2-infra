@@ -52,7 +52,7 @@ spec:
     clusterMetrics:
       enabled: true
       kepler:
-        enabled: true
+        enabled: false
       kube-state-metrics:
         metricsTuning:
           useDefaultAllowList: true
