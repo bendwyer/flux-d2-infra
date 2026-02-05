@@ -26,6 +26,11 @@ spec:
     operatorConfig:
       defaultTags:
         - tag:k8s-operator
+      image:
+        repository: ghcr.io/tailscale/k8s-operator
+    proxyConfig:
+      image:
+        repository: ghcr.io/tailscale/tailscale
     oauthSecretVolume:
       secret:
         secretName: tailscale
