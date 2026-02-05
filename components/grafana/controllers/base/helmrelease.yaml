@@ -56,9 +56,6 @@ spec:
       kube-state-metrics:
         metricsTuning:
           useDefaultAllowList: true
-          excludeMetrics:
-            - kube_pod_status_reason
-            - kube_pod_restart_policy
       node-exporter:
         metricsTuning:
           useDefaultAllowList: true
@@ -74,13 +71,7 @@ spec:
       enabled: true
     integrations:
       alloy:
-        instances:
-          - name: alloy
-            labelSelectors:
-              app.kubernetes.io/name:
-                - alloy-metrics
-                - alloy-singleton
-                - alloy-logs
+        instances: []
     alloy-metrics:
       enabled: true
     alloy-singleton:
