@@ -56,6 +56,9 @@ spec:
       kube-state-metrics:
         metricsTuning:
           useDefaultAllowList: true
+          excludeMetrics:
+            - kube_pod_status_reason
+            - kube_pod_restart_policy
       node-exporter:
         metricsTuning:
           useDefaultAllowList: true
