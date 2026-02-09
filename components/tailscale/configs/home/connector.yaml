@@ -21,8 +21,8 @@ spec:
   hostnamePrefix: k8s-subnet-router-home
   subnetRouter:
     advertiseRoutes:
-      - "${SUBNET_1}"
-      - "${SUBNET_2}"
+      - "${SUBNET_1_CIDR}"
+      - "${SUBNET_2_CIDR}"
   tags:
     - "tag:${SUBNET_1_TAG}"
     - "tag:${SUBNET_2_TAG}"
