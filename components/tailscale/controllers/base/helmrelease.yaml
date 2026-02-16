@@ -7,6 +7,7 @@ metadata:
   namespace: tailscale
 spec:
   interval: 1h
+  timeout: 10m
   chart:
     spec:
       chart: tailscale-operator
@@ -15,13 +16,13 @@ spec:
         kind: HelmRepository
         name: tailscale
         namespace: tailscale
-  # install:
-  #   remediation:
-  #     retries: 3
-  # upgrade:
-  #   cleanupOnFail: true
-  #   remediation:
-  #     retries: 3
+  install:
+    remediation:
+      retries: 3
+  upgrade:
+    cleanupOnFail: true
+    remediation:
+      retries: 3
   values:
     operatorConfig:
       defaultTags:
