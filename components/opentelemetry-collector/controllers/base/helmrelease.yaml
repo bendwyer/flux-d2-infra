@@ -1,0 +1,58 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/fluxcd-community/flux2-schemas/refs/heads/main/helmrelease-helm-v2.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: opentelemetry-collector
+  namespace: opentelemetry-collector
+spec:
+  interval: 1h
+  chart:
+    spec:
+      chart: opentelemetry-collector
+      version: "^0.145.0"
+      sourceRef:
+        kind: HelmRepository
+        name: open-telemetry
+        namespace: opentelemetry-collector
+  # install:
+  #   remediation:
+  #     retries: 3
+  # upgrade:
+  #   cleanupOnFail: true
+  #   remediation:
+  #     retries: 3
+  values:
+    mode: daemonset
+    image:
+      repository: otel/opentelemetry-collector-contrib
+    presets:
+      logsCollection:
+        enabled: true
+        includeCollectorLogs: false
+      kubernetesAttributes:
+        enabled: true
+        extractAllPodLabels: true
+    config:
+      receivers:
+        filelog:
+          include:
+            - /var/log/pods/*/*/*.log
+          exclude:
+            - /var/log/pods/*/otc-container/*.log
+          include_file_path: true
+          include_file_name: false
+          operators:
+            - id: container-parser
+              type: container
+          retry_on_failure:
+            enabled: true
+          start_at: end
+      processors:
+        batch:
+          send_batch_size: 10000
+          timeout: 5s
+        memory_limiter:
+          check_interval: 5s
+          limit_percentage: 80
+          spike_limit_percentage: 25
