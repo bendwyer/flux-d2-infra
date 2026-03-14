@@ -34,6 +34,7 @@ jobs:
           - kubelet-serving-cert-approver
           - longhorn
           - metrics-server
+          - node-exporter
           - onepassword
           - opentelemetry-collector
           - tailscale
