@@ -28,7 +28,7 @@ spec:
       spec:
         retentionPeriod: "13"
         extraArgs:
-          openTelemetry.usePrometheusNaming: "true"
+          opentelemetry.usePrometheusNaming: "true"
         storage:
           accessModes:
             - ReadWriteOnce
