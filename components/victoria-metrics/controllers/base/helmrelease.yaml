@@ -63,5 +63,9 @@ spec:
         selectAllByDefault: true
     kube-state-metrics:
       enabled: true
+    vmagent:
+      spec:
+        externalLabels:
+          cluster: home
     prometheus-node-exporter:
       enabled: true
