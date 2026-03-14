@@ -9,6 +9,8 @@ metadata:
     tailscale.com/hostname: otel-collector
     tailscale.com/tags: tag:k8s-private
 spec:
+  type: LoadBalancer
+  loadBalancerClass: tailscale
   selector:
     app.kubernetes.io/name: opentelemetry-collector
   ports:
