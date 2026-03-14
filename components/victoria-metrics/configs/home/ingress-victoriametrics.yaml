@@ -20,6 +20,6 @@ spec:
             pathType: Prefix
             backend:
               service:
-                name: victoriametrics-victoria-metrics-k8s-stack
+                name: vmsingle-victoria-metrics-k8s-stack
                 port:
                   name: http
