@@ -34,6 +34,7 @@ jobs:
           - longhorn
           - metrics-server
           - onepassword
+          - opentelemetry-collector
           - tailscale
           - tsidp
           - vertical-pod-autoscaler
