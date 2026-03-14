@@ -30,7 +30,6 @@ jobs:
           - bjw-s
           - cert-manager
           - goldilocks
-          - grafana
           - kubelet-serving-cert-approver
           - longhorn
           - metrics-server
