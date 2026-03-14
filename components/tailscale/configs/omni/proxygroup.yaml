@@ -7,4 +7,4 @@ spec:
   type: egress
   replicas: 1
   tags:
-    - tag:k8s-private
+    - tag:k8s-egress
