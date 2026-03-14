@@ -8,6 +8,7 @@ metadata:
 spec:
   interval: 1h
   values:
+    dnsPolicy: Default
     config:
       receivers:
         prometheus:
