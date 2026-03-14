@@ -5,8 +5,8 @@ metadata:
   name: opentelemetry-collector-otlp
   namespace: opentelemetry-collector
   annotations:
-    tailscale.com/expose: "true"
-    tailscale.com/hostname: "otel-collector"
+    tailscale.com/proxy-group: private-ingress
+    tailscale.com/hostname: otel-collector
     tailscale.com/tags: tag:k8s-private
 spec:
   selector:
