@@ -20,6 +20,6 @@ spec:
             pathType: Prefix
             backend:
               service:
-                name: vmalertmanager-victoria-metrics-k8s-stack
+                name: vmalertmanager-victoria-metrics-k8s-stack-http
                 port:
                   name: http

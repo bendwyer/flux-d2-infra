@@ -20,6 +20,6 @@ spec:
             pathType: Prefix
             backend:
               service:
-                name: victoria-logs-single-server
+                name: victoria-logs-single-server-http
                 port:
                   name: http
