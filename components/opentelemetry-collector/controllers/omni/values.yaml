@@ -23,6 +23,12 @@ spec:
                 static_configs:
                   - targets:
                       - node-exporter-prometheus-node-exporter.node-exporter.svc.cluster.local:9100
+      processors:
+        resource/cluster:
+          attributes:
+            - key: cluster
+              value: omni
+              action: upsert
       exporters:
         otlp/home:
           endpoint: "otel-collector-home.opentelemetry-collector.svc.cluster.local:4317"
@@ -34,6 +40,10 @@ spec:
             initial_interval: 5s
             max_interval: 30s
             max_elapsed_time: 300s
+        otlphttp/victoriametrics:
+          endpoint: http://victoriametrics-home.opentelemetry-collector.svc.cluster.local:8428/opentelemetry
+          tls:
+            insecure: true
       service:
         pipelines:
           logs:
@@ -49,6 +59,7 @@ spec:
               - prometheus
             processors:
               - memory_limiter
+              - resource/cluster
               - batch
             exporters:
-              - otlp/home
+              - otlphttp/victoriametrics

@@ -5,3 +5,4 @@ kind: Kustomization
 resources:
   - proxygroup.yaml
   - egress-otel-collector.yaml
+  - egress-victoriametrics.yaml
