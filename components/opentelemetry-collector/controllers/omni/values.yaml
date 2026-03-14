@@ -25,7 +25,7 @@ spec:
                       - node-exporter-prometheus-node-exporter.node-exporter.svc.cluster.local:9100
       exporters:
         otlp/home:
-          endpoint: "otel-collector.tail0c49c.ts.net:4317"
+          endpoint: "otel-collector-home.opentelemetry-collector.svc.cluster.local:4317"
           tls:
             insecure: true
           compression: gzip
