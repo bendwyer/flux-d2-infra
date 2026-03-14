@@ -1,0 +1,35 @@
+---
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: vmagent
+  namespace: vmagent
+spec:
+  interval: 1h
+  chart:
+    spec:
+      chart: victoria-metrics-agent
+      version: "^0.33.0"
+      sourceRef:
+        kind: HelmRepository
+        name: victoriametrics
+        namespace: vmagent
+  values:
+    remoteWrite:
+      - url: http://victoriametrics-home.vmagent.svc.cluster.local:8428/api/v1/write
+    extraArgs:
+      promscrape.suppressDuplicateScrapeTargetErrors: "true"
+    config:
+      global:
+        scrape_interval: 30s
+        external_labels:
+          cluster: omni
+      scrape_configs:
+        - job_name: kube-state-metrics
+          static_configs:
+            - targets:
+                - kube-state-metrics.kube-state-metrics.svc.cluster.local:8080
+        - job_name: node-exporter
+          static_configs:
+            - targets:
+                - node-exporter-prometheus-node-exporter.node-exporter.svc.cluster.local:9100
