@@ -8,6 +8,9 @@ metadata:
 spec:
   interval: 1h
   values:
+    presets:
+      kubernetesAttributes:
+        enabled: false
     config:
       receivers:
         otlp:
