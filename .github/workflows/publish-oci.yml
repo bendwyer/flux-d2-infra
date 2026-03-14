@@ -30,6 +30,7 @@ jobs:
           - bjw-s
           - cert-manager
           - goldilocks
+          - kube-state-metrics
           - kubelet-serving-cert-approver
           - longhorn
           - metrics-server
