@@ -23,6 +23,12 @@ spec:
                 static_configs:
                   - targets:
                       - node-exporter-prometheus-node-exporter.node-exporter.svc.cluster.local:9100
+      processors:
+        resource/cluster:
+          attributes:
+            - key: cluster
+              value: omni
+              action: upsert
       exporters:
         otlp/home:
           endpoint: "otel-collector-home.opentelemetry-collector.svc.cluster.local:4317"
@@ -41,6 +47,7 @@ spec:
               - filelog
             processors:
               - memory_limiter
+              - resource/cluster
               - batch
             exporters:
               - otlp/home
@@ -49,6 +56,7 @@ spec:
               - prometheus
             processors:
               - memory_limiter
+              - resource/cluster
               - batch
             exporters:
               - otlp/home

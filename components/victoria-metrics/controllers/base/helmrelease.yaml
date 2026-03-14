@@ -61,6 +61,10 @@ spec:
       spec:
         replicaCount: 1
         selectAllByDefault: true
+    vmagent:
+      spec:
+        externalLabels:
+          cluster: home
     kube-state-metrics:
       enabled: true
     prometheus-node-exporter:

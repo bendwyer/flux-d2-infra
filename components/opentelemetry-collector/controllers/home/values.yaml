@@ -8,6 +8,9 @@ metadata:
 spec:
   interval: 1h
   values:
+    presets:
+      kubernetesAttributes:
+        enabled: false
     config:
       receivers:
         otlp:
@@ -16,6 +19,12 @@ spec:
               endpoint: ${env:MY_POD_IP}:4317
             http:
               endpoint: ${env:MY_POD_IP}:4318
+      processors:
+        resource/cluster:
+          attributes:
+            - key: cluster
+              value: home
+              action: insert
       exporters:
         otlphttp/victorialogs:
           logs_endpoint: http://victoria-logs-single-server.victoria-logs.svc.cluster.local:9428/insert/opentelemetry/v1/logs
@@ -33,6 +42,7 @@ spec:
               - otlp
             processors:
               - memory_limiter
+              - resource/cluster
               - batch
             exporters:
               - otlphttp/victorialogs
@@ -41,6 +51,7 @@ spec:
               - otlp
             processors:
               - memory_limiter
+              - resource/cluster
               - batch
             exporters:
               - otlphttp/victoriametrics
