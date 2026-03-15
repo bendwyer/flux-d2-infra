@@ -13,6 +13,7 @@ metadata:
     gethomepage.dev/group: "Infrastructure"
     gethomepage.dev/icon: "victoriametrics.png"
     gethomepage.dev/href: "https://victoriametrics.tail0c49c.ts.net"
+    gethomepage.dev/app: "vmsingle"
 
 spec:
   ingressClassName: tailscale
