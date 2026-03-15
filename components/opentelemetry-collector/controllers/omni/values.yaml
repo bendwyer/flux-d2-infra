@@ -9,26 +9,6 @@ spec:
   interval: 1h
   values:
     config:
-      receivers:
-        prometheus:
-          config:
-            scrape_configs:
-              - job_name: kube-state-metrics
-                scrape_interval: 30s
-                static_configs:
-                  - targets:
-                      - kube-state-metrics.kube-state-metrics.svc.cluster.local:8080
-              - job_name: node-exporter
-                scrape_interval: 30s
-                static_configs:
-                  - targets:
-                      - node-exporter-prometheus-node-exporter.node-exporter.svc.cluster.local:9100
-      processors:
-        resource/cluster:
-          attributes:
-            - key: cluster
-              value: omni
-              action: upsert
       exporters:
         otlp/home:
           endpoint: "otel-collector-home.opentelemetry-collector.svc.cluster.local:4317"
@@ -40,10 +20,6 @@ spec:
             initial_interval: 5s
             max_interval: 30s
             max_elapsed_time: 300s
-        otlphttp/victoriametrics:
-          endpoint: http://victoriametrics-home.opentelemetry-collector.svc.cluster.local:8428/opentelemetry
-          tls:
-            insecure: true
       service:
         pipelines:
           logs:
@@ -54,12 +30,3 @@ spec:
               - batch
             exporters:
               - otlp/home
-          metrics:
-            receivers:
-              - prometheus
-            processors:
-              - memory_limiter
-              - resource/cluster
-              - batch
-            exporters:
-              - otlphttp/victoriametrics
