@@ -85,6 +85,10 @@ spec:
                   {{ if .Annotations.description }}{{ .Annotations.description }}{{ end }}
                   {{ end }}
                   [View in Alertmanager](https://alertmanager.tail0c49c.ts.net)
+    vmalert:
+      spec:
+        extraArgs:
+          external.url: https://grafana.tail0c49c.ts.net
     kubeScheduler:
       enabled: false
     kubeControllerManager:
