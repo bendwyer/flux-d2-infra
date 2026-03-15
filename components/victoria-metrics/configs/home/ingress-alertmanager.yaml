@@ -13,6 +13,7 @@ metadata:
     gethomepage.dev/group: "Infrastructure"
     gethomepage.dev/icon: "alertmanager.png"
     gethomepage.dev/href: "https://alertmanager.tail0c49c.ts.net"
+    gethomepage.dev/app: "vmalertmanager"
 
 spec:
   ingressClassName: tailscale
