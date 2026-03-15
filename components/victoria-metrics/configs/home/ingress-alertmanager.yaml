@@ -8,6 +8,12 @@ metadata:
     tailscale.com/proxy-group: private-ingress
     tailscale.com/tags: tag:k8s-private
     tailscale.com/http-redirect: "true"
+    gethomepage.dev/enabled: "true"
+    gethomepage.dev/name: "Alertmanager"
+    gethomepage.dev/group: "Infrastructure"
+    gethomepage.dev/icon: "alertmanager.png"
+    gethomepage.dev/href: "https://alertmanager.tail0c49c.ts.net"
+
 spec:
   ingressClassName: tailscale
   tls:
