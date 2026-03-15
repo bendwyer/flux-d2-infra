@@ -97,5 +97,11 @@ spec:
       spec:
         externalLabels:
           cluster: home
+        resources:
+          limits:
+            memory: 256Mi
+          requests:
+            cpu: 200m
+            memory: 256Mi
     prometheus-node-exporter:
       enabled: true
