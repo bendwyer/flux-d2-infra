@@ -6,7 +6,7 @@ metadata:
     tailscale.com/tailnet-fqdn: victoriametrics-otlp.tail0c49c.ts.net
     tailscale.com/proxy-group: egress
   name: victoriametrics-home
-  namespace: opentelemetry-collector
+  namespace: vmagent
 spec:
   externalName: placeholder
   type: ExternalName
