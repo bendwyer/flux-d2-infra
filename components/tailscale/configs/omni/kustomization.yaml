@@ -6,5 +6,3 @@ resources:
   - ../base
 patches:
   - path: proxygroup.yaml
-    target:
-      kind: ProxyGroup
