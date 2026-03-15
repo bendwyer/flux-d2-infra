@@ -5,3 +5,7 @@ kind: Kustomization
 resources:
   - ../base
   - connector.yaml
+patches:
+  - path: proxygroup.yaml
+    target:
+      kind: ProxyGroup
