@@ -6,10 +6,7 @@ metadata:
   name: shared-ingress
 spec:
   type: ingress
-  replicas: 2
-  hostnamePrefix: shared-ingress
-  tags:
-    - tag:k8s-shared
+  hostnamePrefix: shared-ingress-home
 ---
 # yaml-language-server: $schema=https://raw.githubusercontent.com/CustomResourceDefinition/catalog/refs/heads/main/schema/tailscale.com/proxygroup_v1alpha1.json
 apiVersion: tailscale.com/v1alpha1
@@ -18,10 +15,7 @@ metadata:
   name: private-ingress
 spec:
   type: ingress
-  replicas: 1
-  hostnamePrefix: private-ingress
-  tags:
-    - tag:k8s-private
+  hostnamePrefix: private-ingress-home
 ---
 # yaml-language-server: $schema=https://raw.githubusercontent.com/CustomResourceDefinition/catalog/refs/heads/main/schema/tailscale.com/proxygroup_v1alpha1.json
 apiVersion: tailscale.com/v1alpha1
@@ -30,7 +24,4 @@ metadata:
   name: egress
 spec:
   type: egress
-  replicas: 1
-  hostnamePrefix: egress
-  tags:
-    - tag:k8s-egress
+  hostnamePrefix: egress-home
