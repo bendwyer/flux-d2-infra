@@ -80,11 +80,17 @@ spec:
                   [{{ .Status | toUpper }}{{ if eq .Status "firing" }}:{{ .Alerts.Firing | len }}{{ end }}] {{ .CommonLabels.alertname }}
                 message: |-
                   {{ range .Alerts }}
-                  **{{ .Status | toUpper }}**{{ if .Labels.severity }} `{{ .Labels.severity }}`{{ end }}{{ if .Labels.namespace }} *{{ .Labels.namespace }}*{{ end }}
+                  **{{ .Status | toUpper }}**{{ if .Labels.severity }} `{{ .Labels.severity }}`{{ end }}{{ if .Labels.namespace }} *{{ .Labels.namespace }}*{{ end }} — {{ .StartsAt.Local.Format "Jan 02 15:04 MST" }}
                   {{ if .Annotations.summary }}{{ .Annotations.summary }}{{ end }}
                   {{ if .Annotations.description }}{{ .Annotations.description }}{{ end }}
                   {{ end }}
                   [View in Alertmanager](https://alertmanager.tail0c49c.ts.net)
+    kubeScheduler:
+      enabled: false
+    kubeControllerManager:
+      enabled: false
+    kubeEtcd:
+      enabled: false
     kube-state-metrics:
       enabled: true
     vmagent:
