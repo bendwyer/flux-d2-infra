@@ -5,3 +5,5 @@ kind: Kustomization
 resources:
   - ../base
   - onepassworditem-tailscale.yaml
+patches:
+  - path: values.yaml
