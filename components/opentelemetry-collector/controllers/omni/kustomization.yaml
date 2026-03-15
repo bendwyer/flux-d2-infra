@@ -6,6 +6,3 @@ resources:
   - ../base
 patches:
   - path: values.yaml
-    target:
-      kind: HelmRelease
-      name: opentelemetry-collector
