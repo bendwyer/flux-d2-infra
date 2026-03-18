@@ -7,14 +7,9 @@ metadata:
   namespace: opentelemetry-collector
 spec:
   interval: 1h
-  chart:
-    spec:
-      chart: opentelemetry-collector
-      version: "^0.145.0"
-      sourceRef:
-        kind: HelmRepository
-        name: open-telemetry
-        namespace: opentelemetry-collector
+  chartRef:
+    kind: OCIRepository
+    name: opentelemetry-collector
   # install:
   #   remediation:
   #     retries: 3
