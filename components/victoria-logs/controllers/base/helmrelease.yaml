@@ -7,14 +7,9 @@ metadata:
   namespace: victoria-logs
 spec:
   interval: 1h
-  chart:
-    spec:
-      chart: victoria-logs-single
-      version: "^0.11.0"
-      sourceRef:
-        kind: HelmRepository
-        name: victoriametrics
-        namespace: victoria-logs
+  chartRef:
+    kind: OCIRepository
+    name: victoria-logs-single
   # install:
   #   remediation:
   #     retries: 3
