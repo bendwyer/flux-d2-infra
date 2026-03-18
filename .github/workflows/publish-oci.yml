@@ -39,6 +39,7 @@ jobs:
           - vmagent
     uses: bendwyer/github-workflows/.github/workflows/flux-publish-oci.yml@main
     with:
+      oci_repo: ghcr.io/bendwyer/d2-infra
       component_name: ${{ matrix.component }}
       artifact_path: ./components
     secrets:
