@@ -9,8 +9,8 @@
   "customManagers": [
     {
       "customType": "regex",
-      "fileMatch": [
-        "components/.+/controllers/base/ocirepository\\.yaml$"
+      "managerFilePatterns": [
+        "/components/.+/controllers/base/ocirepository\\.yaml$/"
       ],
       "matchStrings": [
         "# renovate: datasource=(?<datasource>[^\\s]+) depName=(?<depName>[^\\n]+)\\n\\s+semver:\\s*\"(?<currentValue>[^\"]+)\""
