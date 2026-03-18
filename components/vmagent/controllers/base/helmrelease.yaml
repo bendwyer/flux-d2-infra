@@ -6,14 +6,9 @@ metadata:
   namespace: vmagent
 spec:
   interval: 1h
-  chart:
-    spec:
-      chart: victoria-metrics-agent
-      version: "^0.33.0"
-      sourceRef:
-        kind: HelmRepository
-        name: victoriametrics
-        namespace: vmagent
+  chartRef:
+    kind: OCIRepository
+    name: victoria-metrics-agent
   values:
     remoteWrite:
       - url: http://victoriametrics-home.vmagent.svc.cluster.local:8428/api/v1/write
