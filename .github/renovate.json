@@ -1,0 +1,39 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": [
+    "config:recommended"
+  ],
+  "enabledManagers": [
+    "custom.regex"
+  ],
+  "customManagers": [
+    {
+      "customType": "regex",
+      "fileMatch": [
+        "components/.+/controllers/base/ocirepository\\.yaml$"
+      ],
+      "matchStrings": [
+        "# renovate: datasource=(?<datasource>[^\\s]+) depName=(?<depName>[^\\n]+)\\n\\s+semver:\\s*\"(?<currentValue>[^\"]+)\""
+      ],
+      "versioningTemplate": "npm"
+    }
+  ],
+  "packageRules": [
+    {
+      "description": "Disable patch updates — handled in-cluster by semver ranges",
+      "matchUpdateTypes": [
+        "patch"
+      ],
+      "enabled": false
+    },
+    {
+      "description": "Disable minor updates for >=1.x — handled in-cluster by semver ranges",
+      "matchUpdateTypes": [
+        "minor"
+      ],
+      "matchCurrentVersion": ">=1.0.0",
+      "enabled": false
+    }
+  ],
+  "rangeStrategy": "replace"
+}
