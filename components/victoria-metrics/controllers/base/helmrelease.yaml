@@ -7,14 +7,9 @@ metadata:
   namespace: victoria-metrics
 spec:
   interval: 1h
-  chart:
-    spec:
-      chart: victoria-metrics-k8s-stack
-      version: "^0.71.0"
-      sourceRef:
-        kind: HelmRepository
-        name: victoriametrics
-        namespace: victoria-metrics
+  chartRef:
+    kind: OCIRepository
+    name: victoria-metrics-k8s-stack
   # install:
   #   remediation:
   #     retries: 3
