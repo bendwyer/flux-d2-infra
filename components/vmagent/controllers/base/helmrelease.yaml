@@ -31,6 +31,8 @@ spec:
           relabel_configs:
             - target_label: job
               replacement: kubelet
+            - source_labels: [__metrics_path__]
+              target_label: metrics_path
           honor_labels: true
         - job_name: kube-state-metrics
           static_configs:
