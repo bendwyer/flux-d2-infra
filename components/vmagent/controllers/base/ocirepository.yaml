@@ -9,8 +9,7 @@ spec:
   interval: 1h
   url: oci://ghcr.io/victoriametrics/helm-charts/victoria-metrics-agent
   ref:
-    # renovate: datasource=docker depName=ghcr.io/victoriametrics/helm-charts/victoria-metrics-agent
-    semver: ">=0.34.0 <0.35.0"
+    tag: "0.34.0"
   layerSelector:
     mediaType: "application/vnd.cncf.helm.chart.content.v1.tar+gzip"
     operation: copy

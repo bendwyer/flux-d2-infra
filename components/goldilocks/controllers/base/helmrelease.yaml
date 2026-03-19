@@ -27,4 +27,4 @@ spec:
       flags:
         enable-cost: false
     image:
-      tag: "v4.14.9"
+      tag: "${GOLDILOCKS_IMAGE_TAG}"

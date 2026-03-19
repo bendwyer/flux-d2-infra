@@ -9,7 +9,7 @@ spec:
   interval: 1h
   url: oci://ghcr.io/bjw-s-labs/helm/app-template
   ref:
-    semver: "4.6.x"
+    tag: "4.6.2"
   layerSelector:
     mediaType: "application/vnd.cncf.helm.chart.content.v1.tar+gzip"
     operation: copy
