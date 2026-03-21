@@ -1,5 +1,5 @@
 ---
-name: renovate
+name: renovatebot
 
 on:
   schedule:
