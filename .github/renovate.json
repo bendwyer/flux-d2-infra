@@ -9,16 +9,16 @@
   "packageRules": [
     {
       "description": "Automerge patch+minor for >=1.x charts",
-      "matchDatasources": ["docker"],
+      "matchDatasources": ["docker", "helm", "git-refs"],
       "matchCurrentVersion": ">=1.0.0",
-      "matchUpdateTypes": ["minor", "patch"],
+      "matchUpdateTypes": ["minor", "patch", "digest"],
       "automerge": true
     },
     {
       "description": "Automerge patch only for 0.x charts",
-      "matchDatasources": ["docker"],
+      "matchDatasources": ["docker", "helm", "git-refs"],
       "matchCurrentVersion": "<1.0.0",
-      "matchUpdateTypes": ["patch"],
+      "matchUpdateTypes": ["patch", "digest"],
       "automerge": true
     }
   ]
