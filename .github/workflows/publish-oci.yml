@@ -3,11 +3,6 @@ name: publish-oci
 
 on:
   workflow_dispatch:
-  pull_request:
-    branches:
-      - main
-    paths:
-      - "components/**"
   push:
     branches:
       - main
@@ -16,31 +11,9 @@ on:
 
 jobs:
   publish:
-    strategy:
-      fail-fast: false # Continue publishing other components if one fails
-      matrix:
-        component:
-          # add additional components here
-          - bjw-s
-          - cert-manager
-          - goldilocks
-          - kube-state-metrics
-          - kubelet-serving-cert-approver
-          - longhorn
-          - metrics-server
-          - node-exporter
-          - onepassword
-          - opentelemetry-collector
-          - tailscale
-          - tsidp
-          - vertical-pod-autoscaler
-          - victoria-logs
-          - victoria-metrics
-          - vmagent
     uses: bendwyer/github-workflows/.github/workflows/flux-publish-oci.yml@main
     with:
       oci_repo: ghcr.io/bendwyer/d2-infra
-      component_name: ${{ matrix.component }}
       artifact_path: ./components
     secrets:
       ghcr_token: ${{ secrets.GITHUB_TOKEN }}

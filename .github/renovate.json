@@ -1,39 +1,25 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "extends": [
-    "config:recommended"
-  ],
-  "enabledManagers": [
-    "custom.regex"
-  ],
-  "customManagers": [
-    {
-      "customType": "regex",
-      "managerFilePatterns": [
-        "/components/.+/controllers/base/ocirepository\\.yaml$/"
-      ],
-      "matchStrings": [
-        "# renovate: datasource=(?<datasource>[^\\s]+) depName=(?<depName>[^\\n]+)\\n\\s+semver:\\s*\"(?<currentValue>[^\"]+)\""
-      ],
-      "versioningTemplate": "npm"
-    }
-  ],
+  "extends": ["config:recommended"],
+  "dependencyDashboard": false,
+  "labels": ["dependencies"],
+  "separateMinorPatch": true,
+  "flux": { "managerFilePatterns": ["/components/.+\\.yaml$/"] },
+  "github-actions": { "enabled": false },
   "packageRules": [
     {
-      "description": "Disable patch updates — handled in-cluster by semver ranges",
-      "matchUpdateTypes": [
-        "patch"
-      ],
-      "enabled": false
+      "description": "Automerge patch+minor for >=1.x charts",
+      "matchDatasources": ["docker"],
+      "matchCurrentVersion": ">=1.0.0",
+      "matchUpdateTypes": ["minor", "patch"],
+      "automerge": true
     },
     {
-      "description": "Disable minor updates for >=1.x — handled in-cluster by semver ranges",
-      "matchUpdateTypes": [
-        "minor"
-      ],
-      "matchCurrentVersion": ">=1.0.0",
-      "enabled": false
+      "description": "Automerge patch only for 0.x charts",
+      "matchDatasources": ["docker"],
+      "matchCurrentVersion": "<1.0.0",
+      "matchUpdateTypes": ["patch"],
+      "automerge": true
     }
-  ],
-  "rangeStrategy": "replace"
+  ]
 }
