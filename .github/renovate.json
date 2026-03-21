@@ -10,15 +10,17 @@
     {
       "description": "Automerge patch+minor for >=1.x",
       "matchDatasources": ["docker", "helm", "git-refs"],
-      "matchCurrentVersion": "/^v?[1-9]/",
+      "matchCurrentVersion": ">=1.0.0",
       "matchUpdateTypes": ["minor", "patch", "digest"],
+      "versioning": "semver-coerced",
       "automerge": true
     },
     {
       "description": "Automerge patch only for 0.x",
       "matchDatasources": ["docker", "helm", "git-refs"],
-      "matchCurrentVersion": "/^v?0\\./",
+      "matchCurrentVersion": "<1.0.0",
       "matchUpdateTypes": ["patch", "digest"],
+      "versioning": "semver-coerced",
       "automerge": true
     }
   ]
