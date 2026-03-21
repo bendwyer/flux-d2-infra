@@ -8,17 +8,19 @@
   "github-actions": { "enabled": false },
   "packageRules": [
     {
-      "description": "Automerge patch+minor for >=1.x charts",
+      "description": "Automerge patch+minor for >=1.x",
       "matchDatasources": ["docker", "helm", "git-refs"],
       "matchCurrentVersion": ">=1.0.0",
       "matchUpdateTypes": ["minor", "patch", "digest"],
+      "versioning": "semver-coerced",
       "automerge": true
     },
     {
-      "description": "Automerge patch only for 0.x charts",
+      "description": "Automerge patch only for 0.x",
       "matchDatasources": ["docker", "helm", "git-refs"],
       "matchCurrentVersion": "<1.0.0",
       "matchUpdateTypes": ["patch", "digest"],
+      "versioning": "semver-coerced",
       "automerge": true
     }
   ]
