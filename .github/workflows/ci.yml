@@ -1,0 +1,31 @@
+---
+name: ci
+
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  changes:
+    uses: bendwyer/github-workflows/.github/workflows/github-detect-changes.yml@main
+
+  publish:
+    needs: changes
+    if: needs.changes.outputs.changes != '[]'
+    uses: bendwyer/github-workflows/.github/workflows/flux-publish-oci.yml@main
+    with:
+      oci_repo: ghcr.io/bendwyer/d2-infra
+      artifact_path: ./components
+    secrets:
+      ghcr_token: ${{ secrets.GITHUB_TOKEN }}
+
+  check:
+    if: always()
+    needs:
+      - changes
+      - publish
+    uses: bendwyer/github-workflows/.github/workflows/github-check.yml@main
+    with:
+      allowed_skips: publish
+      jobs: ${{ toJSON(needs) }}
