@@ -9,4 +9,4 @@ spec:
   interval: 1h
   url: https://github.com/alex1989hu/kubelet-serving-cert-approver
   ref:
-    commit: bc558bfcc9b439e416bba3276b9ce07ebea7060e  # v0.10.2
+    commit: 96d1d0c279ecfe9f3fc8c93be2fb7c3616dd530b  # v0.10.2
