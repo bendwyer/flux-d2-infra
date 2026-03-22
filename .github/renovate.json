@@ -9,11 +9,15 @@
   "github-actions": { "enabled": false },
   "packageRules": [
     {
+      "description": "Use semver-coerced versioning for all sources",
+      "matchDatasources": ["docker", "helm", "git-refs"],
+      "versioning": "semver-coerced"
+    },
+    {
       "description": "Automerge patch+minor for >=1.x",
       "matchDatasources": ["docker", "helm", "git-refs"],
       "matchCurrentVersion": ">=1.0.0",
       "matchUpdateTypes": ["minor", "patch", "digest"],
-      "versioning": "semver-coerced",
       "automerge": true
     },
     {
@@ -21,7 +25,6 @@
       "matchDatasources": ["docker", "helm", "git-refs"],
       "matchCurrentVersion": "<1.0.0",
       "matchUpdateTypes": ["patch", "digest"],
-      "versioning": "semver-coerced",
       "automerge": true
     }
   ]
