@@ -16,14 +16,14 @@
     {
       "description": "Automerge patch+minor for >=1.x",
       "matchDatasources": ["docker", "helm", "git-refs"],
-      "matchCurrentVersion": ">=1.0.0",
+      "matchCurrentVersion": "/^v?[1-9]/",
       "matchUpdateTypes": ["minor", "patch", "digest"],
       "automerge": true
     },
     {
       "description": "Automerge patch only for 0.x",
       "matchDatasources": ["docker", "helm", "git-refs"],
-      "matchCurrentVersion": "<1.0.0",
+      "matchCurrentVersion": "/^v?0\\./",
       "matchUpdateTypes": ["patch", "digest"],
       "automerge": true
     }
