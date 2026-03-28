@@ -23,6 +23,10 @@ spec:
   #   remediation:
   #     retries: 3
   values:
+    controller:
+      flags:
+        on-by-default: "true"
+        exclude-namespaces: "default,kube-node-lease,kube-public"
     dashboard:
       flags:
         enable-cost: false
