@@ -4,5 +4,4 @@ kind: Namespace
 metadata:
   name: metrics-server
   labels:
-    goldilocks.fairwinds.com/enabled: "true"
     name: metrics-server

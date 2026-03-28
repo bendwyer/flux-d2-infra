@@ -4,5 +4,4 @@ kind: Namespace
 metadata:
   name: bjw-s
   labels:
-    goldilocks.fairwinds.com/enabled: "true"
     name: bjw-s

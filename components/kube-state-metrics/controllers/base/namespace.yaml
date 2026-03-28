@@ -4,5 +4,4 @@ kind: Namespace
 metadata:
   name: kube-state-metrics
   labels:
-    goldilocks.fairwinds.com/enabled: "true"
     name: kube-state-metrics

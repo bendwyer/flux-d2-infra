@@ -4,5 +4,4 @@ kind: Namespace
 metadata:
   name: vertical-pod-autoscaler
   labels:
-    goldilocks.fairwinds.com/enabled: "true"
     name: vertical-pod-autoscaler
