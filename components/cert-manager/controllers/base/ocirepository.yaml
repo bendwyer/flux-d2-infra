@@ -9,4 +9,4 @@ spec:
   interval: 1h
   url: oci://quay.io/jetstack/charts/cert-manager
   ref:
-    tag: "v1.20.0"
+    tag: "v1.20.1"
