@@ -30,5 +30,7 @@ spec:
     dashboard:
       flags:
         enable-cost: false
+        on-by-default: "true"
+        exclude-namespaces: "default,kube-node-lease,kube-public"
     image:
       tag: "v4.14.18"
