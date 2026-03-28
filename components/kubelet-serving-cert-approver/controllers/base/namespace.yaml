@@ -4,5 +4,4 @@ kind: Namespace
 metadata:
   name: kubelet-serving-cert-approver
   labels:
-    goldilocks.fairwinds.com/enabled: "true"
     name: kubelet-serving-cert-approver

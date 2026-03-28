@@ -4,5 +4,4 @@ kind: Namespace
 metadata:
   name: goldilocks
   labels:
-    goldilocks.fairwinds.com/enabled: "true"
     name: goldilocks

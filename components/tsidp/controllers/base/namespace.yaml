@@ -4,5 +4,4 @@ kind: Namespace
 metadata:
   name: tsidp
   labels:
-    goldilocks.fairwinds.com/enabled: "true"
     name: tsidp
