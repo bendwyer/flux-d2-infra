@@ -30,6 +30,13 @@ flux-d2-infra/
 
 ## Current Components
 
+### Flux Operator
+- **Purpose**: Manages the Flux controllers lifecycle via FluxInstance CRD
+- **Bootstrap**: Initially installed via Talos extraManifests; HelmRelease takes ownership via server-side apply
+- **Dependencies**: None (deploys independently of 1Password)
+- **Configs**: None — uses `createConfigs: "disabled"` in the fleet ResourceSet to skip the configs Kustomization
+- **Note**: HelmRelease deploys to `flux-system` namespace via `targetNamespace`/`storageNamespace`
+
 ### 1Password Operator
 - **Purpose**: Secret management via 1Password Connect
 - **Bootstrap**: Credentials injected via Talos inline manifests
