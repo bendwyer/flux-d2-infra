@@ -23,7 +23,7 @@ spec:
       key: RESTIC_PASSWORD
     s3:
       endpoint: https://nbg1.your-objectstorage.com
-      bucket: k8up-home-9935857008
+      bucket: k8up-home-9935857008/tsidp
       accessKeyIDSecretRef:
         name: k8up-backup-credentials
         key: AWS_ACCESS_KEY_ID
