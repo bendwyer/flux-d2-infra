@@ -9,20 +9,9 @@ spec:
   interval: 1h
   values:
     config:
-      receivers:
-        otlp:
-          protocols:
-            grpc:
-              endpoint: ${env:MY_POD_IP}:4317
-            http:
-              endpoint: ${env:MY_POD_IP}:4318
       exporters:
         otlphttp/victorialogs:
           logs_endpoint: http://victoria-logs-single-server.victoria-logs.svc.cluster.local:9428/insert/opentelemetry/v1/logs
-          tls:
-            insecure: true
-        otlphttp/victoriametrics:
-          endpoint: http://vmsingle-victoria-metrics-k8s-stack.victoria-metrics.svc.cluster.local:8428/opentelemetry
           tls:
             insecure: true
       service:
@@ -30,17 +19,8 @@ spec:
           logs:
             receivers:
               - filelog
-              - otlp
             processors:
               - memory_limiter
               - batch
             exporters:
               - otlphttp/victorialogs
-          metrics:
-            receivers:
-              - otlp
-            processors:
-              - memory_limiter
-              - batch
-            exporters:
-              - otlphttp/victoriametrics

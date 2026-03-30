@@ -8,4 +8,3 @@ resources:
   - ingress-victoriametrics.yaml
   - ingress-alertmanager.yaml
   - service-alertmanager.yaml
-  - service-victoriametrics-otlp.yaml
