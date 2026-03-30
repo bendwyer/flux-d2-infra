@@ -10,13 +10,13 @@ spec:
     failedJobsHistoryLimit: 3
     successfulJobsHistoryLimit: 3
   prune:
-    schedule: "@weekly-random"
+    schedule: "0 3 * * 6"
     retention:
       keepDaily: 7
       keepWeekly: 4
       keepMonthly: 3
   check:
-    schedule: "@weekly-random"
+    schedule: "0 5 * * 6"
   backend:
     repoPasswordSecretRef:
       name: k8up-backup-credentials
