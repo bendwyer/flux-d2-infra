@@ -6,17 +6,17 @@ metadata:
   namespace: tsidp
 spec:
   backup:
-    schedule: "0 3 * * *"
+    schedule: "@daily-random"
     failedJobsHistoryLimit: 3
     successfulJobsHistoryLimit: 3
   prune:
-    schedule: "0 5 * * 0"
+    schedule: "@weekly-random"
     retention:
       keepDaily: 7
       keepWeekly: 4
       keepMonthly: 3
   check:
-    schedule: "0 6 * * 0"
+    schedule: "@weekly-random"
   backend:
     repoPasswordSecretRef:
       name: k8up-backup-credentials
