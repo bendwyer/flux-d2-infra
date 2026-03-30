@@ -9,5 +9,4 @@ spec:
   interval: 1h
   values:
     recommender:
-      extraArgs:
-        prometheus-address: http://victoriametrics-home.vmagent.svc.cluster.local:8428
+      extraArgs: {}
