@@ -5,3 +5,5 @@ kind: Kustomization
 resources:
   - ../base
   - ingress-grafana.yaml
+  - ocirepository-dashboards.yaml
+  - kustomization-dashboards.yaml
