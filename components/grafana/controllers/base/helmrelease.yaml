@@ -1,0 +1,25 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/fluxcd-community/flux2-schemas/refs/heads/main/helmrelease-helm-v2.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: grafana
+  namespace: grafana
+spec:
+  interval: 1h
+  chartRef:
+    kind: OCIRepository
+    name: grafana
+  values:
+    persistence:
+      enabled: true
+      size: 5Gi
+    service:
+      type: ClusterIP
+    ingress:
+      enabled: false
+    sidecar:
+      datasources:
+        enabled: true
+      dashboards:
+        enabled: true
