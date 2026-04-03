@@ -11,6 +11,10 @@ spec:
     kind: OCIRepository
     name: grafana
   values:
+    admin:
+      existingSecret: grafana-admin
+      userKey: username
+      passwordKey: password
     persistence:
       enabled: true
       size: 5Gi
