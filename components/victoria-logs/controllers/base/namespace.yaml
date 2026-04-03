@@ -1,8 +1,0 @@
----
-apiVersion: v1
-kind: Namespace
-metadata:
-  name: victoria-logs
-  labels:
-    name: victoria-logs
-    # pod-security.kubernetes.io/enforce set in flux-d2-fleet ResourceSet

@@ -1,0 +1,15 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/fluxcd-community/flux2-schemas/refs/heads/main/ocirepository-source-v1.json
+apiVersion: source.toolkit.fluxcd.io/v1
+kind: OCIRepository
+metadata:
+  name: prometheus-node-exporter
+  namespace: prometheus-node-exporter
+spec:
+  interval: 1h
+  url: oci://ghcr.io/prometheus-community/charts/prometheus-node-exporter
+  ref:
+    tag: "4.43.1"
+  layerSelector:
+    mediaType: "application/vnd.cncf.helm.chart.content.v1.tar+gzip"
+    operation: copy

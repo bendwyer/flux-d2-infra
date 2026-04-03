@@ -1,0 +1,61 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/fluxcd-community/flux2-schemas/refs/heads/main/helmrelease-helm-v2.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: opentelemetry-collector-gateway
+  namespace: opentelemetry-collector-gateway
+spec:
+  interval: 1h
+  chartRef:
+    kind: OCIRepository
+    name: opentelemetry-collector-gateway
+  # install:
+  #   remediation:
+  #     retries: 3
+  # upgrade:
+  #   cleanupOnFail: true
+  #   remediation:
+  #     retries: 3
+  values:
+    mode: deployment
+    replicaCount: 1
+    image:
+      repository: otel/opentelemetry-collector-contrib
+    presets:
+      kubernetesAttributes:
+        enabled: true
+        extractAllPodLabels: true
+    resources:
+      limits:
+        memory: 512Mi
+      requests:
+        cpu: 100m
+        memory: 256Mi
+    clusterRole:
+      create: true
+      rules:
+        - apiGroups: [""]
+          resources: ["nodes", "nodes/proxy", "nodes/metrics", "services", "endpoints", "pods"]
+          verbs: ["get", "list", "watch"]
+        - apiGroups: ["networking.k8s.io"]
+          resources: ["ingresses"]
+          verbs: ["get", "list", "watch"]
+        - nonResourceURLs: ["/metrics", "/metrics/cadvisor"]
+          verbs: ["get"]
+    config:
+      receivers:
+        otlp:
+          protocols:
+            grpc:
+              endpoint: 0.0.0.0:4317
+            http:
+              endpoint: 0.0.0.0:4318
+      processors:
+        batch:
+          send_batch_size: 10000
+          timeout: 5s
+        memory_limiter:
+          check_interval: 5s
+          limit_percentage: 80
+          spike_limit_percentage: 25

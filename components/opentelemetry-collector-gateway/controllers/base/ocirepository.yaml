@@ -1,0 +1,15 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/fluxcd-community/flux2-schemas/refs/heads/main/ocirepository-source-v1.json
+apiVersion: source.toolkit.fluxcd.io/v1
+kind: OCIRepository
+metadata:
+  name: opentelemetry-collector-gateway
+  namespace: opentelemetry-collector-gateway
+spec:
+  interval: 1h
+  url: oci://ghcr.io/open-telemetry/opentelemetry-helm-charts/opentelemetry-collector
+  ref:
+    tag: "0.147.1"
+  layerSelector:
+    mediaType: "application/vnd.cncf.helm.chart.content.v1.tar+gzip"
+    operation: copy
