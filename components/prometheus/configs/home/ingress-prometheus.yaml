@@ -1,0 +1,32 @@
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: prometheus
+  namespace: prometheus
+  annotations:
+    tailscale.com/proxy-group: private-ingress
+    tailscale.com/tags: tag:k8s-private
+    tailscale.com/http-redirect: "true"
+    gethomepage.dev/enabled: "true"
+    gethomepage.dev/name: "Prometheus"
+    gethomepage.dev/group: "Infrastructure"
+    gethomepage.dev/icon: "prometheus.png"
+    gethomepage.dev/href: "https://prometheus.tail0c49c.ts.net"
+    gethomepage.dev/app: "prometheus"
+
+spec:
+  ingressClassName: tailscale
+  tls:
+    - hosts:
+        - prometheus
+  rules:
+    - http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: prometheus-server
+                port:
+                  number: 80
