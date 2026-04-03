@@ -11,8 +11,6 @@ spec:
     kind: OCIRepository
     name: grafana
   values:
-    deploymentStrategy:
-      type: Recreate
     admin:
       existingSecret: grafana-admin
       userKey: username
