@@ -10,8 +10,12 @@ spec:
   values:
     config:
       exporters:
-        otlphttp/victorialogs:
-          logs_endpoint: http://victoria-logs-single-server.victoria-logs.svc.cluster.local:9428/insert/opentelemetry/v1/logs
+        prometheusremotewrite:
+          endpoint: http://prometheus-server.prometheus.svc.cluster.local:80/api/v1/write
+          external_labels:
+            cluster: home
+        otlphttp/loki:
+          endpoint: http://loki-gateway.loki.svc.cluster.local:80/otlp
           tls:
             insecure: true
       service:
@@ -23,4 +27,12 @@ spec:
               - memory_limiter
               - batch
             exporters:
-              - otlphttp/victorialogs
+              - otlphttp/loki
+          metrics:
+            receivers:
+              - hostmetrics
+            processors:
+              - memory_limiter
+              - batch
+            exporters:
+              - prometheusremotewrite

@@ -28,8 +28,39 @@ spec:
       kubernetesAttributes:
         enabled: true
         extractAllPodLabels: true
+    resources:
+      limits:
+        memory: 512Mi
+      requests:
+        cpu: 100m
+        memory: 256Mi
+    extraVolumes:
+      - name: hostfs-proc
+        hostPath:
+          path: /proc
+      - name: hostfs-sys
+        hostPath:
+          path: /sys
+    extraVolumeMounts:
+      - name: hostfs-proc
+        mountPath: /hostfs/proc
+        readOnly: true
+      - name: hostfs-sys
+        mountPath: /hostfs/sys
+        readOnly: true
     config:
       receivers:
+        hostmetrics:
+          collection_interval: 30s
+          root_path: /hostfs
+          scrapers:
+            cpu: {}
+            memory: {}
+            load: {}
+            network: {}
+            # filesystem and disk omitted — Talos uses squashfs root +
+            # ephemeral overlays which produce noisy/misleading data.
+            # Add later with exclude_mount_points/exclude_fs_types filters.
         filelog:
           include:
             - /var/log/pods/*/*/*.log
