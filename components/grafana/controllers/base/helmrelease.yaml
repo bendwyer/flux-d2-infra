@@ -27,3 +27,4 @@ spec:
         enabled: true
       dashboards:
         enabled: true
+        searchNamespace: ALL
