@@ -19,4 +19,4 @@ spec:
       patch: |
         - op: add
           path: /metadata/annotations/grafana_folder
-          value: "K8up"
+          value: "k8up"
