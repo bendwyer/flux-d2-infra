@@ -5,3 +5,5 @@ kind: Kustomization
 resources:
   - ../base
   - ingress-alertmanager.yaml
+  - kustomization-alertmanager-mixin.yaml
+  - ocirepository-alertmanager-mixin.yaml
