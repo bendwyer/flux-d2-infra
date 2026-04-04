@@ -10,5 +10,6 @@ spec:
     kind: OCIRepository
     name: dashboards
   path: .
+  targetNamespace: grafana
   prune: true
   interval: 10m
