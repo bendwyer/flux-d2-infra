@@ -13,3 +13,10 @@ spec:
   targetNamespace: k8up
   prune: true
   interval: 10m
+  patches:
+    - target:
+        kind: ConfigMap
+      patch: |
+        - op: add
+          path: /metadata/annotations/grafana_folder
+          value: "K8up"
