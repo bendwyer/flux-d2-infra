@@ -105,6 +105,10 @@ spec:
                     regex: (.+):(.+)
                     target_label: __address__
                     replacement: $1:10249
+              - job_name: longhorn
+                static_configs:
+                  - targets:
+                      - longhorn-backend.longhorn.svc.cluster.local:9500
               - job_name: flux-system
                 kubernetes_sd_configs:
                   - role: pod
