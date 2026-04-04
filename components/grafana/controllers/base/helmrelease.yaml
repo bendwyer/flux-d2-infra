@@ -11,6 +11,9 @@ spec:
     kind: OCIRepository
     name: grafana
   values:
+    deploymentStrategy:
+      type: Recreate
+      rollingUpdate: null
     admin:
       existingSecret: grafana-admin
       userKey: username
