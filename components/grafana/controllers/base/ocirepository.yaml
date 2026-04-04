@@ -9,7 +9,7 @@ spec:
   interval: 1h
   url: oci://ghcr.io/grafana/helm-charts/grafana
   ref:
-    tag: "8.15.0"
+    tag: "10.5.15"
   layerSelector:
     mediaType: "application/vnd.cncf.helm.chart.content.v1.tar+gzip"
     operation: copy
