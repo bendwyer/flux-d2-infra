@@ -9,4 +9,4 @@ spec:
   interval: 1h
   url: oci://ghcr.io/bendwyer/k8s-monitoring/k8up
   ref:
-    tag: "1.0.0"
+    tag: "1.0.1"
