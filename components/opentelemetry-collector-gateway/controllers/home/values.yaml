@@ -67,6 +67,44 @@ spec:
                 static_configs:
                   - targets:
                       - loki.loki.svc.cluster.local:3100
+              - job_name: kube-controller-manager
+                scheme: https
+                tls_config:
+                  insecure_skip_verify: true
+                bearer_token_file: /var/run/secrets/kubernetes.io/serviceaccount/token
+                kubernetes_sd_configs:
+                  - role: node
+                relabel_configs:
+                  - source_labels: [__meta_kubernetes_node_label_node_kubernetes_io_role]
+                    regex: control-plane
+                    action: keep
+                  - source_labels: [__address__]
+                    regex: (.+):(.+)
+                    target_label: __address__
+                    replacement: $1:10257
+              - job_name: kube-scheduler
+                scheme: https
+                tls_config:
+                  insecure_skip_verify: true
+                bearer_token_file: /var/run/secrets/kubernetes.io/serviceaccount/token
+                kubernetes_sd_configs:
+                  - role: node
+                relabel_configs:
+                  - source_labels: [__meta_kubernetes_node_label_node_kubernetes_io_role]
+                    regex: control-plane
+                    action: keep
+                  - source_labels: [__address__]
+                    regex: (.+):(.+)
+                    target_label: __address__
+                    replacement: $1:10259
+              - job_name: kube-proxy
+                kubernetes_sd_configs:
+                  - role: node
+                relabel_configs:
+                  - source_labels: [__address__]
+                    regex: (.+):(.+)
+                    target_label: __address__
+                    replacement: $1:10249
       exporters:
         prometheusremotewrite:
           endpoint: http://prometheus-prometheus.prometheus.svc.cluster.local:9090/api/v1/write
