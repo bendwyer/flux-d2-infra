@@ -32,6 +32,17 @@ spec:
                 bearer_token_file: /var/run/secrets/kubernetes.io/serviceaccount/token
                 kubernetes_sd_configs:
                   - role: node
+              - job_name: cadvisor
+                metrics_path: /metrics/cadvisor
+                scheme: https
+                tls_config:
+                  insecure_skip_verify: true
+                bearer_token_file: /var/run/secrets/kubernetes.io/serviceaccount/token
+                kubernetes_sd_configs:
+                  - role: node
+                relabel_configs:
+                  - target_label: job
+                    replacement: kubelet
               - job_name: apiserver
                 scheme: https
                 tls_config:
