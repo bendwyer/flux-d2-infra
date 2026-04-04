@@ -8,8 +8,9 @@ metadata:
 spec:
   interval: 1h
   values:
-    server:
-      alertmanagers:
-        - static_configs:
-            - targets:
-                - alertmanager.alertmanager.svc.cluster.local:9093
+    prometheus:
+      prometheusSpec:
+        additionalAlertManagerConfigs:
+          - static_configs:
+              - targets:
+                  - alertmanager.alertmanager.svc.cluster.local:9093

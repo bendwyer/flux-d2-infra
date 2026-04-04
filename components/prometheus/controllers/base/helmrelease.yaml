@@ -11,19 +11,73 @@ spec:
     kind: OCIRepository
     name: prometheus
   values:
-    server:
-      retention: "30d"
-      persistentVolume:
-        enabled: true
-        size: 50Gi
-      extraFlags:
-        - "web.enable-remote-write-receiver"
-    # Disable bundled sub-charts — deployed as standalone components
+    fullnameOverride: "prometheus"
+
+    crds:
+      enabled: true
+
+    # --- Disable all bundled components — deployed as standalone ---
+    grafana:
+      enabled: false
     alertmanager:
       enabled: false
-    kube-state-metrics:
+    nodeExporter:
       enabled: false
-    prometheus-node-exporter:
+    kubeStateMetrics:
       enabled: false
-    prometheus-pushgateway:
+    defaultRules:
+      create: false
+
+    # --- Disable all scrape targets — OTel Gateway handles collection ---
+    kubelet:
       enabled: false
+    kubeApiServer:
+      enabled: false
+    kubeControllerManager:
+      enabled: false
+    kubeScheduler:
+      enabled: false
+    kubeProxy:
+      enabled: false
+    kubeEtcd:
+      enabled: false
+    coreDns:
+      enabled: false
+
+    # --- Prometheus Operator ---
+    prometheusOperator:
+      enabled: true
+
+    # --- Prometheus Instance ---
+    prometheus:
+      enabled: true
+      prometheusSpec:
+        retention: "30d"
+        enableRemoteWriteReceiver: true
+
+        storageSpec:
+          volumeClaimTemplate:
+            spec:
+              accessModes: ["ReadWriteOnce"]
+              resources:
+                requests:
+                  storage: 50Gi
+
+        # Watch PrometheusRule CRDs across all namespaces
+        ruleSelectorNilUsesHelmValues: false
+        ruleSelector: {}
+        ruleNamespaceSelector: {}
+
+        # Disable scraping — OTel handles collection
+        serviceMonitorSelectorNilUsesHelmValues: false
+        serviceMonitorSelector:
+          matchLabels:
+            __disabled__: "true"
+        podMonitorSelectorNilUsesHelmValues: false
+        podMonitorSelector:
+          matchLabels:
+            __disabled__: "true"
+        scrapeConfigSelectorNilUsesHelmValues: false
+        scrapeConfigSelector:
+          matchLabels:
+            __disabled__: "true"
