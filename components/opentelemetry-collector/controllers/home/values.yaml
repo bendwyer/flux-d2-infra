@@ -11,7 +11,7 @@ spec:
     config:
       exporters:
         prometheusremotewrite:
-          endpoint: http://prometheus-server.prometheus.svc.cluster.local:80/api/v1/write
+          endpoint: http://prometheus-prometheus.prometheus.svc.cluster.local:9090/api/v1/write
           external_labels:
             cluster: home
         otlphttp/loki:

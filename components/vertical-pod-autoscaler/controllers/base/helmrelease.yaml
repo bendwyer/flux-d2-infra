@@ -22,7 +22,7 @@ spec:
       enabled: false
     recommender:
       extraArgs:
-        prometheus-address: http://prometheus-server.prometheus.svc.cluster.local:80
+        prometheus-address: http://prometheus-prometheus.prometheus.svc.cluster.local:9090
         storage: prometheus
         history-length: "8d"
         history-resolution: "1h"
