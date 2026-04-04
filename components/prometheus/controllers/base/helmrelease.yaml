@@ -27,7 +27,3 @@ spec:
       enabled: false
     prometheus-pushgateway:
       enabled: false
-    # Disable built-in scraping — OTel Gateway handles collection
-    serverFiles:
-      prometheus.yml:
-        scrape_configs: []
