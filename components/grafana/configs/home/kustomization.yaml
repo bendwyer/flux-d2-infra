@@ -5,5 +5,5 @@ kind: Kustomization
 resources:
   - ../base
   - ingress-grafana.yaml
-  - ocirepository-dashboards.yaml
-  - kustomization-dashboards.yaml
+  - ocirepository-kubernetes-mixin.yaml
+  - kustomization-kubernetes-mixin.yaml
