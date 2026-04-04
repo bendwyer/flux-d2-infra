@@ -5,3 +5,5 @@ kind: Kustomization
 resources:
   - ../base
   - ingress-prometheus.yaml
+  - kustomization-prometheus-mixin.yaml
+  - ocirepository-prometheus-mixin.yaml
