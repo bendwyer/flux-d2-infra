@@ -105,6 +105,13 @@ spec:
                     regex: (.+):(.+)
                     target_label: __address__
                     replacement: $1:10249
+      processors:
+        transform:
+          metric_statements:
+            - context: scope
+              statements:
+                - set(name, "")
+                - set(version, "")
       exporters:
         prometheusremotewrite:
           endpoint: http://prometheus-prometheus.prometheus.svc.cluster.local:9090/api/v1/write
@@ -122,6 +129,7 @@ spec:
               - otlp
             processors:
               - memory_limiter
+              - transform
               - batch
             exporters:
               - prometheusremotewrite
