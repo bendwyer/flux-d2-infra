@@ -9,7 +9,7 @@ spec:
   interval: 1h
   url: oci://ghcr.io/prometheus-community/charts/prometheus
   ref:
-    tag: "27.52.0"
+    tag: "28.15.0"
   layerSelector:
     mediaType: "application/vnd.cncf.helm.chart.content.v1.tar+gzip"
     operation: copy
