@@ -72,12 +72,12 @@ spec:
         serviceMonitorSelectorNilUsesHelmValues: false
         serviceMonitorSelector:
           matchLabels:
-            __disabled__: "true"
+            prometheus_disabled: "true"
         podMonitorSelectorNilUsesHelmValues: false
         podMonitorSelector:
           matchLabels:
-            __disabled__: "true"
+            prometheus_disabled: "true"
         scrapeConfigSelectorNilUsesHelmValues: false
         scrapeConfigSelector:
           matchLabels:
-            __disabled__: "true"
+            prometheus_disabled: "true"
