@@ -51,6 +51,22 @@ spec:
                 static_configs:
                   - targets:
                       - kubernetes.default.svc.cluster.local:443
+              - job_name: prometheus
+                static_configs:
+                  - targets:
+                      - prometheus-prometheus.prometheus.svc.cluster.local:9090
+              - job_name: grafana
+                static_configs:
+                  - targets:
+                      - grafana.grafana.svc.cluster.local:80
+              - job_name: alertmanager
+                static_configs:
+                  - targets:
+                      - alertmanager.alertmanager.svc.cluster.local:9093
+              - job_name: loki
+                static_configs:
+                  - targets:
+                      - loki.loki.svc.cluster.local:3100
       exporters:
         prometheusremotewrite:
           endpoint: http://prometheus-prometheus.prometheus.svc.cluster.local:9090/api/v1/write
