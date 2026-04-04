@@ -14,7 +14,7 @@ spec:
         datasources:
           - name: Prometheus
             type: prometheus
-            url: http://prometheus-server.prometheus.svc.cluster.local:80
+            url: http://prometheus-prometheus.prometheus.svc.cluster.local:9090
             isDefault: true
             editable: false
           - name: Loki
