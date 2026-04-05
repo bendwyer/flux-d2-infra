@@ -128,6 +128,9 @@ spec:
                     action: keep
                   - source_labels: [__meta_kubernetes_pod_name]
                     target_label: instance
+                metric_relabel_configs:
+                  - source_labels: [namespace]
+                    target_label: exported_namespace
       processors:
         transform:
           metric_statements:
