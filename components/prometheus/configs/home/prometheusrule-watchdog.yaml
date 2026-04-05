@@ -1,0 +1,27 @@
+---
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: watchdog
+  namespace: prometheus
+  labels:
+    app.kubernetes.io/part-of: k8s-monitoring
+spec:
+  groups:
+    - name: general.rules
+      rules:
+        - alert: Watchdog
+          annotations:
+            description: >-
+              This is an alert meant to ensure that the entire alerting
+              pipeline is functional. This alert is always firing, therefore
+              it should always be firing in Alertmanager and always fire
+              against a receiver. There are integrations with tools like
+              DeadMansSnitch that use this alert to determine if Alertmanager
+              and the upstream notification pipeline are functional.
+            summary: >-
+              An alert that should always be firing to certify that
+              Alertmanager is working properly.
+          expr: vector(1)
+          labels:
+            severity: none
