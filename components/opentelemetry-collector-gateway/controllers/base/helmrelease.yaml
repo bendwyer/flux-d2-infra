@@ -28,10 +28,10 @@ spec:
         extractAllPodLabels: true
     resources:
       limits:
-        memory: 1Gi
+        memory: 1536Mi
       requests:
         cpu: 100m
-        memory: 1Gi
+        memory: 1536Mi
     clusterRole:
       create: true
       rules:
