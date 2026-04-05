@@ -24,7 +24,7 @@ spec:
   #     retries: 3
   values:
     defaultSettings:
-      allowCollectingLonghornUsageMetrics: false
+      allowCollectingLonghornUsageMetrics: true
       defaultDataPath: /var/mnt/longhorn
       deletingConfirmationFlag: true
       storageReservedPercentageForDefaultDisk: 0
