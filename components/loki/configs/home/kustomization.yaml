@@ -5,5 +5,7 @@ kind: Kustomization
 resources:
   - ../base
   - ingress-loki.yaml
+  - kustomization-loki-dashboards.yaml
   - kustomization-loki-mixin.yaml
+  - ocirepository-loki-dashboards.yaml
   - ocirepository-loki-mixin.yaml
