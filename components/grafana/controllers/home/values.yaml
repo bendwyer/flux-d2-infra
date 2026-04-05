@@ -17,6 +17,8 @@ spec:
             url: http://prometheus-prometheus.prometheus.svc.cluster.local:9090
             isDefault: true
             editable: false
+            jsonData:
+              timeInterval: "1m"
           - name: Loki
             type: loki
             url: http://loki-gateway.loki.svc.cluster.local:80
