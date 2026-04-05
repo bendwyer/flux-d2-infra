@@ -75,8 +75,8 @@ spec:
                 kubernetes_sd_configs:
                   - role: node
                 relabel_configs:
-                  - source_labels: [__meta_kubernetes_node_label_node_kubernetes_io_role]
-                    regex: control-plane
+                  - source_labels: [__meta_kubernetes_node_labelpresent_node_role_kubernetes_io_control_plane]
+                    regex: "true"
                     action: keep
                   - source_labels: [__address__]
                     regex: (.+):(.+)
@@ -90,8 +90,8 @@ spec:
                 kubernetes_sd_configs:
                   - role: node
                 relabel_configs:
-                  - source_labels: [__meta_kubernetes_node_label_node_kubernetes_io_role]
-                    regex: control-plane
+                  - source_labels: [__meta_kubernetes_node_labelpresent_node_role_kubernetes_io_control_plane]
+                    regex: "true"
                     action: keep
                   - source_labels: [__address__]
                     regex: (.+):(.+)
