@@ -30,37 +30,12 @@ spec:
         extractAllPodLabels: true
     resources:
       limits:
-        memory: 512Mi
-      requests:
-        cpu: 100m
         memory: 256Mi
-    extraVolumes:
-      - name: hostfs-proc
-        hostPath:
-          path: /proc
-      - name: hostfs-sys
-        hostPath:
-          path: /sys
-    extraVolumeMounts:
-      - name: hostfs-proc
-        mountPath: /hostfs/proc
-        readOnly: true
-      - name: hostfs-sys
-        mountPath: /hostfs/sys
-        readOnly: true
+      requests:
+        cpu: 50m
+        memory: 128Mi
     config:
       receivers:
-        hostmetrics:
-          collection_interval: 30s
-          root_path: /hostfs
-          scrapers:
-            cpu: {}
-            memory: {}
-            load: {}
-            network: {}
-            # filesystem and disk omitted — Talos uses squashfs root +
-            # ephemeral overlays which produce noisy/misleading data.
-            # Add later with exclude_mount_points/exclude_fs_types filters.
         filelog:
           include:
             - /var/log/pods/*/*/*.log
@@ -76,8 +51,8 @@ spec:
           start_at: end
       processors:
         batch:
-          send_batch_size: 10000
-          timeout: 5s
+          send_batch_size: 1024
+          timeout: 2s
         memory_limiter:
           check_interval: 5s
           limit_percentage: 80
