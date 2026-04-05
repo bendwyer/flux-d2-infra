@@ -1,0 +1,22 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/fluxcd-community/flux2-schemas/refs/heads/main/kustomization-kustomize-v1.json
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: loki-dashboards
+  namespace: loki
+spec:
+  sourceRef:
+    kind: OCIRepository
+    name: loki-dashboards
+  path: .
+  targetNamespace: loki
+  prune: true
+  interval: 10m
+  patches:
+    - target:
+        kind: ConfigMap
+      patch: |
+        - op: add
+          path: /metadata/annotations/grafana_folder
+          value: "Loki"
