@@ -110,9 +110,18 @@ spec:
                   - targets:
                       - k8up-metrics.k8up.svc.cluster.local:8080
               - job_name: longhorn
-                static_configs:
-                  - targets:
-                      - longhorn-backend.longhorn.svc.cluster.local:9500
+                kubernetes_sd_configs:
+                  - role: pod
+                    namespaces:
+                      names:
+                        - longhorn
+                relabel_configs:
+                  - source_labels: [__meta_kubernetes_pod_label_app]
+                    regex: longhorn-manager
+                    action: keep
+                  - source_labels: [__meta_kubernetes_pod_ip]
+                    target_label: __address__
+                    replacement: $1:9500
               - job_name: flux-system
                 kubernetes_sd_configs:
                   - role: pod
