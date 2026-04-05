@@ -159,7 +159,7 @@ spec:
           endpoint: http://prometheus-prometheus.prometheus.svc.cluster.local:9090/api/v1/write
           external_labels:
             cluster: home
-        otlphttp/loki:
+        otlp_http/loki:
           endpoint: http://loki-gateway.loki.svc.cluster.local:80/otlp
           tls:
             insecure: true
@@ -182,4 +182,4 @@ spec:
               - memory_limiter
               - batch
             exporters:
-              - otlphttp/loki
+              - otlp_http/loki
