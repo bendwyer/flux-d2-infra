@@ -3,7 +3,7 @@
 apiVersion: source.toolkit.fluxcd.io/v1
 kind: OCIRepository
 metadata:
-  name: otel-collector-dashboards
+  name: opentelemetry-collector-dashboards
   namespace: opentelemetry-collector-gateway
 spec:
   interval: 1h

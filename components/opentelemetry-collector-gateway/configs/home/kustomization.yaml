@@ -4,5 +4,5 @@ apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 resources:
   - ../base
-  - kustomization-otel-collector-dashboards.yaml
-  - ocirepository-otel-collector-dashboards.yaml
+  - kustomization-opentelemetry-collector-dashboards.yaml
+  - ocirepository-opentelemetry-collector-dashboards.yaml
