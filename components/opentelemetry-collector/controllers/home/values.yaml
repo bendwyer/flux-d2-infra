@@ -10,12 +10,8 @@ spec:
   values:
     config:
       exporters:
-        prometheusremotewrite:
-          endpoint: http://prometheus-prometheus.prometheus.svc.cluster.local:9090/api/v1/write
-          external_labels:
-            cluster: home
-        otlphttp/loki:
-          endpoint: http://loki-gateway.loki.svc.cluster.local:80/otlp
+        otlp:
+          endpoint: opentelemetry-collector-gateway.opentelemetry-collector-gateway.svc.cluster.local:4317
           tls:
             insecure: true
       service:
@@ -27,12 +23,4 @@ spec:
               - memory_limiter
               - batch
             exporters:
-              - otlphttp/loki
-          metrics:
-            receivers:
-              - hostmetrics
-            processors:
-              - memory_limiter
-              - batch
-            exporters:
-              - prometheusremotewrite
+              - otlp
