@@ -114,10 +114,6 @@ spec:
                 static_configs:
                   - targets:
                       - prometheus-pushgateway.prometheus-pushgateway.svc.cluster.local:9091
-              - job_name: otel-gateway
-                static_configs:
-                  - targets:
-                      - opentelemetry-collector-gateway.opentelemetry-collector-gateway.svc.cluster.local:8888
               - job_name: longhorn
                 kubernetes_sd_configs:
                   - role: pod
@@ -163,14 +159,6 @@ spec:
           tls:
             insecure: true
       service:
-        telemetry:
-          metrics:
-            readers:
-              - pull:
-                  exporter:
-                    prometheus:
-                      host: ${env:MY_POD_IP}
-                      port: 8888
         pipelines:
           metrics:
             receivers:
