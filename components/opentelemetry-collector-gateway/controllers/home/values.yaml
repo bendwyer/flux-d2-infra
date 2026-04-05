@@ -128,6 +128,8 @@ spec:
                     action: keep
                   - source_labels: [__meta_kubernetes_pod_name]
                     target_label: instance
+                  - source_labels: [__meta_kubernetes_pod_name]
+                    target_label: pod
                   - source_labels: [__meta_kubernetes_namespace]
                     target_label: namespace
                 metric_relabel_configs:
