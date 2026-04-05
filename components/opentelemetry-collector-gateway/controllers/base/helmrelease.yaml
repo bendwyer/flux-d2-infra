@@ -32,6 +32,12 @@ spec:
       requests:
         cpu: 100m
         memory: 1Gi
+    ports:
+      metrics:
+        enabled: true
+        containerPort: 8888
+        servicePort: 8888
+        protocol: TCP
     clusterRole:
       create: true
       rules:
