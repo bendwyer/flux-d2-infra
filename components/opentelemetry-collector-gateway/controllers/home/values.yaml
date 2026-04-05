@@ -109,6 +109,11 @@ spec:
                 static_configs:
                   - targets:
                       - k8up-metrics.k8up.svc.cluster.local:8080
+              - job_name: pushgateway
+                honor_labels: true
+                static_configs:
+                  - targets:
+                      - prometheus-pushgateway.prometheus-pushgateway.svc.cluster.local:9091
               - job_name: longhorn
                 kubernetes_sd_configs:
                   - role: pod
