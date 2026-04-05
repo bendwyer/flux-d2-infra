@@ -35,6 +35,13 @@ spec:
         cpu: 50m
         memory: 128Mi
     config:
+      # Disable chart-default exporters and pipelines
+      exporters:
+        debug: null
+      service:
+        pipelines:
+          metrics: null
+          traces: null
       receivers:
         filelog:
           include:

@@ -24,6 +24,3 @@ spec:
               - batch
             exporters:
               - otlp
-          # Disable chart-default pipelines that route to the debug exporter
-          metrics: null
-          traces: null
