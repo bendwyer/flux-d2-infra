@@ -10,7 +10,7 @@ spec:
   values:
     config:
       exporters:
-        otlp:
+        otlp_grpc:
           endpoint: opentelemetry-collector-gateway.opentelemetry-collector-gateway.svc.cluster.local:4317
           tls:
             insecure: true
@@ -23,4 +23,4 @@ spec:
               - memory_limiter
               - batch
             exporters:
-              - otlp
+              - otlp_grpc
