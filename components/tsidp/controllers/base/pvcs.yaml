@@ -4,6 +4,8 @@ kind: PersistentVolumeClaim
 metadata:
   name: tsidp-data
   namespace: tsidp
+  labels:
+    k8up.io/backup-schedule: tsidp-data
 spec:
   accessModes:
     - ReadWriteOnce
