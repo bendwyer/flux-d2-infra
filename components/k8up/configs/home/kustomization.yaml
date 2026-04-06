@@ -6,3 +6,4 @@ resources:
   - ../base
   - kustomization-k8up-dashboards.yaml
   - ocirepository-k8up-dashboards.yaml
+  - prometheusrule-k8up.yaml
