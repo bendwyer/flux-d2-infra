@@ -1,0 +1,17 @@
+---
+# Injects RESTIC_EXCLUDE env var into k8up backup pods.
+# Excludes the ext4 lost+found directory which is owned by root:root with
+# restrictive permissions and cannot be read by the backup pod.
+apiVersion: k8up.io/v1
+kind: PodConfig
+metadata:
+  name: backup-exclude-lost-found
+  namespace: tsidp
+spec:
+  template:
+    spec:
+      containers:
+        - name: k8up
+          env:
+            - name: RESTIC_EXCLUDE
+              value: lost+found

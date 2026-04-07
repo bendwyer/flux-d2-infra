@@ -1,4 +1,5 @@
 ---
+# yaml-language-server: $https://raw.githubusercontent.com/CustomResourceDefinition/catalog/refs/heads/main/schema/k8up.io/schedule_v1.json
 apiVersion: k8up.io/v1
 kind: Schedule
 metadata:
@@ -11,19 +12,24 @@ spec:
     fsGroup: 1000
   backup:
     schedule: "30 1 * * *"
+    clusterName: tsidp-data
     failedJobsHistoryLimit: 3
     successfulJobsHistoryLimit: 3
+    podConfigRef:
+      name: backup-exclude-lost-found
     labelSelectors:
       - matchLabels:
           k8up.io/backup-schedule: tsidp-data
   prune:
     schedule: "0 2 * * 6"
+    clusterName: tsidp-data
     retention:
       keepDaily: 7
       keepWeekly: 4
       keepMonthly: 3
   check:
     schedule: "30 2 * * 6"
+    clusterName: tsidp-data
   backend:
     repoPasswordSecretRef:
       name: k8up-backup-credentials

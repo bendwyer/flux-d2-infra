@@ -5,4 +5,5 @@ kind: Kustomization
 resources:
   - ../base
   - onepassworditem-k8up.yaml
+  - podconfig-k8up.yaml
   - schedule-tsidp.yaml
