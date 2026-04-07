@@ -22,7 +22,6 @@ spec:
           k8up.io/backup-schedule: tsidp-data
   prune:
     schedule: "0 2 * * 6"
-    clusterName: tsidp-data
     retention:
       keepDaily: 7
       keepWeekly: 4
