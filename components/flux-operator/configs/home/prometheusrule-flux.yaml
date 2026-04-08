@@ -54,7 +54,7 @@ spec:
               {{ $labels.kind }} {{ $labels.exported_namespace }}/{{ $labels.name }}
               has been suspended for over 24 hours. If this is intentional, silence
               this alert. Otherwise, resume reconciliation with
-              `flux resume {{ $labels.kind | lower }} -n {{ $labels.exported_namespace }} {{ $labels.name }}`.
+              `flux resume {{ $labels.kind | toLower }} -n {{ $labels.exported_namespace }} {{ $labels.name }}`.
 
         - alert: FluxOperatorAbsent
           expr: |
