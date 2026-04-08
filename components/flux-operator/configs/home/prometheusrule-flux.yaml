@@ -1,0 +1,70 @@
+---
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: flux
+  namespace: prometheus
+  labels:
+    app.kubernetes.io/part-of: k8s-monitoring
+spec:
+  groups:
+    - name: flux.rules
+      rules:
+        - alert: FluxResourceFailing
+          expr: |
+            flux_resource_info{ready="False",reason!~"DependencyNotReady"} == 1
+          for: 15m
+          labels:
+            severity: warning
+          annotations:
+            summary: >-
+              Flux {{ $labels.kind }} {{ $labels.exported_namespace }}/{{ $labels.name }} has been failing for 15m
+            description: >-
+              {{ $labels.kind }} {{ $labels.exported_namespace }}/{{ $labels.name }}
+              has been Ready=False for over 15 minutes with reason "{{ $labels.reason }}".
+              Last attempted revision: {{ $labels.revision }}.
+              Investigate before it escalates.
+
+        - alert: FluxResourceStalled
+          expr: |
+            flux_resource_info{ready="False",reason!~"DependencyNotReady"} == 1
+          for: 30m
+          labels:
+            severity: critical
+          annotations:
+            summary: >-
+              Flux {{ $labels.kind }} {{ $labels.exported_namespace }}/{{ $labels.name }} appears stalled (30m)
+            description: >-
+              {{ $labels.kind }} {{ $labels.exported_namespace }}/{{ $labels.name }}
+              has been Ready=False for over 30 minutes with reason "{{ $labels.reason }}".
+              The Flux controller has likely exhausted automatic retries or is unable
+              to make progress. A manual reconcile or intervention is probably required.
+              Last attempted revision: {{ $labels.revision }}.
+
+        - alert: FluxResourceSuspended
+          expr: |
+            flux_resource_info{suspended="True"} == 1
+          for: 24h
+          labels:
+            severity: info
+          annotations:
+            summary: >-
+              Flux {{ $labels.kind }} {{ $labels.exported_namespace }}/{{ $labels.name }} has been suspended for 24h
+            description: >-
+              {{ $labels.kind }} {{ $labels.exported_namespace }}/{{ $labels.name }}
+              has been suspended for over 24 hours. If this is intentional, silence
+              this alert. Otherwise, resume reconciliation with
+              `flux resume {{ $labels.kind | lower }} -n {{ $labels.exported_namespace }} {{ $labels.name }}`.
+
+        - alert: FluxOperatorAbsent
+          expr: |
+            absent(flux_operator_info) == 1
+          for: 5m
+          labels:
+            severity: critical
+          annotations:
+            summary: Flux operator metrics have disappeared
+            description: >-
+              The flux-operator metrics endpoint has not been scraped successfully
+              for 5 minutes. Other Flux alerts cannot be trusted while this is firing
+              because they depend on metrics emitted by the operator.
