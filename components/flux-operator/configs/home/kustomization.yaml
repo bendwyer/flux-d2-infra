@@ -6,3 +6,4 @@ resources:
   - ../base
   - kustomization-flux-dashboards.yaml
   - ocirepository-flux-dashboards.yaml
+  - prometheusrule-flux.yaml
