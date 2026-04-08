@@ -147,6 +147,10 @@ spec:
                     action: keep
                   - source_labels: [__meta_kubernetes_pod_name]
                     target_label: instance
+                  - source_labels: [__meta_kubernetes_pod_name]
+                    target_label: pod
+                  - source_labels: [__meta_kubernetes_namespace]
+                    target_label: namespace
               - job_name: flux-operator
                 kubernetes_sd_configs:
                   - role: pod
@@ -162,6 +166,10 @@ spec:
                     action: keep
                   - source_labels: [__meta_kubernetes_pod_name]
                     target_label: instance
+                  - source_labels: [__meta_kubernetes_pod_name]
+                    target_label: pod
+                  - source_labels: [__meta_kubernetes_namespace]
+                    target_label: namespace
       processors:
         transform:
           metric_statements:
