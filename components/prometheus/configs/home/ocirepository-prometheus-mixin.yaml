@@ -9,4 +9,4 @@ spec:
   interval: 1h
   url: oci://ghcr.io/bendwyer/k8s-monitoring/prometheus-mixin
   ref:
-    tag: "3.11.0"
+    tag: "3.11.1"
