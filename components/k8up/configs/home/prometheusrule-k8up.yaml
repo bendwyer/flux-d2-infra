@@ -22,6 +22,37 @@ spec:
               encountered {{ $value }} error(s). This may indicate permission issues
               or files that could not be read during backup.
             runbook_url: https://k8up.io/k8up/explanations/runbooks/K8upResticErrors.html
+        - alert: K8upBackupRetrying
+          expr: |
+            kube_job_status_failed{job_name=~"(backup|prune|check|archive|restore)-.*"} > 0
+            and on(namespace, job_name)
+            kube_job_status_active{job_name=~"(backup|prune|check|archive|restore)-.*"} > 0
+          for: 30s
+          labels:
+            severity: warning
+          annotations:
+            summary: "k8up job {{ $labels.job_name }} is retrying"
+            description: >-
+              k8up Job {{ $labels.namespace }}/{{ $labels.job_name }} has had
+              {{ $value }} pod failure(s) and is still active (within backoffLimit).
+              Likely a transient backend hiccup; will resolve on retry.
+        - alert: K8upBackupFailed
+          expr: |
+            kube_job_status_failed{job_name=~"(backup|prune|check|archive|restore)-.*"} > 0
+            and on(namespace, job_name)
+            kube_job_status_active{job_name=~"(backup|prune|check|archive|restore)-.*"} == 0
+            and on(namespace, job_name)
+            kube_job_status_succeeded{job_name=~"(backup|prune|check|archive|restore)-.*"} == 0
+          for: 1m
+          labels:
+            severity: critical
+          annotations:
+            summary: "k8up job {{ $labels.job_name }} failed (backoffLimit exceeded)"
+            description: >-
+              k8up Job {{ $labels.namespace }}/{{ $labels.job_name }} exhausted its
+              backoffLimit with {{ $value }} pod failure(s) and no active or
+              succeeded pods. Investigate the pod logs in Loki for the underlying
+              restic error.
         - alert: K8upBackupNotRunning
           expr: sum(rate(k8up_jobs_total[25h])) == 0 and on(namespace) k8up_schedules_gauge > 0
           for: 1m
