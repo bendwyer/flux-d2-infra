@@ -38,30 +38,33 @@ spec:
               Likely a transient backend hiccup; will resolve on retry.
         - alert: K8upBackupFailed
           expr: |
-            kube_job_status_failed{job_name=~"(backup|prune|check|archive|restore)-.*"} > 0
-            and on(namespace, job_name)
-            kube_job_status_active{job_name=~"(backup|prune|check|archive|restore)-.*"} == 0
-            and on(namespace, job_name)
-            kube_job_status_succeeded{job_name=~"(backup|prune|check|archive|restore)-.*"} == 0
+            k8up_jobs_failed_counter_total{jobType="backup"} > 0
+            unless
+            k8up_jobs_failed_counter_total{jobType="backup"}
+              == k8up_jobs_failed_counter_total{jobType="backup"} offset 30m
           for: 1m
           labels:
             severity: critical
           annotations:
-            summary: "k8up job {{ $labels.job_name }} failed (backoffLimit exceeded)"
+            summary: "k8up backup failed in namespace {{ $labels.namespace }}"
             description: >-
-              k8up Job {{ $labels.namespace }}/{{ $labels.job_name }} exhausted its
-              backoffLimit with {{ $value }} pod failure(s) and no active or
-              succeeded pods. Investigate the pod logs in Loki for the underlying
-              restic error.
+              A k8up backup in namespace {{ $labels.namespace }} reached its
+              backoffLimit and is in Failed state (failure counter = {{ $value }}).
+              Investigate the failed Backup resources and the corresponding pod
+              logs in Loki for the underlying restic error. This alert auto-resolves
+              30 minutes after the counter stops growing.
         - alert: K8upBackupNotRunning
-          expr: sum(rate(k8up_jobs_total[25h])) == 0 and on(namespace) k8up_schedules_gauge > 0
+          expr: |
+            sum by (namespace) (increase(k8up_jobs_successful_counter_total{jobType="backup"}[25h])) == 0
+            and on(namespace) k8up_schedules_gauge > 0
           for: 1m
           labels:
             severity: critical
           annotations:
-            summary: "No k8up backup jobs ran in {{ $labels.namespace }} in the last 24h"
+            summary: "No successful k8up backup in {{ $labels.namespace }} in the last 25h"
             description: >-
               Namespace {{ $labels.namespace }} has active k8up schedules but no
-              backup jobs have run in the last 24 hours. The k8up operator may be
-              stuck or the schedule may be misconfigured.
+              backup jobs have completed successfully in the last 25 hours. The
+              k8up operator may be stuck, the schedule may be misconfigured, or
+              every recent attempt may have failed.
             runbook_url: https://k8up.io/k8up/explanations/runbooks/K8upBackupNotRunning.html
