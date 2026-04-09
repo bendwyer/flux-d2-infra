@@ -22,7 +22,5 @@ spec:
   subnetRouter:
     advertiseRoutes:
       - "${SUBNET_1_CIDR}"
-      - "${SUBNET_2_CIDR}"
   tags:
     - "tag:${SUBNET_1_TAG}"
-    - "tag:${SUBNET_2_TAG}"
