@@ -15,7 +15,6 @@ spec:
     clusterName: tsidp-data
     failedJobsHistoryLimit: 3
     successfulJobsHistoryLimit: 3
-    backoffLimit: 10
     podConfigRef:
       name: backup-exclude-lost-found
     labelSelectors:
