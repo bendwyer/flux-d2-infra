@@ -1,15 +1,15 @@
----
-# yaml-language-server: $schema=https://raw.githubusercontent.com/CustomResourceDefinition/catalog/refs/heads/main/schema/tailscale.com/connector_v1alpha1.json
-apiVersion: tailscale.com/v1alpha1
-kind: Connector
-metadata:
-  name: k8s-exit-node-home
-spec:
-  replicas: 1
-  hostnamePrefix: k8s-exit-node-home
-  exitNode: true
-  tags:
-    - "tag:${EXIT_NODE_TAG}"
+# ---
+# # yaml-language-server: $schema=https://raw.githubusercontent.com/CustomResourceDefinition/catalog/refs/heads/main/schema/tailscale.com/connector_v1alpha1.json
+# apiVersion: tailscale.com/v1alpha1
+# kind: Connector
+# metadata:
+#   name: k8s-exit-node-home
+# spec:
+#   replicas: 1
+#   hostnamePrefix: k8s-exit-node-home
+#   exitNode: true
+#   tags:
+#     - "tag:${EXIT_NODE_TAG}"
 ---
 # yaml-language-server: $schema=https://raw.githubusercontent.com/CustomResourceDefinition/catalog/refs/heads/main/schema/tailscale.com/connector_v1alpha1.json
 apiVersion: tailscale.com/v1alpha1
