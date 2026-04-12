@@ -12,3 +12,10 @@ spec:
   values:
     transport: http
     readonly: true
+    resources:
+      requests:
+        cpu: 50m
+        memory: 128Mi
+      limits:
+        cpu: null
+        memory: 128Mi
