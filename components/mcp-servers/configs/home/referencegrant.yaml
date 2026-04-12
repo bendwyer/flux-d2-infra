@@ -1,0 +1,14 @@
+---
+apiVersion: gateway.networking.k8s.io/v1beta1
+kind: ReferenceGrant
+metadata:
+  name: allow-agentgateway
+  namespace: mcp-servers
+spec:
+  from:
+    - group: agentgateway.dev
+      kind: AgentgatewayBackend
+      namespace: agentgateway
+  to:
+    - group: ""
+      kind: Service
