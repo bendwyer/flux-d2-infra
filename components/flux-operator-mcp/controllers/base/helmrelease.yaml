@@ -12,6 +12,10 @@ spec:
   values:
     transport: http
     readonly: false
+    networkPolicy:
+      ingress:
+        namespaces:
+          - tailscale
     resources:
       requests:
         cpu: 50m
