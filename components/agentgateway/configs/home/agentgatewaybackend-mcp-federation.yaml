@@ -31,6 +31,10 @@ spec:
           host: context7-mcp.agentgateway.svc.cluster.local
           port: 3000
           protocol: StreamableHTTP
+          policies:
+            auth:
+              secretRef:
+                name: context7-mcp
       - name: flux-operator
         static:
           host: flux-operator-mcp.flux-operator-mcp.svc.cluster.local

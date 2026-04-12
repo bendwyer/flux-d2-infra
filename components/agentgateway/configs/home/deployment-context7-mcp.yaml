@@ -24,12 +24,6 @@ spec:
             - http
             - --port
             - "3000"
-          env:
-            - name: CONTEXT7_API_KEY
-              valueFrom:
-                secretKeyRef:
-                  name: context7-mcp
-                  key: credential
           ports:
             - containerPort: 3000
           resources:
