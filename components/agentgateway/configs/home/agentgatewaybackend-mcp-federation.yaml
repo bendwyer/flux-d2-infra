@@ -1,0 +1,38 @@
+---
+apiVersion: agentgateway.dev/v1alpha1
+kind: AgentgatewayBackend
+metadata:
+  name: mcp-federation
+  namespace: agentgateway
+spec:
+  mcp:
+    targets:
+      - name: github
+        static:
+          host: github-mcp.agentgateway.svc.cluster.local
+          port: 8082
+          protocol: StreamableHTTP
+          policies:
+            auth:
+              secretRef:
+                name: github-mcp
+      - name: grafana
+        static:
+          host: grafana-mcp.agentgateway.svc.cluster.local
+          port: 8000
+          protocol: StreamableHTTP
+      - name: terraform
+        static:
+          host: terraform-mcp.agentgateway.svc.cluster.local
+          port: 8080
+          protocol: StreamableHTTP
+      - name: context7
+        static:
+          host: context7-mcp.agentgateway.svc.cluster.local
+          port: 3000
+          protocol: StreamableHTTP
+      - name: flux-operator
+        static:
+          host: flux-operator-mcp.flux-operator-mcp.svc.cluster.local
+          port: 9090
+          protocol: StreamableHTTP

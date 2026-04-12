@@ -12,9 +12,5 @@ resources:
   # Agentgateway configuration
   - gateway.yaml
   - httproute.yaml
-  - agentgatewaybackend-flux-operator-mcp.yaml
-  - agentgatewaybackend-github-mcp.yaml
-  - agentgatewaybackend-grafana-mcp.yaml
-  - agentgatewaybackend-terraform-mcp.yaml
-  - agentgatewaybackend-context7-mcp.yaml
+  - agentgatewaybackend-mcp-federation.yaml
   - ingress-mcp.yaml
