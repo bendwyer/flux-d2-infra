@@ -26,7 +26,7 @@ spec:
             - 0.0.0.0:8000
           env:
             - name: GRAFANA_URL
-              value: "https://grafana.tail0c49c.ts.net"
+              value: "http://grafana.grafana.svc.cluster.local"
             - name: GRAFANA_SERVICE_ACCOUNT_TOKEN
               valueFrom:
                 secretKeyRef:
