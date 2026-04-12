@@ -1,0 +1,57 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: context7-mcp
+  namespace: agentgateway
+  labels:
+    app: context7-mcp
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: context7-mcp
+  template:
+    metadata:
+      labels:
+        app: context7-mcp
+    spec:
+      containers:
+        - name: context7-mcp
+          image: ghcr.io/bendwyer/containers/context7-mcp:2.1.7
+          args:
+            - --transport
+            - http
+            - --port
+            - "3000"
+          env:
+            - name: CONTEXT7_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: context7-mcp
+                  key: credential
+          ports:
+            - containerPort: 3000
+          resources:
+            requests:
+              cpu: 50m
+              memory: 128Mi
+            limits:
+              memory: 128Mi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: context7-mcp
+  namespace: agentgateway
+  labels:
+    app: context7-mcp
+spec:
+  selector:
+    app: context7-mcp
+  ports:
+    - protocol: TCP
+      port: 3000
+      targetPort: 3000
+      appProtocol: agentgateway.dev/mcp
+  type: ClusterIP

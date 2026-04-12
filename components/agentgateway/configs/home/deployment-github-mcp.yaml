@@ -1,0 +1,50 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: github-mcp
+  namespace: agentgateway
+  labels:
+    app: github-mcp
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: github-mcp
+  template:
+    metadata:
+      labels:
+        app: github-mcp
+    spec:
+      containers:
+        - name: github-mcp
+          image: ghcr.io/bendwyer/containers/github-mcp:0.32.0
+          args:
+            - http
+            - --port
+            - "8082"
+          ports:
+            - containerPort: 8082
+          resources:
+            requests:
+              cpu: 50m
+              memory: 128Mi
+            limits:
+              memory: 128Mi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: github-mcp
+  namespace: agentgateway
+  labels:
+    app: github-mcp
+spec:
+  selector:
+    app: github-mcp
+  ports:
+    - protocol: TCP
+      port: 8082
+      targetPort: 8082
+      appProtocol: agentgateway.dev/mcp
+  type: ClusterIP

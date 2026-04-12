@@ -1,0 +1,52 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: terraform-mcp
+  namespace: agentgateway
+  labels:
+    app: terraform-mcp
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: terraform-mcp
+  template:
+    metadata:
+      labels:
+        app: terraform-mcp
+    spec:
+      containers:
+        - name: terraform-mcp
+          image: ghcr.io/bendwyer/containers/terraform-mcp:0.5.1
+          args:
+            - streamable-http
+            - --transport-port
+            - "8080"
+            - --transport-host
+            - 0.0.0.0
+          ports:
+            - containerPort: 8080
+          resources:
+            requests:
+              cpu: 50m
+              memory: 128Mi
+            limits:
+              memory: 128Mi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: terraform-mcp
+  namespace: agentgateway
+  labels:
+    app: terraform-mcp
+spec:
+  selector:
+    app: terraform-mcp
+  ports:
+    - protocol: TCP
+      port: 8080
+      targetPort: 8080
+      appProtocol: agentgateway.dev/mcp
+  type: ClusterIP

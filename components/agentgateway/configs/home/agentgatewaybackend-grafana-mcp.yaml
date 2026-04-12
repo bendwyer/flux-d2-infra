@@ -11,7 +11,4 @@ spec:
         selector:
           services:
             matchLabels:
-              app.kubernetes.io/service: mcp-servers-grafana-mcp
-          namespaces:
-            matchLabels:
-              kubernetes.io/metadata.name: mcp-servers
+              app: grafana-mcp

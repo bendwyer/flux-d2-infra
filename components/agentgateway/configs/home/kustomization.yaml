@@ -4,6 +4,12 @@ apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 resources:
   - ../base
+  # MCP server deployments
+  - deployment-github-mcp.yaml
+  - deployment-grafana-mcp.yaml
+  - deployment-terraform-mcp.yaml
+  - deployment-context7-mcp.yaml
+  # Agentgateway configuration
   - gateway.yaml
   - httproute.yaml
   - agentgatewaybackend-flux-operator-mcp.yaml
