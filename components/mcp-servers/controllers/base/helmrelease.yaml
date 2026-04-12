@@ -1,0 +1,129 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s-labs/helm-charts/main/charts/other/app-template/schemas/helmrelease-helm-v2.schema.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: mcp-servers
+  namespace: mcp-servers
+spec:
+  interval: 1h
+  chartRef:
+    kind: OCIRepository
+    name: app-template
+    namespace: bjw-s
+  values:
+    controllers:
+      github-mcp:
+        containers:
+          app:
+            image:
+              repository: ghcr.io/bendwyer/containers/github-mcp
+              tag: "0.32.0"
+              pullPolicy: IfNotPresent
+            args:
+              - http
+              - --port
+              - "8082"
+            env:
+              GITHUB_PERSONAL_ACCESS_TOKEN:
+                valueFrom:
+                  secretKeyRef:
+                    name: github-mcp
+                    key: credential
+            resources:
+              requests:
+                cpu: 50m
+                memory: 128Mi
+              limits:
+                memory: 128Mi
+
+      grafana-mcp:
+        containers:
+          app:
+            image:
+              repository: ghcr.io/bendwyer/containers/grafana-mcp
+              tag: "0.11.6"
+              pullPolicy: IfNotPresent
+            args:
+              - --transport
+              - streamable-http
+              - --address
+              - 0.0.0.0:8000
+            env:
+              GRAFANA_URL: "https://grafana.tail0c49c.ts.net"
+              GRAFANA_SERVICE_ACCOUNT_TOKEN:
+                valueFrom:
+                  secretKeyRef:
+                    name: grafana-mcp
+                    key: credential
+            resources:
+              requests:
+                cpu: 50m
+                memory: 128Mi
+              limits:
+                memory: 128Mi
+
+      terraform-mcp:
+        containers:
+          app:
+            image:
+              repository: ghcr.io/bendwyer/containers/terraform-mcp
+              tag: "0.5.1"
+              pullPolicy: IfNotPresent
+            args:
+              - streamable-http
+              - --transport-port
+              - "8080"
+            resources:
+              requests:
+                cpu: 50m
+                memory: 128Mi
+              limits:
+                memory: 128Mi
+
+      context7-mcp:
+        containers:
+          app:
+            image:
+              repository: ghcr.io/bendwyer/containers/context7-mcp
+              tag: "2.1.7"
+              pullPolicy: IfNotPresent
+            args:
+              - --transport
+              - http
+              - --port
+              - "3000"
+            env:
+              CONTEXT7_API_KEY:
+                valueFrom:
+                  secretKeyRef:
+                    name: context7-mcp
+                    key: credential
+            resources:
+              requests:
+                cpu: 50m
+                memory: 128Mi
+              limits:
+                memory: 128Mi
+
+    service:
+      github-mcp:
+        controller: github-mcp
+        ports:
+          http:
+            port: 8082
+      grafana-mcp:
+        controller: grafana-mcp
+        ports:
+          http:
+            port: 8000
+      terraform-mcp:
+        controller: terraform-mcp
+        ports:
+          http:
+            port: 8080
+      context7-mcp:
+        controller: context7-mcp
+        ports:
+          http:
+            port: 3000
