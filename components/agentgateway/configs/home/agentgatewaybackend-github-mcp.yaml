@@ -8,10 +8,11 @@ spec:
   mcp:
     targets:
       - name: github-mcp
-        selector:
-          services:
-            matchLabels:
-              app.kubernetes.io/service: mcp-servers-github-mcp
-          namespaces:
-            matchLabels:
-              kubernetes.io/metadata.name: mcp-servers
+        static:
+          host: github-mcp.agentgateway.svc.cluster.local
+          port: 8082
+          protocol: StreamableHTTP
+          policies:
+            auth:
+              secretRef:
+                name: github-mcp
