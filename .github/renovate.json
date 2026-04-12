@@ -11,19 +11,19 @@
   "packageRules": [
     {
       "description": "Use semver-coerced versioning for all sources",
-      "matchDatasources": ["docker", "helm", "git-refs"],
+      "matchDatasources": ["docker", "helm", "git-refs", "github-tags"],
       "versioning": "semver-coerced"
     },
     {
       "description": "Automerge patch+minor for >=1.x",
-      "matchDatasources": ["docker", "helm", "git-refs"],
+      "matchDatasources": ["docker", "helm", "git-refs", "github-tags"],
       "matchCurrentVersion": "/^v?[1-9]/",
       "matchUpdateTypes": ["minor", "patch", "digest"],
       "automerge": true
     },
     {
       "description": "Automerge patch only for 0.x",
-      "matchDatasources": ["docker", "helm", "git-refs"],
+      "matchDatasources": ["docker", "helm", "git-refs", "github-tags"],
       "matchCurrentVersion": "/^v?0\\./",
       "matchUpdateTypes": ["patch", "digest"],
       "automerge": true
