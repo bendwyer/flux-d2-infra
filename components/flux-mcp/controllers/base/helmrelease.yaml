@@ -1,0 +1,14 @@
+---
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: flux-mcp
+  namespace: flux-mcp
+spec:
+  interval: 1h
+  chartRef:
+    kind: OCIRepository
+    name: flux-mcp
+  values:
+    transport: http
+    readonly: true
