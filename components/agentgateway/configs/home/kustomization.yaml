@@ -11,3 +11,4 @@ resources:
   - agentgatewaybackend-grafana-mcp.yaml
   - agentgatewaybackend-terraform-mcp.yaml
   - agentgatewaybackend-context7-mcp.yaml
+  - ingress-mcp.yaml
