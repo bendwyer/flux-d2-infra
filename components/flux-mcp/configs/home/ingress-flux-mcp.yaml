@@ -20,6 +20,6 @@ spec:
             pathType: Prefix
             backend:
               service:
-                name: flux-mcp
+                name: flux-mcp-flux-operator-mcp
                 port:
                   number: 9090
