@@ -15,16 +15,4 @@ spec:
       backendRefs:
         - group: agentgateway.dev
           kind: AgentgatewayBackend
-          name: flux-operator-mcp
-        - group: agentgateway.dev
-          kind: AgentgatewayBackend
-          name: github-mcp
-        - group: agentgateway.dev
-          kind: AgentgatewayBackend
-          name: grafana-mcp
-        - group: agentgateway.dev
-          kind: AgentgatewayBackend
-          name: terraform-mcp
-        - group: agentgateway.dev
-          kind: AgentgatewayBackend
-          name: context7-mcp
+          name: mcp-federation
