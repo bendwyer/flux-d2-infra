@@ -8,8 +8,10 @@ spec:
   mcp:
     targets:
       - name: grafana-mcp
-        backendRef:
-          name: grafana-mcp
-          namespace: mcp-servers
-        port: 8000
-        protocol: StreamableHTTP
+        selector:
+          services:
+            matchLabels:
+              app.kubernetes.io/service: mcp-servers-grafana-mcp
+          namespaces:
+            matchLabels:
+              kubernetes.io/metadata.name: mcp-servers

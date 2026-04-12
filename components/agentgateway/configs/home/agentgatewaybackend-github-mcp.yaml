@@ -8,8 +8,10 @@ spec:
   mcp:
     targets:
       - name: github-mcp
-        backendRef:
-          name: github-mcp
-          namespace: mcp-servers
-        port: 8082
-        protocol: StreamableHTTP
+        selector:
+          services:
+            matchLabels:
+              app.kubernetes.io/service: mcp-servers-github-mcp
+          namespaces:
+            matchLabels:
+              kubernetes.io/metadata.name: mcp-servers
