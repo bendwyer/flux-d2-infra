@@ -16,6 +16,7 @@ spec:
       ingress:
         namespaces:
           - tailscale
+          - agentgateway
     resources:
       requests:
         cpu: 50m
@@ -23,3 +24,13 @@ spec:
       limits:
         cpu: null
         memory: 128Mi
+  postRenderers:
+    - kustomize:
+        patches:
+          - target:
+              kind: Service
+              name: flux-operator-mcp
+            patch: |
+              - op: add
+                path: /spec/ports/0/appProtocol
+                value: agentgateway.dev/mcp

@@ -74,6 +74,8 @@ spec:
               - streamable-http
               - --transport-port
               - "8080"
+              - --transport-host
+              - 0.0.0.0
             resources:
               requests:
                 cpu: 50m
@@ -112,18 +114,22 @@ spec:
         ports:
           http:
             port: 8082
+            appProtocol: agentgateway.dev/mcp
       grafana-mcp:
         controller: grafana-mcp
         ports:
           http:
             port: 8000
+            appProtocol: agentgateway.dev/mcp
       terraform-mcp:
         controller: terraform-mcp
         ports:
           http:
             port: 8080
+            appProtocol: agentgateway.dev/mcp
       context7-mcp:
         controller: context7-mcp
         ports:
           http:
             port: 3000
+            appProtocol: agentgateway.dev/mcp
