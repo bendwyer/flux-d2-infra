@@ -1,0 +1,15 @@
+---
+apiVersion: agentgateway.dev/v1alpha1
+kind: AgentgatewayBackend
+metadata:
+  name: terraform-mcp
+  namespace: agentgateway
+spec:
+  mcp:
+    targets:
+      - name: terraform-mcp
+        backendRef:
+          name: terraform-mcp
+          namespace: mcp-servers
+        port: 8080
+        protocol: StreamableHTTP

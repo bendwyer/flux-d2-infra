@@ -1,0 +1,15 @@
+---
+apiVersion: agentgateway.dev/v1alpha1
+kind: AgentgatewayBackend
+metadata:
+  name: github-mcp
+  namespace: agentgateway
+spec:
+  mcp:
+    targets:
+      - name: github-mcp
+        backendRef:
+          name: github-mcp
+          namespace: mcp-servers
+        port: 8082
+        protocol: StreamableHTTP
