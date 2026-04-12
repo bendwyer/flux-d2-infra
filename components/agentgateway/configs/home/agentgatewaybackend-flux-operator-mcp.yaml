@@ -1,0 +1,15 @@
+---
+apiVersion: agentgateway.dev/v1alpha1
+kind: AgentgatewayBackend
+metadata:
+  name: flux-operator-mcp
+  namespace: agentgateway
+spec:
+  mcp:
+    targets:
+      - name: flux-operator-mcp
+        backendRef:
+          name: flux-operator-mcp
+          namespace: flux-operator-mcp
+        port: 9090
+        protocol: StreamableHTTP

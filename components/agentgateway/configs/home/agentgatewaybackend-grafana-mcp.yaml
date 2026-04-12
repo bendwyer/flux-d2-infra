@@ -1,0 +1,15 @@
+---
+apiVersion: agentgateway.dev/v1alpha1
+kind: AgentgatewayBackend
+metadata:
+  name: grafana-mcp
+  namespace: agentgateway
+spec:
+  mcp:
+    targets:
+      - name: grafana-mcp
+        backendRef:
+          name: grafana-mcp
+          namespace: mcp-servers
+        port: 8000
+        protocol: StreamableHTTP
