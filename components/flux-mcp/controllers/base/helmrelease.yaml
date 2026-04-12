@@ -11,7 +11,7 @@ spec:
     name: flux-mcp
   values:
     transport: http
-    readonly: true
+    readonly: false
     resources:
       requests:
         cpu: 50m
