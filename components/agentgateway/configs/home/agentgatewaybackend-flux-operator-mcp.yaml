@@ -8,8 +8,10 @@ spec:
   mcp:
     targets:
       - name: flux-operator-mcp
-        backendRef:
-          name: flux-operator-mcp
-          namespace: flux-operator-mcp
-        port: 9090
-        protocol: StreamableHTTP
+        selector:
+          services:
+            matchLabels:
+              app.kubernetes.io/name: flux-operator-mcp
+          namespaces:
+            matchLabels:
+              kubernetes.io/metadata.name: flux-operator-mcp

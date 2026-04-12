@@ -8,8 +8,10 @@ spec:
   mcp:
     targets:
       - name: context7-mcp
-        backendRef:
-          name: context7-mcp
-          namespace: mcp-servers
-        port: 3000
-        protocol: StreamableHTTP
+        selector:
+          services:
+            matchLabels:
+              app.kubernetes.io/service: mcp-servers-context7-mcp
+          namespaces:
+            matchLabels:
+              kubernetes.io/metadata.name: mcp-servers

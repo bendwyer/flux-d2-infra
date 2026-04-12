@@ -8,8 +8,10 @@ spec:
   mcp:
     targets:
       - name: terraform-mcp
-        backendRef:
-          name: terraform-mcp
-          namespace: mcp-servers
-        port: 8080
-        protocol: StreamableHTTP
+        selector:
+          services:
+            matchLabels:
+              app.kubernetes.io/service: mcp-servers-terraform-mcp
+          namespaces:
+            matchLabels:
+              kubernetes.io/metadata.name: mcp-servers
