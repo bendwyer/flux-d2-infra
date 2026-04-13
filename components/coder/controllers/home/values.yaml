@@ -11,7 +11,7 @@ spec:
     coder:
       env:
         - name: CODER_ACCESS_URL
-          value: "https://coder.tail0c49c.ts.net"
+          value: "http://coder.coder.svc.cluster.local"
         - name: CODER_PG_CONNECTION_URL
           valueFrom:
             secretKeyRef:
