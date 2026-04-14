@@ -1,0 +1,31 @@
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: longhorn
+  namespace: longhorn
+  annotations:
+    tailscale.com/proxy-group: private-ingress
+    tailscale.com/tags: tag:k8s-private
+    tailscale.com/http-redirect: "true"
+    gethomepage.dev/enabled: "true"
+    gethomepage.dev/name: "Longhorn"
+    gethomepage.dev/group: "Infrastructure"
+    gethomepage.dev/icon: "longhorn.png"
+    gethomepage.dev/href: "https://longhorn.tail0c49c.ts.net"
+
+spec:
+  ingressClassName: tailscale
+  tls:
+    - hosts:
+        - longhorn
+  rules:
+    - http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: longhorn-frontend
+                port:
+                  name: http

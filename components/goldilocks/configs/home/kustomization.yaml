@@ -4,7 +4,4 @@ apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 resources:
   - ../base
-  - ingress-flux-operator.yaml
-  - kustomization-flux-dashboards.yaml
-  - ocirepository-flux-dashboards.yaml
-  - prometheusrule-flux.yaml
+  - ingress-goldilocks.yaml

@@ -1,0 +1,31 @@
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: goldilocks
+  namespace: goldilocks
+  annotations:
+    tailscale.com/proxy-group: private-ingress
+    tailscale.com/tags: tag:k8s-private
+    tailscale.com/http-redirect: "true"
+    gethomepage.dev/enabled: "true"
+    gethomepage.dev/name: "Goldilocks"
+    gethomepage.dev/group: "Infrastructure"
+    gethomepage.dev/icon: "si-kubernetes"
+    gethomepage.dev/href: "https://goldilocks.tail0c49c.ts.net"
+
+spec:
+  ingressClassName: tailscale
+  tls:
+    - hosts:
+        - goldilocks
+  rules:
+    - http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: goldilocks-dashboard
+                port:
+                  name: http
