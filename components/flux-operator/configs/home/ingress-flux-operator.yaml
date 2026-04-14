@@ -12,13 +12,13 @@ metadata:
     gethomepage.dev/name: "Flux"
     gethomepage.dev/group: "Infrastructure"
     gethomepage.dev/icon: "flux-cd.png"
-    gethomepage.dev/href: "https://flux.tail0c49c.ts.net"
+    gethomepage.dev/href: "https://flux-operator.tail0c49c.ts.net"
 
 spec:
   ingressClassName: tailscale
   tls:
     - hosts:
-        - flux
+        - flux-operator
   rules:
     - http:
         paths:
