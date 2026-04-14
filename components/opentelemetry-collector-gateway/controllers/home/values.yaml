@@ -170,6 +170,10 @@ spec:
                     target_label: pod
                   - source_labels: [__meta_kubernetes_namespace]
                     target_label: namespace
+              - job_name: bifrost
+                static_configs:
+                  - targets:
+                      - bifrost.bifrost.svc.cluster.local:8080
       processors:
         transform:
           metric_statements:
