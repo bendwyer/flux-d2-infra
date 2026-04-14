@@ -27,7 +27,7 @@ spec:
       client:
         allowDirectKeys: true
         enableLogging: true
-        disableContentLogging: true
+        disableContentLogging: false
       providers: {}
       plugins:
         telemetry:
