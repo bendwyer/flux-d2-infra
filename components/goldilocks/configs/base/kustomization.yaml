@@ -2,8 +2,4 @@
 # yaml-language-server: $schema=https://json.schemastore.org/kustomization
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
-resources:
-  - ../base
-  - ingress-longhorn.yaml
-  - kustomization-longhorn-dashboards.yaml
-  - ocirepository-longhorn-dashboards.yaml
+resources: []
