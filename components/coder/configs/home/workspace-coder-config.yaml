@@ -1,0 +1,25 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/CustomResourceDefinition/catalog/refs/heads/main/schema/app.terraform.io/workspace_v1alpha2.json
+apiVersion: app.terraform.io/v1alpha2
+kind: Workspace
+metadata:
+  name: coder-config
+  namespace: hcp-terraform-operator
+spec:
+  organization: bendwyer
+  token:
+    secretKeyRef:
+      name: hcp-terraform
+      key: credential
+  name: coder-config
+  description: Manages Coder workspace templates and configuration via coderd Terraform provider
+  executionMode: agent
+  agentPool:
+    name: home-pool
+  applyMethod: auto
+  terraformVersion: 1.14.8
+  tags:
+    - k8s-cluster:home
+    - k8s-component:coder
+    - platform:k8s
+    - role:config
