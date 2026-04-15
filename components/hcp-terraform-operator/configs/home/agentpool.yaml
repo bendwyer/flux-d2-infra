@@ -1,0 +1,28 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/CustomResourceDefinition/catalog/refs/heads/main/schema/app.terraform.io/agentpool_v1alpha2.json
+apiVersion: app.terraform.io/v1alpha2
+kind: AgentPool
+metadata:
+  name: home-pool
+  namespace: hcp-terraform-operator
+spec:
+  organization: bendwyer
+  token:
+    secretKeyRef:
+      name: hcp-terraform
+      key: credential
+  name: home-pool
+  agentTokens:
+    - name: home-agent
+  agentDeployment:
+    replicas: 1
+    spec:
+      containers:
+        - name: hcp-terraform-agent
+          image: "hashicorp/tfc-agent:1.28.7"
+          resources:
+            requests:
+              cpu: 50m
+              memory: 256Mi
+            limits:
+              memory: 256Mi
