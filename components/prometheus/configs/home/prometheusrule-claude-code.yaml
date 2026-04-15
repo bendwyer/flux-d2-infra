@@ -1,0 +1,48 @@
+---
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: claude-code
+  namespace: prometheus
+  labels:
+    app.kubernetes.io/part-of: k8s-monitoring
+spec:
+  groups:
+    - name: claude-code.rules
+      rules:
+        # Recording rules
+        - record: claude_code:cost_per_day
+          expr: |
+            sum(increase(claude_code_cost_usage_USD_total[24h]))
+
+        - record: claude_code:cache_hit_ratio
+          expr: |
+            sum(rate(claude_code_token_usage_tokens_total{type="cacheRead"}[1h]))
+            / (sum(rate(claude_code_token_usage_tokens_total{type="cacheRead"}[1h]))
+               + sum(rate(claude_code_token_usage_tokens_total{type="input"}[1h])))
+
+        # Alerts
+        - alert: ClaudeCodeHighSessionCost
+          expr: |
+            sum by (session_id) (claude_code_cost_usage_USD_total) > 10
+          for: 1m
+          labels:
+            severity: warning
+          annotations:
+            summary: "Claude Code session cost exceeds $10"
+            description: >-
+              Session {{ $labels.session_id }} has accumulated
+              ${{ $value | printf "%.2f" }} in estimated cost.
+              Review whether the session is running as expected.
+
+        - alert: ClaudeCodeHighDailyCost
+          expr: |
+            sum(increase(claude_code_cost_usage_USD_total[24h])) > 50
+          for: 5m
+          labels:
+            severity: warning
+          annotations:
+            summary: "Claude Code daily cost exceeds $50"
+            description: >-
+              Estimated Claude Code spend in the last 24 hours is
+              ${{ $value | printf "%.2f" }}. Review usage if unexpected.
