@@ -16,6 +16,8 @@ spec:
   executionMode: agent
   agentPool:
     name: home-pool
+  project:
+    name: kubernetes
   applyMethod: auto
   terraformVersion: 1.14.8
   tags:
