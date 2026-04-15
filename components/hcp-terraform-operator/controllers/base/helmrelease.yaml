@@ -1,0 +1,34 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/fluxcd-community/flux2-schemas/refs/heads/main/helmrelease-helm-v2.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: hcp-terraform-operator
+  namespace: hcp-terraform-operator
+spec:
+  interval: 1h
+  chart:
+    spec:
+      chart: hcp-terraform-operator
+      version: "2.11.3"
+      sourceRef:
+        kind: HelmRepository
+        name: hcp-terraform-operator
+        namespace: hcp-terraform-operator
+  values:
+    replicaCount: 1
+    operator:
+      resources:
+        requests:
+          cpu: 50m
+          memory: 128Mi
+        limits:
+          memory: 128Mi
+      syncPeriod: 1h
+    kubeRbacProxy:
+      resources:
+        requests:
+          cpu: 50m
+          memory: 64Mi
+        limits:
+          memory: 64Mi
