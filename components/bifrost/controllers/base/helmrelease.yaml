@@ -28,9 +28,7 @@ spec:
         allowDirectKeys: true
         enableLogging: true
         disableContentLogging: false
-      providers:
-        anthropic:
-          keys: []
+      providers: {}
       plugins:
         telemetry:
           enabled: true
