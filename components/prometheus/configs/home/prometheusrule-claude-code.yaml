@@ -24,12 +24,12 @@ spec:
         # Alerts
         - alert: ClaudeCodeHighSessionCost
           expr: |
-            sum by (session_id) (claude_code_cost_usage_USD_total) > 10
+            sum by (session_id) (claude_code_cost_usage_USD_total) > 25
           for: 1m
           labels:
             severity: warning
           annotations:
-            summary: "Claude Code session cost exceeds $10"
+            summary: "Claude Code session cost exceeds $25"
             description: >-
               Session {{ $labels.session_id }} has accumulated
               ${{ $value | printf "%.2f" }} in estimated cost.
@@ -37,12 +37,12 @@ spec:
 
         - alert: ClaudeCodeHighDailyCost
           expr: |
-            sum(increase(claude_code_cost_usage_USD_total[24h])) > 50
+            sum(increase(claude_code_cost_usage_USD_total[24h])) > 100
           for: 5m
           labels:
             severity: warning
           annotations:
-            summary: "Claude Code daily cost exceeds $50"
+            summary: "Claude Code daily cost exceeds $100"
             description: >-
               Estimated Claude Code spend in the last 24 hours is
               ${{ $value | printf "%.2f" }}. Review usage if unexpected.
