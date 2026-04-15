@@ -30,7 +30,11 @@ spec:
         disableContentLogging: false
       providers:
         anthropic:
-          keys: []
+          keys:
+            - name: passthrough
+              value: "unused-claude-max-oauth-passthrough"
+              models: ["*"]
+              weight: 1.0
       plugins:
         telemetry:
           enabled: true
