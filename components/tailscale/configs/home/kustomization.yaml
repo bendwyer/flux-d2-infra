@@ -5,6 +5,5 @@ kind: Kustomization
 resources:
   - ../base
   - connector.yaml
-  - dnsconfig.yaml
 patches:
   - path: proxygroup.yaml
