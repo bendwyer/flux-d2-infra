@@ -1,0 +1,21 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: coder-ts
+  namespace: coder
+  annotations:
+    tailscale.com/tailnet-fqdn: coder.tail0c49c.ts.net
+    tailscale.com/proxy-group: egress
+spec:
+  type: ExternalName
+  externalName: placeholder.internal
+  ports:
+    - name: https
+      port: 443
+      targetPort: 443
+      protocol: TCP
+    - name: http
+      port: 80
+      targetPort: 80
+      protocol: TCP
