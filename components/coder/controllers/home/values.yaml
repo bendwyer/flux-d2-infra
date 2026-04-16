@@ -11,7 +11,7 @@ spec:
     coder:
       env:
         - name: CODER_ACCESS_URL
-          value: "http://coder.coder.svc.cluster.local"
+          value: "https://coder.tail0c49c.ts.net"
         - name: CODER_PG_CONNECTION_URL
           valueFrom:
             secretKeyRef:
@@ -22,3 +22,17 @@ spec:
       serviceAccount:
         workspaceNamespaces:
           - name: coder-workspaces
+  postRenderers:
+    - kustomize:
+        patches:
+          - target:
+              kind: Deployment
+              name: coder
+            patch: |
+              - op: add
+                path: /spec/template/spec/dnsConfig
+                value:
+                  nameservers:
+                    - 10.96.0.153
+                  searches:
+                    - ts.net
