@@ -5,5 +5,4 @@ kind: Kustomization
 resources:
   - ../base
   - ingress-coder.yaml
-  - service-coder-ts.yaml
   - workspace-coder-config.yaml

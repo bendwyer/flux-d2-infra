@@ -5,7 +5,6 @@ metadata:
   name: coder
   namespace: coder
   annotations:
-    tailscale.com/proxy-group: private-ingress
     tailscale.com/tags: tag:k8s-private
     tailscale.com/http-redirect: "true"
     gethomepage.dev/enabled: "true"
