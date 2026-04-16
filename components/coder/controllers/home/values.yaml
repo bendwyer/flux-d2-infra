@@ -22,25 +22,3 @@ spec:
       serviceAccount:
         workspaceNamespaces:
           - name: coder-workspaces
-  postRenderers:
-    - kustomize:
-        patches:
-          - target:
-              kind: Deployment
-              name: coder
-            patch: |
-              - op: add
-                path: /spec/template/spec/dnsPolicy
-                value: None
-              - op: add
-                path: /spec/template/spec/dnsConfig
-                value:
-                  nameservers:
-                    - 10.96.0.154
-                  searches:
-                    - coder.svc.cluster.local
-                    - svc.cluster.local
-                    - cluster.local
-                  options:
-                    - name: ndots
-                      value: "5"
