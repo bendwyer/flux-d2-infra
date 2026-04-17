@@ -19,6 +19,22 @@ spec:
               key: uri
         - name: CODER_OAUTH2_GITHUB_DEFAULT_PROVIDER_ENABLE
           value: "false"
+        - name: CODER_OIDC_ISSUER_URL
+          value: "https://idp.tail0c49c.ts.net"
+        - name: CODER_OIDC_CLIENT_ID
+          valueFrom:
+            secretKeyRef:
+              name: coder-oidc
+              key: client_id
+        - name: CODER_OIDC_CLIENT_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: coder-oidc
+              key: client_secret
+        - name: CODER_OIDC_SIGN_IN_TEXT
+          value: "Tailscale"
+        - name: CODER_OIDC_SCOPES
+          value: "openid,profile,email"
       serviceAccount:
         workspaceNamespaces:
           - name: coder-workspaces
