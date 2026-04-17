@@ -9,4 +9,4 @@ spec:
   interval: 1h
   url: oci://ghcr.io/bendwyer/k8s-monitoring/grafana-mixin
   ref:
-    tag: "13.0.0"
+    tag: "13.0.1"
