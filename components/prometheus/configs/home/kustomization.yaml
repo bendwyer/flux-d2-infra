@@ -7,5 +7,5 @@ resources:
   - ingress-prometheus.yaml
   - kustomization-prometheus-mixin.yaml
   - ocirepository-prometheus-mixin.yaml
-  - prometheusrule-claude-code.yaml
+  # - prometheusrule-claude-code.yaml
   - prometheusrule-watchdog.yaml
