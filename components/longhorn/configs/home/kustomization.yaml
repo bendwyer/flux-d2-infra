@@ -7,3 +7,4 @@ resources:
   - ingress-longhorn.yaml
   - kustomization-longhorn-dashboards.yaml
   - ocirepository-longhorn-dashboards.yaml
+  - storageclass-longhorn-scratch.yaml
