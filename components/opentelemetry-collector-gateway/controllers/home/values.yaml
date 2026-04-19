@@ -177,7 +177,7 @@ spec:
               - job_name: argo-workflows
                 static_configs:
                   - targets:
-                      - argo-workflows-workflow-controller-metrics.argo-workflows.svc.cluster.local:9090
+                      - argo-workflows-workflow-controller.argo-workflows.svc.cluster.local:8080
       processors:
         transform:
           metric_statements:
