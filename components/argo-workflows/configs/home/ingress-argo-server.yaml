@@ -1,0 +1,29 @@
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: argo-workflows-server
+  namespace: argo-workflows
+  annotations:
+    tailscale.com/tags: tag:k8s-private
+    tailscale.com/http-redirect: "true"
+    gethomepage.dev/enabled: "true"
+    gethomepage.dev/name: "Argo Workflows"
+    gethomepage.dev/group: "Tools"
+    gethomepage.dev/icon: "argo-workflows.png"
+    gethomepage.dev/href: "https://argo.tail0c49c.ts.net"
+spec:
+  ingressClassName: tailscale
+  tls:
+    - hosts:
+        - argo
+  rules:
+    - http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: argo-workflows-server
+                port:
+                  number: 2746
