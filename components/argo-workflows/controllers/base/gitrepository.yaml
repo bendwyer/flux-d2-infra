@@ -1,0 +1,14 @@
+---
+apiVersion: source.toolkit.fluxcd.io/v1
+kind: GitRepository
+metadata:
+  name: argo-workflows
+  namespace: argo-workflows
+spec:
+  interval: 6h
+  url: https://github.com/argoproj/argo-workflows
+  ref:
+    tag: v4.0.4
+  ignore: |
+    /*
+    !/manifests/base/crds

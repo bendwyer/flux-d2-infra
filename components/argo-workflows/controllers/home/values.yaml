@@ -1,0 +1,29 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/fluxcd-community/flux2-schemas/refs/heads/main/helmrelease-helm-v2.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: argo-workflows
+  namespace: argo-workflows
+spec:
+  interval: 1h
+  values:
+    server:
+      authModes:
+        - sso
+      sso:
+        enabled: true
+        issuer: https://idp.tail0c49c.ts.net
+        redirectUrl: https://argo.tail0c49c.ts.net/oauth2/callback
+        clientId:
+          name: argo-server-sso
+          key: client_id
+        clientSecret:
+          name: argo-server-sso
+          key: client_secret
+        scopes:
+          - openid
+          - profile
+          - email
+        rbac:
+          enabled: false
