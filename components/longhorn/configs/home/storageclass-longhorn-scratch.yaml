@@ -1,0 +1,22 @@
+---
+# Single-replica, reclaim-on-delete Longhorn StorageClass for ephemeral workload
+# scratch volumes. Trade-off: loses node-failure resilience (if the node holding
+# the scratch replica fails, the volume becomes unavailable and the workload
+# fails). Acceptable for Argo Workflows ephemeral PVCs where the workload can
+# be re-submitted and the data is by definition discardable.
+#
+# Consumers:
+#   - books namespace: process-kobo / process-humble workflow scratch
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: longhorn-scratch
+provisioner: driver.longhorn.io
+allowVolumeExpansion: true
+reclaimPolicy: Delete
+volumeBindingMode: Immediate
+parameters:
+  numberOfReplicas: "1"
+  staleReplicaTimeout: "30"
+  dataLocality: "best-effort"
+  fsType: "ext4"
