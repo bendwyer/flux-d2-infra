@@ -8,7 +8,7 @@ spec:
   interval: 6h
   url: https://github.com/argoproj/argo-workflows
   ref:
-    tag: v4.0.4
+    tag: v4.0.5
   ignore: |
     /*
     !/manifests/base/crds
