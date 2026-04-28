@@ -12,7 +12,8 @@
     {
       "description": "Use semver-coerced versioning for all sources",
       "matchDatasources": ["docker", "helm", "git-refs", "github-tags"],
-      "versioning": "semver-coerced"
+      "versioning": "semver-coerced",
+      "pinDigests": true
     },
     {
       "description": "Automerge patch+minor for >=1.x",
