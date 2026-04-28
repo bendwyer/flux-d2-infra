@@ -36,7 +36,6 @@ spec:
               pullPolicy: IfNotPresent
             env:
               TAILSCALE_USE_WIP_CODE: "1"
-              TSNET_FORCE_LOGIN: "1"
               TS_STATE_DIR: /data
               TS_HOSTNAME: idp
               TS_ADVERTISE_TAGS: "tag:tsidp"
@@ -54,7 +53,7 @@ spec:
                 cpu: 50m
                 memory: 128Mi
               limits:
-                memory: 256Mi
+                memory: 128Mi
             probes:
               liveness:
                 enabled: false
