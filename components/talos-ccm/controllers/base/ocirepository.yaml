@@ -10,6 +10,7 @@ spec:
   url: oci://ghcr.io/siderolabs/charts/talos-cloud-controller-manager
   ref:
     tag: "0.5.4"
+    digest: "sha256:c43c147325116e8305ac7c49f14b6208627dc3e7bdb2c2a0bf116003a9ee39f2"
   layerSelector:
     mediaType: "application/vnd.cncf.helm.chart.content.v1.tar+gzip"
     operation: copy
