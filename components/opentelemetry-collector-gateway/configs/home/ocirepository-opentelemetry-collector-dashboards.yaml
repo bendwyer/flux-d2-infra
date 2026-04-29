@@ -10,3 +10,4 @@ spec:
   url: oci://ghcr.io/bendwyer/k8s-monitoring/opentelemetry-collector
   ref:
     tag: "1.1.2"
+    digest: "sha256:c29f05052402a875fad96b0422dd7a15ffc481ff3be5bd1f600f69477b558b2f"
