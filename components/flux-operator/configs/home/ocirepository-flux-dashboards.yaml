@@ -10,3 +10,4 @@ spec:
   url: oci://ghcr.io/bendwyer/k8s-monitoring/flux
   ref:
     tag: "1.1.2"
+    digest: "sha256:ab8cb877959f8b1f7a7d3017ee52581a61c7edf5508c68739cdebd7fed84cdec"
