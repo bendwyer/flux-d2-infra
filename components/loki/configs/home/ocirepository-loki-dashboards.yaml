@@ -10,3 +10,4 @@ spec:
   url: oci://ghcr.io/bendwyer/k8s-monitoring/loki
   ref:
     tag: "1.0.1"
+    digest: "sha256:b7887858a3368a86cdf3e963497c80a78068428f4484fa4a45a8f4f715cc52d1"

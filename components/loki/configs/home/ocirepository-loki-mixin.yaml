@@ -10,3 +10,4 @@ spec:
   url: oci://ghcr.io/bendwyer/k8s-monitoring/loki-mixin
   ref:
     tag: "3.7.1"
+    digest: "sha256:8b35815c044ea9e22222c9e2b9dbc33533b112f719d9415fcaeec05521ac250b"
