@@ -9,7 +9,7 @@ spec:
   interval: 1h
   url: oci://ghcr.io/coder/chart/coder
   ref:
-    tag: "2.32.0"
+    tag: "2.32.1@sha256:12524fdba92e948b0e17afc22f0586d531a7cb4405e3a5f56efebc0faa842a89"
   layerSelector:
     mediaType: "application/vnd.cncf.helm.chart.content.v1.tar+gzip"
     operation: copy
