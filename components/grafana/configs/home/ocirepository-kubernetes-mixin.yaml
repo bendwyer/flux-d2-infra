@@ -10,3 +10,4 @@ spec:
   url: oci://ghcr.io/bendwyer/k8s-monitoring/kubernetes-mixin
   ref:
     tag: "1.5.0"
+    digest: "sha256:a8f55dad22867c8f6c167e32dc3da24867e5663b1dbb888464a6059dc074d118"
