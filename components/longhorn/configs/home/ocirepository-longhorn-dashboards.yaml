@@ -10,3 +10,4 @@ spec:
   url: oci://ghcr.io/bendwyer/k8s-monitoring/longhorn
   ref:
     tag: "1.0.1"
+    digest: "sha256:e6c2d5a0c28694c66050f19a4ed255e9d0a379e486a1ec6e5556b73104108aea"
