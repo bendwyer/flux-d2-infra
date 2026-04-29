@@ -9,6 +9,7 @@ spec:
   url: oci://ghcr.io/controlplaneio-fluxcd/charts/flux-operator-mcp
   ref:
     tag: "0.48.0"
+    digest: "sha256:2717c3f817de187f4d1bd1b30803b611038ed15102203ead13ddca23b588cb0b"
   layerSelector:
     mediaType: "application/vnd.cncf.helm.chart.content.v1.tar+gzip"
     operation: copy
