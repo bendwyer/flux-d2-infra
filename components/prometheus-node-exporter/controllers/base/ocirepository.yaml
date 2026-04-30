@@ -9,8 +9,8 @@ spec:
   interval: 1h
   url: oci://ghcr.io/prometheus-community/charts/prometheus-node-exporter
   ref:
-    tag: "4.53.1"
-    digest: "sha256:90366dfc60c9cd4b367569581ad53b0ac0b77b81e9a8abefbeab9df41056b162"
+    tag: "4.54.0"
+    digest: "sha256:77e667648056be3a7d118b82bb17ac6b50b375fc55aee0c436c27c761695f0dd"
   layerSelector:
     mediaType: "application/vnd.cncf.helm.chart.content.v1.tar+gzip"
     operation: copy
