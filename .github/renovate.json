@@ -33,6 +33,11 @@
       "matchCurrentVersion": "/^v?0\\./",
       "matchUpdateTypes": ["patch", "digest"],
       "automerge": true
+    },
+    {
+      "description": "Coder: never automerge. Mainline and stable releases both have prerelease=false on GitHub, so Renovate can't distinguish them; PRs need human review to confirm the proposed version is on the stable channel before merging. Renovate still tracks new versions and opens PRs as normal — just not auto-merged.",
+      "matchPackageNames": ["ghcr.io/coder/chart/coder"],
+      "automerge": false
     }
   ]
 }
