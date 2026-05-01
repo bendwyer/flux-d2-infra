@@ -8,16 +8,6 @@
   "separateMinorPatch": true,
   "flux": { "managerFilePatterns": ["/components/.+\\.yaml$/"] },
   "github-actions": { "enabled": false },
-  "customDatasources": {
-    "github-latest-release": {
-      "description": "Track GitHub /releases/latest (the 'Set as latest' pointer) for projects that publish mainline + stable both as prerelease=false. Opt in per-package via packageRules with datasource: custom.github-latest-release and packageName: <owner>/<repo>.",
-      "defaultRegistryUrlTemplate": "https://api.github.com/repos/{{packageName}}/releases/latest",
-      "format": "json",
-      "transformTemplates": [
-        "{ \"releases\": [ { \"version\": $replace(tag_name, /^v/, \"\"), \"sourceUrl\": html_url, \"releaseTimestamp\": published_at } ] }"
-      ]
-    }
-  },
   "packageRules": [
     {
       "description": "Use semver-coerced versioning for all sources",
@@ -43,14 +33,6 @@
       "matchCurrentVersion": "/^v?0\\./",
       "matchUpdateTypes": ["patch", "digest"],
       "automerge": true
-    },
-    {
-      "description": "Coder: track GitHub /releases/latest (stable channel pointer). Coder marks both mainline and stable as prerelease=false on GitHub, so the docker datasource's 'highest semver wins' picks mainline. Swap to the GitHub stable signal. Floor of 2.32.0 prevents a downgrade PR while cluster is on mainline 2.32.x; once 2.32 promotes to stable (~when 2.33 GAs), /releases/latest will return 2.32.x and the floor becomes harmless.",
-      "matchPackageNames": ["ghcr.io/coder/chart/coder"],
-      "datasource": "custom.github-latest-release",
-      "packageName": "coder/coder",
-      "versioning": "semver",
-      "allowedVersions": ">=2.32.0"
     }
   ]
 }
