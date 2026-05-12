@@ -1,0 +1,10 @@
+---
+apiVersion: metallb.io/v1beta1
+kind: IPAddressPool
+metadata:
+  name: lan-ingress
+  namespace: metallb
+spec:
+  addresses:
+    - 192.168.10.46-192.168.10.50
+  autoAssign: false

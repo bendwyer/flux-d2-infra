@@ -1,0 +1,8 @@
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: metallb
+  labels:
+    name: metallb
+    # pod-security.kubernetes.io/enforce set in flux-d2-fleet ResourceSet
