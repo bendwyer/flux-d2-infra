@@ -9,8 +9,9 @@ spec:
   interval: 1h
   url: oci://ghcr.io/coder/chart/coder
   ref:
-    tag: "2.32.1"
-    digest: "sha256:12524fdba92e948b0e17afc22f0586d531a7cb4405e3a5f56efebc0faa842a89"
+    # No digest: Renovate tracks this chart via github-releases (stable channel),
+    # which can't resolve OCI digests. Tag-only pinning.
+    tag: "2.32.2"
   layerSelector:
     mediaType: "application/vnd.cncf.helm.chart.content.v1.tar+gzip"
     operation: copy
