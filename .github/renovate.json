@@ -6,7 +6,6 @@
   "labels": ["dependencies"],
   "rebaseWhen": "behind-base-branch",
   "separateMinorPatch": true,
-  "minimumReleaseAge": "24 hours",
   "flux": { "managerFilePatterns": ["/components/.+\\.yaml$/"] },
   "github-actions": { "enabled": false },
   "customDatasources": {
