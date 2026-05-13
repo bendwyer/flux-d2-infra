@@ -6,5 +6,5 @@ metadata:
   name: hcp-terraform-operator
   namespace: hcp-terraform-operator
 spec:
-  interval: 6h
+  interval: 30m
   url: https://helm.releases.hashicorp.com
