@@ -9,6 +9,20 @@
   "minimumReleaseAge": "24 hours",
   "flux": { "managerFilePatterns": ["/components/.+\\.yaml$/"] },
   "github-actions": { "enabled": false },
+  "customManagers": [
+    {
+      "customType": "regex",
+      "managerFilePatterns": ["/components/coder/controllers/base/ocirepository\\.yaml$/"],
+      "matchStrings": [
+        "url:\\s+oci://ghcr\\.io/coder/chart/coder[\\s\\S]*?tag:\\s+\"(?<currentValue>[^\"]+)\""
+      ],
+      "depNameTemplate": "coder/coder",
+      "packageNameTemplate": "coder/coder",
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^v(?<version>.+)$",
+      "versioningTemplate": "semver-coerced"
+    }
+  ],
   "packageRules": [
     {
       "description": "Use semver-coerced versioning for all sources",
@@ -36,9 +50,10 @@
       "automerge": true
     },
     {
-      "description": "Coder: never automerge. Mainline and stable releases both have prerelease=false on GitHub, so Renovate can't distinguish them; PRs need human review to confirm the proposed version is on the stable channel before merging. Renovate still tracks new versions and opens PRs as normal — just not auto-merged.",
+      "description": "Coder: stable-only. customManager above tracks coder/coder via github-releases so respectLatest honors GitHub's 'latest' marker (stable); disable the flux lookup to avoid duplicate mainline PRs.",
+      "matchManagers": ["flux"],
       "matchPackageNames": ["ghcr.io/coder/chart/coder"],
-      "automerge": false
+      "enabled": false
     }
   ]
 }
