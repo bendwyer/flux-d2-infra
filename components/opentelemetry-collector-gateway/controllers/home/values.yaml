@@ -213,3 +213,5 @@ spec:
         telemetry:
           metrics:
             level: detailed
+          resource:
+            service.instance.id: ${env:OTEL_K8S_POD_NAME}
