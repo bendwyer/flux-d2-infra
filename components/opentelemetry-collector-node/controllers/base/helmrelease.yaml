@@ -3,13 +3,13 @@
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
-  name: opentelemetry-collector-agent
-  namespace: opentelemetry-collector-agent
+  name: opentelemetry-collector-node
+  namespace: opentelemetry-collector-node
 spec:
   interval: 1h
   chartRef:
     kind: OCIRepository
-    name: opentelemetry-collector-agent
+    name: opentelemetry-collector-node
   # install:
   #   remediation:
   #     retries: 3
