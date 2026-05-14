@@ -5,5 +5,5 @@ kind: Kustomization
 resources:
   - ../base
   - ingress-otlp.yaml
-  - kustomization-opentelemetry-collector-dashboards.yaml
-  - ocirepository-opentelemetry-collector-dashboards.yaml
+  - kustomization-opentelemetry-collector-mixin.yaml
+  - ocirepository-opentelemetry-collector-mixin.yaml
