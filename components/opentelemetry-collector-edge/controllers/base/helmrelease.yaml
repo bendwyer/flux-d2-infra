@@ -1,0 +1,45 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/fluxcd-community/flux2-schemas/refs/heads/main/helmrelease-helm-v2.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: opentelemetry-collector-edge
+  namespace: opentelemetry-collector-edge
+spec:
+  interval: 1h
+  chartRef:
+    kind: OCIRepository
+    name: opentelemetry-collector-edge
+  values:
+    mode: deployment
+    replicaCount: 1
+    image:
+      repository: otel/opentelemetry-collector-contrib
+    resources:
+      limits:
+        memory: 256Mi
+      requests:
+        cpu: 50m
+        memory: 128Mi
+    config:
+      # Disable chart-default debug exporter and traces pipeline
+      exporters:
+        debug: null
+      service:
+        pipelines:
+          traces: null
+      receivers:
+        otlp:
+          protocols:
+            grpc:
+              endpoint: 0.0.0.0:4317
+            http:
+              endpoint: 0.0.0.0:4318
+      processors:
+        batch:
+          send_batch_size: 10000
+          timeout: 5s
+        memory_limiter:
+          check_interval: 5s
+          limit_percentage: 80
+          spike_limit_percentage: 25
