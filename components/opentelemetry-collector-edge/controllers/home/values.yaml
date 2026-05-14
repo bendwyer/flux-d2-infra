@@ -23,6 +23,9 @@ spec:
           endpoint: http://prometheus-prometheus.prometheus.svc.cluster.local:9090/api/v1/write
           external_labels:
             cluster: home
+          resource_to_telemetry_conversion:
+            enabled: true
+            exclude_service_attributes: true
         otlp_http/loki:
           endpoint: http://loki-gateway.loki.svc.cluster.local:80/otlp
           tls:
