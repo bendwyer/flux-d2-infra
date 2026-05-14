@@ -3,11 +3,11 @@
 apiVersion: source.toolkit.fluxcd.io/v1
 kind: OCIRepository
 metadata:
-  name: opentelemetry-collector-dashboards
+  name: opentelemetry-collector-mixin
   namespace: opentelemetry-collector-gateway
 spec:
   interval: 1h
-  url: oci://ghcr.io/bendwyer/k8s-monitoring/opentelemetry-collector
+  url: oci://ghcr.io/bendwyer/k8s-monitoring/opentelemetry-collector-mixin
   ref:
-    tag: "1.1.2"
-    digest: "sha256:c29f05052402a875fad96b0422dd7a15ffc481ff3be5bd1f600f69477b558b2f"
+    tag: "2025.10.23"
+    digest: "sha256:a910c3ed6a76a0147c5a1a39117563fbb0e15c8dff8b92febd585292d8f1acb4"
