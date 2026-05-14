@@ -9,5 +9,5 @@ resources:
   - kustomization-kubernetes-mixin.yaml
   - ocirepository-grafana-mixin.yaml
   - ocirepository-kubernetes-mixin.yaml
-  - kustomization-claude-code-dashboards.yaml
-  - ocirepository-claude-code-dashboards.yaml
+  - kustomization-claude-code-mixin.yaml
+  - ocirepository-claude-code-mixin.yaml
