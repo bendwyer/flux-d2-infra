@@ -210,3 +210,6 @@ spec:
               - batch
             exporters:
               - otlp_http/loki
+        telemetry:
+          metrics:
+            level: detailed
