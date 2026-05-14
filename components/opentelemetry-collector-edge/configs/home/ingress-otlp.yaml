@@ -3,7 +3,7 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: otlp
-  namespace: opentelemetry-collector-gateway
+  namespace: opentelemetry-collector-edge
   annotations:
     tailscale.com/proxy-group: private-ingress
     tailscale.com/tags: tag:k8s-private
@@ -20,6 +20,6 @@ spec:
             pathType: Prefix
             backend:
               service:
-                name: opentelemetry-collector-gateway
+                name: opentelemetry-collector-edge
                 port:
                   number: 4318
