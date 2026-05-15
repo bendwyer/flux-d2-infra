@@ -43,5 +43,5 @@ spec:
           metrics:
             level: detailed
           resource:
-            service.namespace: ${env:OTEL_K8S_NAMESPACE}
+            service.namespace: edge
             service.instance.id: ${env:OTEL_K8S_POD_NAME}
