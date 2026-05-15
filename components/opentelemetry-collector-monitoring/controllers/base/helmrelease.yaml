@@ -1,0 +1,47 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/fluxcd-community/flux2-schemas/refs/heads/main/helmrelease-helm-v2.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: opentelemetry-collector-monitoring
+  namespace: opentelemetry-collector-monitoring
+spec:
+  interval: 1h
+  chartRef:
+    kind: OCIRepository
+    name: opentelemetry-collector-monitoring
+  values:
+    mode: deployment
+    replicaCount: 1
+    image:
+      repository: otel/opentelemetry-collector-contrib
+    resources:
+      limits:
+        memory: 256Mi
+      requests:
+        cpu: 50m
+        memory: 128Mi
+    clusterRole:
+      create: true
+      rules:
+        - apiGroups: [""]
+          resources: [pods]
+          verbs: [get, list, watch]
+    config:
+      # Scrape-only collector: disable chart-default OTLP receiver and unused pipelines
+      receivers:
+        otlp: null
+      exporters:
+        debug: null
+      service:
+        pipelines:
+          logs: null
+          traces: null
+      processors:
+        batch:
+          send_batch_size: 10000
+          timeout: 5s
+        memory_limiter:
+          check_interval: 5s
+          limit_percentage: 80
+          spike_limit_percentage: 25
