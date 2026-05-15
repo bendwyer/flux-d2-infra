@@ -26,6 +26,15 @@ spec:
         cpu: 50m
         memory: 128Mi
     config:
+      processors:
+        k8sattributes:
+          pod_association:
+            - sources:
+                - from: resource_attribute
+                  name: k8s.pod.ip
+            - sources:
+                - from: resource_attribute
+                  name: k8s.pod.uid
       receivers:
         prometheus:
           config:
