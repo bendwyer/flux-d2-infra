@@ -9,15 +9,6 @@ spec:
   interval: 1h
   values:
     config:
-      receivers:
-        prometheus:
-          config:
-            scrape_configs:
-              - job_name: otel-collector-edge
-                scrape_interval: 10s
-                static_configs:
-                  - targets:
-                      - ${env:MY_POD_IP}:8888
       exporters:
         prometheusremotewrite:
           endpoint: http://prometheus-prometheus.prometheus.svc.cluster.local:9090/api/v1/write
@@ -34,7 +25,6 @@ spec:
         pipelines:
           metrics:
             receivers:
-              - prometheus
               - otlp
             processors:
               - memory_limiter
