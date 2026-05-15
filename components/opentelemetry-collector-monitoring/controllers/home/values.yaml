@@ -73,5 +73,5 @@ spec:
           metrics:
             level: detailed
           resource:
-            service.namespace: ${env:OTEL_K8S_NAMESPACE}
+            service.namespace: monitoring
             service.instance.id: ${env:OTEL_K8S_POD_NAME}
