@@ -7,10 +7,10 @@ metadata:
   namespace: grafana
 spec:
   interval: 1h
-  url: oci://ghcr.io/grafana/helm-charts/grafana
+  url: oci://ghcr.io/grafana-community/helm-charts/grafana
   ref:
-    tag: "10.5.15"
-    digest: "sha256:3d75dc3173c3fb07eaa8853283f38558c7c27259f7ed00cf8c096173667426a1"
+    tag: "12.3.3"
+    digest: "sha256:1a2d0185be96685a1ded9c8bf4803f7eea7ed488af656c5865db8f503a5989eb"
   layerSelector:
     mediaType: "application/vnd.cncf.helm.chart.content.v1.tar+gzip"
     operation: copy
