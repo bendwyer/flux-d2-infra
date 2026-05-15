@@ -123,6 +123,15 @@ spec:
                   - targets:
                       - argo-workflows-workflow-controller.argo-workflows.svc.cluster.local:8080
       processors:
+        # Override preset: drop `from: connection` — it misattributes OTLP-received metrics to the sender pod.
+        k8sattributes:
+          pod_association:
+            - sources:
+                - from: resource_attribute
+                  name: k8s.pod.ip
+            - sources:
+                - from: resource_attribute
+                  name: k8s.pod.uid
         transform:
           metric_statements:
             - context: scope
