@@ -55,6 +55,12 @@ spec:
         retention: "30d"
         enableRemoteWriteReceiver: true
 
+        # Match resend-delay to the 30s rule eval interval so Watchdog
+        # re-sends every 60s (every other eval) instead of the 90s default.
+        additionalArgs:
+          - name: rules.alert.resend-delay
+            value: 30s
+
         storageSpec:
           volumeClaimTemplate:
             spec:
