@@ -59,6 +59,15 @@ spec:
           resource_to_telemetry_conversion:
             enabled: true
             exclude_service_attributes: true
+          timeout: 30s
+          sending_queue:
+            enabled: true
+            queue_size: 5000
+          retry_on_failure:
+            enabled: true
+            initial_interval: 5s
+            max_interval: 30s
+            max_elapsed_time: 5m
       service:
         pipelines:
           metrics:

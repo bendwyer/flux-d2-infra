@@ -55,6 +55,13 @@ spec:
         retention: "30d"
         enableRemoteWriteReceiver: true
 
+        resources:
+          limits:
+            memory: 2Gi
+          requests:
+            cpu: 500m
+            memory: 2Gi
+
         # Match resend-delay to the 30s rule eval interval so Watchdog
         # re-sends every 60s (every other eval) instead of the 90s default.
         additionalArgs:
