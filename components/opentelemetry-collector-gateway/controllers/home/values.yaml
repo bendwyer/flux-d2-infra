@@ -145,6 +145,15 @@ spec:
           endpoint: http://prometheus-prometheus.prometheus.svc.cluster.local:9090/api/v1/write
           external_labels:
             cluster: home
+          timeout: 30s
+          sending_queue:
+            enabled: true
+            queue_size: 5000
+          retry_on_failure:
+            enabled: true
+            initial_interval: 5s
+            max_interval: 30s
+            max_elapsed_time: 5m
         otlp_http/loki:
           endpoint: http://loki-gateway.loki.svc.cluster.local:80/otlp
           tls:
