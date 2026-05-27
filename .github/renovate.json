@@ -61,6 +61,12 @@
       "matchManagers": ["flux"],
       "matchPackageNames": ["ghcr.io/coder/chart/coder"],
       "enabled": false
+    },
+    {
+      "description": "Automerge coder patch/minor (custom datasource doesn't match the generic docker/helm rules above)",
+      "matchDatasources": ["custom.coder-stable"],
+      "matchUpdateTypes": ["minor", "patch"],
+      "automerge": true
     }
   ]
 }
