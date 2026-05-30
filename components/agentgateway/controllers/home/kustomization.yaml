@@ -7,3 +7,4 @@ resources:
   - onepassworditem-github-mcp.yaml
   - onepassworditem-grafana-mcp.yaml
   - onepassworditem-context7-mcp.yaml
+  - onepassworditem-terraform-mcp.yaml
