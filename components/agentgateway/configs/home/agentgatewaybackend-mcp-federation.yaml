@@ -40,3 +40,36 @@ spec:
           host: flux-operator-mcp.flux-operator-mcp.svc.cluster.local
           port: 9090
           protocol: StreamableHTTP
+      - name: cloudflare-docs
+        static:
+          host: docs.mcp.cloudflare.com
+          port: 443
+          path: /mcp
+          protocol: StreamableHTTP
+          policies:
+            tls:
+              sni: docs.mcp.cloudflare.com
+      - name: cloudflare-observability
+        static:
+          host: observability.mcp.cloudflare.com
+          port: 443
+          path: /mcp
+          protocol: StreamableHTTP
+          policies:
+            tls:
+              sni: observability.mcp.cloudflare.com
+            auth:
+              secretRef:
+                name: cloudflare-observability-mcp
+      - name: cloudflare-bindings
+        static:
+          host: bindings.mcp.cloudflare.com
+          port: 443
+          path: /mcp
+          protocol: StreamableHTTP
+          policies:
+            tls:
+              sni: bindings.mcp.cloudflare.com
+            auth:
+              secretRef:
+                name: cloudflare-bindings-mcp
