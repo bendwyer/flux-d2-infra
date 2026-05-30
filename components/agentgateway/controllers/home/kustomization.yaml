@@ -8,3 +8,5 @@ resources:
   - onepassworditem-grafana-mcp.yaml
   - onepassworditem-context7-mcp.yaml
   - onepassworditem-terraform-mcp.yaml
+  - onepassworditem-cloudflare-observability-mcp.yaml
+  - onepassworditem-cloudflare-bindings-mcp.yaml
