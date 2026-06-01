@@ -28,6 +28,15 @@
       "packageNameTemplate": "coder",
       "datasourceTemplate": "custom.coder-stable",
       "versioningTemplate": "semver-coerced"
+    },
+    {
+      "customType": "regex",
+      "managerFilePatterns": ["/components/hcp-terraform-operator/configs/home/agentpool\\.yaml$/"],
+      "matchStrings": [
+        "image:\\s+\"hashicorp/tfc-agent:(?<currentValue>[^\"@]+)(?:@(?<currentDigest>sha256:[a-f0-9]+))?\""
+      ],
+      "depNameTemplate": "hashicorp/tfc-agent",
+      "datasourceTemplate": "docker"
     }
   ],
   "packageRules": [
