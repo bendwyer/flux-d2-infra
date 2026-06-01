@@ -19,7 +19,7 @@ spec:
     spec:
       containers:
         - name: hcp-terraform-agent
-          image: "hashicorp/tfc-agent:1.28.7"
+          image: "hashicorp/tfc-agent:1.28.11"
           resources:
             requests:
               cpu: 50m
