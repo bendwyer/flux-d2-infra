@@ -17,9 +17,18 @@ spec:
   agentDeployment:
     replicas: 1
     spec:
+      securityContext:
+        runAsNonRoot: true
+        seccompProfile:
+          type: RuntimeDefault
       containers:
         - name: hcp-terraform-agent
           image: "hashicorp/tfc-agent:1.28.11"
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+                - ALL
           resources:
             requests:
               cpu: 50m
