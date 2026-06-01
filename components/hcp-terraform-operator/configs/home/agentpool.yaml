@@ -19,6 +19,12 @@ spec:
     spec:
       securityContext:
         runAsNonRoot: true
+        # tfc-agent image declares its user by name (USER tfc-agent), not a UID.
+        # runAsNonRoot alone makes the kubelet refuse the container with
+        # CreateContainerConfigError ("non-numeric user"). The tfc-agent user is UID 999.
+        runAsUser: 999
+        runAsGroup: 999
+        fsGroup: 999
         seccompProfile:
           type: RuntimeDefault
       containers:
