@@ -17,11 +17,6 @@ spec:
   agentPool:
     name: home-pool
   project:
-    name: kubernetes
+    name: coder
   applyMethod: auto
   terraformVersion: 1.14.8
-  tags:
-    - k8s-cluster:home
-    - k8s-component:coder
-    - platform:k8s
-    - role:config
