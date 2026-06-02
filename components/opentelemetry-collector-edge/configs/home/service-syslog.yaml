@@ -1,0 +1,24 @@
+---
+# LAN-facing syslog endpoint for the MikroTik router (and any future network
+# devices). MetalLB assigns the requested IP from the `lan-ingress` pool
+# (192.168.10.46-50, autoAssign: false). Kept separate from the chart's
+# ClusterIP Service so the Tailscale OTLP ingress path is untouched and we avoid
+# a mixed-protocol LoadBalancer. External 514/UDP maps to container 5514.
+apiVersion: v1
+kind: Service
+metadata:
+  name: opentelemetry-collector-edge-syslog
+  namespace: opentelemetry-collector-edge
+  annotations:
+    metallb.io/loadBalancerIPs: "192.168.10.46"
+spec:
+  type: LoadBalancer
+  selector:
+    app.kubernetes.io/name: opentelemetry-collector
+    app.kubernetes.io/instance: opentelemetry-collector-edge
+    component: standalone-collector
+  ports:
+    - name: syslog-udp
+      port: 514
+      targetPort: 5514
+      protocol: UDP
