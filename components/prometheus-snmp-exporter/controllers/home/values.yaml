@@ -16,10 +16,10 @@ spec:
     # `config` value is set, so we leave it unset and pass both files explicitly.
     extraArgs:
       - "--config.file=/etc/snmp_exporter/snmp.yml"
-      - "--config.file=/run/secrets/snmp-exporter/auth.yml"
+      - "--config.file=/run/secrets/snmp-mikrotik/auth.yml"
     extraSecretMounts:
-      - name: snmp-auth
-        mountPath: /run/secrets/snmp-exporter
-        secretName: prometheus-snmp-exporter
+      - name: snmp-mikrotik
+        mountPath: /run/secrets/snmp-mikrotik
+        secretName: snmp-mikrotik
         readOnly: true
         defaultMode: 420
