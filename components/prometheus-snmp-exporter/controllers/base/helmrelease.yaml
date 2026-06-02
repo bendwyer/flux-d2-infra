@@ -1,0 +1,19 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/fluxcd-community/flux2-schemas/refs/heads/main/helmrelease-helm-v2.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: prometheus-snmp-exporter
+  namespace: prometheus-snmp-exporter
+spec:
+  interval: 1h
+  chartRef:
+    kind: OCIRepository
+    name: prometheus-snmp-exporter
+  values:
+    resources:
+      limits:
+        memory: 256Mi
+      requests:
+        cpu: 25m
+        memory: 256Mi

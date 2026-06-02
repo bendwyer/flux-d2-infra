@@ -1,0 +1,25 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/fluxcd-community/flux2-schemas/refs/heads/main/helmrelease-helm-v2.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: prometheus-snmp-exporter
+  namespace: prometheus-snmp-exporter
+spec:
+  interval: 1h
+  values:
+    # Module definitions (if_mib, mikrotik, system, ...) come from the image's
+    # built-in /etc/snmp_exporter/snmp.yml. The SNMPv3 auth block is supplied
+    # separately from a 1Password-backed Secret so credentials never live in git.
+    # snmp_exporter merges multiple --config.file flags, so the two are combined
+    # at runtime. The chart only adds --config.file=/config/snmp.yaml when the
+    # `config` value is set, so we leave it unset and pass both files explicitly.
+    extraArgs:
+      - "--config.file=/etc/snmp_exporter/snmp.yml"
+      - "--config.file=/run/secrets/snmp-exporter/auth.yml"
+    extraSecretMounts:
+      - name: snmp-auth
+        mountPath: /run/secrets/snmp-exporter
+        secretName: prometheus-snmp-exporter
+        readOnly: true
+        defaultMode: 420

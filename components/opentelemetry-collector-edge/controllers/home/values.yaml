@@ -8,7 +8,75 @@ metadata:
 spec:
   interval: 1h
   values:
+    # Slightly more headroom than the OTLP-only baseline (256Mi) now that this
+    # collector also runs a syslog receiver and an SNMP scrape.
+    resources:
+      limits:
+        memory: 384Mi
+      requests:
+        cpu: 50m
+        memory: 384Mi
+    # Expose the syslog UDP listener. Port 514 is privileged and the
+    # collector-contrib container runs non-root, so it listens on 5514; the
+    # MetalLB LoadBalancer Service (configs/home/service-syslog.yaml) maps
+    # external 514 to container 5514.
+    ports:
+      syslog:
+        enabled: true
+        containerPort: 5514
+        servicePort: 5514
+        protocol: UDP
     config:
+      receivers:
+        # The MikroTik router pushes RFC 5424 syslog over UDP to the MetalLB VIP.
+        syslog:
+          udp:
+            listen_address: 0.0.0.0:5514
+          protocol: rfc5424
+        # Scrape the snmp_exporter in multi-target mode for the router. The
+        # exporter performs the actual SNMPv3 poll of 192.168.10.1:161.
+        # Named `prometheus/snmp` so it never collides with the chart's default
+        # `prometheus` self-scrape receiver.
+        prometheus/snmp:
+          config:
+            scrape_configs:
+              - job_name: snmp-mikrotik
+                scrape_interval: 60s
+                scrape_timeout: 30s
+                metrics_path: /snmp
+                params:
+                  module: [if_mib, mikrotik, system]
+                  auth: [mikrotik_v3]
+                static_configs:
+                  - targets:
+                      - 192.168.10.1
+                relabel_configs:
+                  - source_labels: [__address__]
+                    target_label: __param_target
+                  - source_labels: [__param_target]
+                    target_label: instance
+                  - target_label: __address__
+                    replacement: prometheus-snmp-exporter.prometheus-snmp-exporter.svc.cluster.local:9116
+      processors:
+        # Enrich raw syslog so it lands in Loki under a useful service/host.
+        # Scoped to the logs/syslog pipeline only; the OTLP logs pipeline stays
+        # pass-through (no resource rewriting) by design.
+        transform/syslog:
+          log_statements:
+            - context: log
+              statements:
+                # The syslog receiver parses RFC 5424 fields into attributes and
+                # leaves the human-readable text in attributes["message"]; promote
+                # it to the log Body so Loki shows a real log line (the line Loki
+                # stores comes from Body, which would otherwise be empty).
+                - set(body, attributes["message"]) where attributes["message"] != nil
+                - delete_key(attributes, "message")
+                # service.name is one of Loki's default-promoted resource attributes,
+                # so this becomes the `service_name` stream label. host.name is NOT
+                # promoted by default, so it lands as structured metadata (still
+                # queryable via `| host_name=...`), which is fine for a single device.
+                - set(resource.attributes["service.name"], "mikrotik")
+                - set(resource.attributes["host.name"], attributes["hostname"]) where attributes["hostname"] != nil
       exporters:
         prometheusremotewrite:
           endpoint: http://prometheus-prometheus.prometheus.svc.cluster.local:9090/api/v1/write
@@ -26,6 +94,7 @@ spec:
           metrics:
             receivers:
               - otlp
+              - prometheus/snmp
             processors:
               - memory_limiter
               - batch
@@ -36,6 +105,15 @@ spec:
               - otlp
             processors:
               - memory_limiter
+              - batch
+            exporters:
+              - otlp_http/loki
+          logs/syslog:
+            receivers:
+              - syslog
+            processors:
+              - memory_limiter
+              - transform/syslog
               - batch
             exporters:
               - otlp_http/loki
