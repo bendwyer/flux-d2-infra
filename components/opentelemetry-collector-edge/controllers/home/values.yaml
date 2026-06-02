@@ -77,6 +77,20 @@ spec:
                 # queryable via `| host_name=...`), which is fine for a single device.
                 - set(resource.attributes["service.name"], "mikrotik")
                 - set(resource.attributes["host.name"], attributes["hostname"]) where attributes["hostname"] != nil
+                # RouterOS encodes the level as a keyword in the leading topic list
+                # (e.g. "firewall,info", "dhcp,debug"), not in a way Loki picks up,
+                # so map it to OTLP severity. Anchored to the first whitespace token
+                # so the message text cannot false-match.
+                - set(severity_number, 5) where IsMatch(body, "^[^ ]*\\bdebug\\b")
+                - set(severity_text, "DEBUG") where IsMatch(body, "^[^ ]*\\bdebug\\b")
+                - set(severity_number, 9) where IsMatch(body, "^[^ ]*\\binfo\\b")
+                - set(severity_text, "INFO") where IsMatch(body, "^[^ ]*\\binfo\\b")
+                - set(severity_number, 13) where IsMatch(body, "^[^ ]*\\bwarning\\b")
+                - set(severity_text, "WARN") where IsMatch(body, "^[^ ]*\\bwarning\\b")
+                - set(severity_number, 17) where IsMatch(body, "^[^ ]*\\berror\\b")
+                - set(severity_text, "ERROR") where IsMatch(body, "^[^ ]*\\berror\\b")
+                - set(severity_number, 21) where IsMatch(body, "^[^ ]*\\bcritical\\b")
+                - set(severity_text, "FATAL") where IsMatch(body, "^[^ ]*\\bcritical\\b")
       exporters:
         prometheusremotewrite:
           endpoint: http://prometheus-prometheus.prometheus.svc.cluster.local:9090/api/v1/write
