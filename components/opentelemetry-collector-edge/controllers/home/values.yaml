@@ -45,7 +45,10 @@ spec:
                 scrape_timeout: 30s
                 metrics_path: /snmp
                 params:
-                  module: [if_mib, mikrotik, system]
+                  # hrDevice (hrProcessorLoad = CPU) and hrStorage (memory) are
+                  # built-in snmp_exporter modules; RouterOS serves both via
+                  # HOST-RESOURCES-MIB (verified with `/system resource cpu print oid`).
+                  module: [if_mib, mikrotik, system, hrStorage, hrDevice]
                   auth: [mikrotik_v3]
                 static_configs:
                   - targets:
