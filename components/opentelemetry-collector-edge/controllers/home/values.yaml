@@ -53,11 +53,15 @@ spec:
                 static_configs:
                   - targets:
                       - 192.168.10.1
+                    labels:
+                      instance: mikrotik-router
                 relabel_configs:
+                  # Keep the polled IP on every series as `target` (the SNMP query
+                  # endpoint, for scrape debugging); `instance` carries the device name.
                   - source_labels: [__address__]
                     target_label: __param_target
-                  - source_labels: [__param_target]
-                    target_label: instance
+                  - source_labels: [__address__]
+                    target_label: target
                   - target_label: __address__
                     replacement: prometheus-snmp-exporter.prometheus-snmp-exporter.svc.cluster.local:9116
       processors:
