@@ -1,0 +1,13 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/fluxcd-community/flux2-schemas/refs/heads/main/ocirepository-source-v1.json
+apiVersion: source.toolkit.fluxcd.io/v1
+kind: OCIRepository
+metadata:
+  name: snmp-mixin
+  namespace: prometheus-snmp-exporter
+spec:
+  interval: 1h
+  url: oci://ghcr.io/bendwyer/k8s-monitoring/snmp-mixin
+  ref:
+    tag: "2026.05.18"
+    digest: "sha256:8da1f5a1f115fb347fff7b0dc1f555ea1b7c5e713938970fbe980760cd43e380"
