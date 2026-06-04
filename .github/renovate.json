@@ -8,27 +8,7 @@
   "separateMinorPatch": true,
   "flux": { "managerFilePatterns": ["/components/.+\\.yaml$/"] },
   "github-actions": { "enabled": false },
-  "customDatasources": {
-    "coder-stable": {
-      "defaultRegistryUrlTemplate": "https://api.github.com/repos/coder/coder/releases/latest",
-      "format": "json",
-      "transformTemplates": [
-        "{ \"releases\": [ { \"version\": $substring(tag_name, 1), \"releaseTimestamp\": published_at, \"changelogUrl\": html_url } ] }"
-      ]
-    }
-  },
   "customManagers": [
-    {
-      "customType": "regex",
-      "managerFilePatterns": ["/components/coder/controllers/base/ocirepository\\.yaml$/"],
-      "matchStrings": [
-        "url:\\s+oci://ghcr\\.io/coder/chart/coder[\\s\\S]*?tag:\\s+\"(?<currentValue>[^\"]+)\""
-      ],
-      "depNameTemplate": "coder",
-      "packageNameTemplate": "coder",
-      "datasourceTemplate": "custom.coder-stable",
-      "versioningTemplate": "semver-coerced"
-    },
     {
       "customType": "regex",
       "managerFilePatterns": ["/components/hcp-terraform-operator/configs/home/agentpool\\.yaml$/"],
@@ -66,16 +46,21 @@
       "automerge": true
     },
     {
-      "description": "Coder: stable-only. customManager above tracks coder/coder via github-releases so respectLatest honors GitHub's 'latest' marker (stable); disable the flux lookup to avoid duplicate mainline PRs.",
+      "description": "Coder: track the published chart tags in GHCR directly (only real chart tags, so phantom versions like 2.33.6 can't be proposed). Automerge current-line patches immediately for prompt security/bugfix.",
       "matchManagers": ["flux"],
       "matchPackageNames": ["ghcr.io/coder/chart/coder"],
-      "enabled": false
+      "matchUpdateTypes": ["patch", "digest"],
+      "automerge": true,
+      "pinDigests": false
     },
     {
-      "description": "Automerge coder patch/minor (custom datasource doesn't match the generic docker/helm rules above)",
-      "matchDatasources": ["custom.coder-stable"],
-      "matchUpdateTypes": ["minor", "patch"],
-      "automerge": true
+      "description": "Coder: soak new minor/major releases ~35d so we adopt a minor only once it is promoted to stable (stable = N-1, monthly cadence): https://coder.com/docs/install/releases",
+      "matchManagers": ["flux"],
+      "matchPackageNames": ["ghcr.io/coder/chart/coder"],
+      "matchUpdateTypes": ["minor", "major"],
+      "minimumReleaseAge": "35 days",
+      "internalChecksFilter": "strict",
+      "automerge": false
     }
   ]
 }

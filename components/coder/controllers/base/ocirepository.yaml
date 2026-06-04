@@ -9,9 +9,8 @@ spec:
   interval: 1h
   url: oci://ghcr.io/coder/chart/coder
   ref:
-    # No digest: Renovate tracks this chart via github-releases (stable channel),
-    # which can't resolve OCI digests. Tag-only pinning.
-    tag: "2.33.6"
+    # Tracks Coder's stable line; new minors/majors are soaked 35 days before adoption.
+    tag: "2.33.5"
   layerSelector:
     mediaType: "application/vnd.cncf.helm.chart.content.v1.tar+gzip"
     operation: copy
