@@ -9,8 +9,8 @@ spec:
   interval: 1h
   url: oci://ghcr.io/prometheus-community/charts/alertmanager
   ref:
-    tag: "1.38.3"
-    digest: "sha256:17a29545dfe3f64e6b7f8c3fedc008760441b195a75de488a8c37f76457dc896"
+    tag: "1.39.0"
+    digest: "sha256:810d6daf72aa9b888990daca1ce7a5f050246fe11f06c16e1809a46857d5fe2e"
   layerSelector:
     mediaType: "application/vnd.cncf.helm.chart.content.v1.tar+gzip"
     operation: copy
