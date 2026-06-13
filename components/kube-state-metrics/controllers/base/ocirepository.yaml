@@ -9,8 +9,8 @@ spec:
   interval: 1h
   url: oci://ghcr.io/prometheus-community/charts/kube-state-metrics
   ref:
-    tag: "7.4.0"
-    digest: "sha256:48ebaf7dfbe9df5a1e6af5ab78992de3026dcef647168c38088554796a01b932"
+    tag: "7.4.1"
+    digest: "sha256:f158688b57c0745404433344f6697f4c711e8a5ae3a8523b28968284a4e71ef7"
   layerSelector:
     mediaType: "application/vnd.cncf.helm.chart.content.v1.tar+gzip"
     operation: copy
