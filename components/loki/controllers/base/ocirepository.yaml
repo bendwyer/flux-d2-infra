@@ -9,8 +9,8 @@ spec:
   interval: 1h
   url: oci://ghcr.io/grafana-community/helm-charts/loki
   ref:
-    tag: "17.4.0"
-    digest: "sha256:bc4c3e3a615dc91c492278a669ad2d3e12cbb788908be6a9ea5b06800cd1f3c3"
+    tag: "17.4.1"
+    digest: "sha256:6ca23257ca517c35d447eca73816dd9fcfd8bb588ab6ee26ae2cd5359b28a135"
   layerSelector:
     mediaType: "application/vnd.cncf.helm.chart.content.v1.tar+gzip"
     operation: copy
