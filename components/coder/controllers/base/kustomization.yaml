@@ -7,3 +7,7 @@ resources:
   - ocirepository.yaml
   - namespace.yaml
   - namespace-workspaces.yaml
+  - serviceaccount-coder-workspace-operator.yaml
+  - clusterrole-coder-workspace-operator.yaml
+  - clusterrolebinding-coder-workspace-operator.yaml
+  - clusterrolebinding-coder-workspace-operator-view.yaml

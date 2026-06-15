@@ -35,6 +35,20 @@ spec:
           value: "Tailscale"
         - name: CODER_OIDC_SCOPES
           value: "openid,profile,email"
+        - name: CODER_EXTERNAL_AUTH_0_ID
+          value: "github"
+        - name: CODER_EXTERNAL_AUTH_0_TYPE
+          value: "github"
+        - name: CODER_EXTERNAL_AUTH_0_CLIENT_ID
+          valueFrom:
+            secretKeyRef:
+              name: coder-external-auth
+              key: client_id
+        - name: CODER_EXTERNAL_AUTH_0_CLIENT_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: coder-external-auth
+              key: client_secret
       serviceAccount:
         workspaceNamespaces:
           - name: coder-workspaces
