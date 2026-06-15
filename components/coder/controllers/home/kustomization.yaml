@@ -6,5 +6,6 @@ resources:
   - ../base
   - cluster-coder-db.yaml
   - onepassworditem-oidc.yaml
+  - onepassworditem-external-auth.yaml
 patches:
   - path: values.yaml

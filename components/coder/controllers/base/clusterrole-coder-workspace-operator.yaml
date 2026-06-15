@@ -1,0 +1,44 @@
+---
+# Operator tier for Coder workspaces: enough to observe the cluster and unstick
+# Flux, but well short of cluster-admin. Destructive fixes (secret/Helm-storage
+# surgery, prune-causing deletes, RBAC changes) are deliberately excluded and
+# left to out-of-band break-glass (Omni-issued kubeconfig). Broad read comes
+# from the built-in `view` role (bound separately); this role adds the deltas.
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: coder-workspace-operator
+rules:
+  # Cluster-scoped reads `view` does not include (node/PV/storage/CRD debugging).
+  - apiGroups: [""]
+    resources: ["nodes", "persistentvolumes"]
+    verbs: ["get", "list", "watch"]
+  - apiGroups: ["storage.k8s.io"]
+    resources: ["storageclasses", "volumeattachments"]
+    verbs: ["get", "list", "watch"]
+  - apiGroups: ["apiextensions.k8s.io"]
+    resources: ["customresourcedefinitions"]
+    verbs: ["get", "list", "watch"]
+  # Operate Flux: read everything + patch to reconcile/force/suspend/resume.
+  # `patch` is safe to grant because it is Flux-mediated — triggering a reconcile
+  # makes Flux apply what is in Git (with Flux's identity), so it cannot inject
+  # arbitrary changes. `delete` is intentionally NOT granted: deleting a
+  # Kustomization/HelmRelease with prune:true cascades into tearing down its
+  # managed resources, so reset-by-recreate is break-glass.
+  - apiGroups:
+      - source.toolkit.fluxcd.io
+      - kustomize.toolkit.fluxcd.io
+      - helm.toolkit.fluxcd.io
+      - notification.toolkit.fluxcd.io
+      - image.toolkit.fluxcd.io
+      - fluxcd.controlplane.io
+    resources: ["*"]
+    verbs: ["get", "list", "watch", "patch"]
+  # Restart wedged workloads (delete pod -> controller recreates; rollout restart
+  # patches the pod template). Narrow, non-destructive, no prune cascade.
+  - apiGroups: [""]
+    resources: ["pods"]
+    verbs: ["delete"]
+  - apiGroups: ["apps"]
+    resources: ["deployments", "statefulsets", "daemonsets"]
+    verbs: ["patch"]
