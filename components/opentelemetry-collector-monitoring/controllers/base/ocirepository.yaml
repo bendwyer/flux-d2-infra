@@ -9,8 +9,8 @@ spec:
   interval: 1h
   url: oci://ghcr.io/open-telemetry/opentelemetry-helm-charts/opentelemetry-collector
   ref:
-    tag: "0.158.1"
-    digest: "sha256:b480c42ae8a6e0ba088e2125292caa15c1020c6bbc285ab57d0a355ef49320d2"
+    tag: "0.158.2"
+    digest: "sha256:a322fd04651f7b56acc0c81e8d9126ea90a0e31d685a68a552b457573717606b"
   layerSelector:
     mediaType: "application/vnd.cncf.helm.chart.content.v1.tar+gzip"
     operation: copy
