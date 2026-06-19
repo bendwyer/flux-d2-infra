@@ -9,8 +9,8 @@ spec:
   interval: 1h
   url: oci://ghcr.io/prometheus-community/charts/prometheus-snmp-exporter
   ref:
-    tag: "9.14.1"
-    digest: "sha256:ea5cb6249ec0d5aa001baca5ddfa8c62eb8ef1156419d1538f2fa6639785fa26"
+    tag: "9.15.0"
+    digest: "sha256:2f0da7f83f70cfcdd2148a1b9462e254535862c4d3448c0ed08ecd98296e0ac2"
   layerSelector:
     mediaType: "application/vnd.cncf.helm.chart.content.v1.tar+gzip"
     operation: copy
