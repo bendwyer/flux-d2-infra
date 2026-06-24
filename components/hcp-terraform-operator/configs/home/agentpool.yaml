@@ -29,7 +29,7 @@ spec:
           type: RuntimeDefault
       containers:
         - name: hcp-terraform-agent
-          image: "hashicorp/tfc-agent:1.28.12"
+          image: "hashicorp/tfc-agent:1.29"
           securityContext:
             allowPrivilegeEscalation: false
             capabilities:
