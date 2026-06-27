@@ -19,14 +19,40 @@ spec:
       databaseUrlSecretName: windmill-db-app
       databaseUrlSecretKey: uri
       # Windmill's Infrastructure-as-Code operator: reconciles declared instance
-      # settings into Postgres (drift-reverted). Manages base_url now; the SSO
-      # (oauths) block against tsidp is a follow-up pending a registered OIDC
-      # client and live verification of the connector.
+      # settings into Postgres (drift-reverted). Manages base_url and the tsidp
+      # OIDC SSO provider. The client secret is referenced from the 1Password
+      # backed windmill-oidc Secret via envRef (the operator resolves it at sync
+      # time); client_id is a non-secret public identifier so it is inlined.
       operator:
         enabled: true
+        extraEnv:
+          - name: TSIDP_CLIENT_SECRET
+            valueFrom:
+              secretKeyRef:
+                name: windmill-oidc
+                key: client_secret
         instanceSpec:
           global_settings:
             base_url: https://windmill.tail0c49c.ts.net
+            # tsidp OIDC SSO. Windmill OSS has no generic OIDC connector and
+            # custom-endpoint OAuth is EE-only in the UI, but supplying login_config
+            # directly here (the "dev setup") is honored by the OSS backend.
+            # Key "tsidp" sets the callback /user/login_callback/tsidp (matches the
+            # registered redirect URI); display_name is the login button label.
+            oauths:
+              tsidp:
+                id: e9777e80fb7a793b0d6831b922c2d9c4
+                display_name: Tailscale
+                secret:
+                  envRef: TSIDP_CLIENT_SECRET
+                login_config:
+                  auth_url: https://idp.tail0c49c.ts.net/authorize
+                  token_url: https://idp.tail0c49c.ts.net/token
+                  userinfo_url: https://idp.tail0c49c.ts.net/userinfo
+                  scopes:
+                    - openid
+                    - email
+                    - profile
       appReplicas: 1
       # windmill-extra hosts the websocket gateway for the in-app editor LSP and
       # debugger (:3000); the Tailscale ingress splits /ws to it (configs/home).
