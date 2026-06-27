@@ -40,6 +40,16 @@ spec:
           host: flux-operator-mcp.flux-operator-mcp.svc.cluster.local
           port: 9090
           protocol: StreamableHTTP
+      - name: windmill-tailscale-exit-nodes
+        static:
+          host: windmill-app.windmill.svc.cluster.local
+          port: 8000
+          path: /api/mcp/w/tailscale-exit-nodes/mcp
+          protocol: StreamableHTTP
+          policies:
+            auth:
+              secretRef:
+                name: windmill-tailscale-exit-nodes-mcp
       - name: cloudflare-docs
         static:
           host: docs.mcp.cloudflare.com
