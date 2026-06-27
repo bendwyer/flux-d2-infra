@@ -10,3 +10,4 @@ resources:
   - onepassworditem-terraform-mcp.yaml
   - onepassworditem-cloudflare-observability-mcp.yaml
   - onepassworditem-cloudflare-bindings-mcp.yaml
+  - onepassworditem-windmill-tailscale-exit-nodes-mcp.yaml
