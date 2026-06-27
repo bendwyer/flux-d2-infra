@@ -72,10 +72,11 @@ spec:
           controller: Deployment
           replicas: 2
           privileged: true
-          # Engage PID-namespace job isolation; the chart does not set this env.
+          # The "default" group skips the DEFAULT_TAGS fallback, so without
+          # WORKER_TAGS the worker has no tags and pulls no jobs.
           extraEnv:
-            - name: FAVOR_UNSHARE_PID
-              value: "true"
+            - name: WORKER_TAGS
+              value: "deno,python3,go,bash,powershell,nativets,mysql,oracledb,bun,postgresql,bigquery,snowflake,mssql,graphql,php,rust,ansible,csharp,nu,java,ruby,rlang,duckdb,dependency,flow,other"
           podSecurityContext:
             runAsUser: 0
             runAsNonRoot: false
