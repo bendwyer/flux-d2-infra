@@ -77,6 +77,12 @@ spec:
           extraEnv:
             - name: WORKER_TAGS
               value: "deno,python3,go,bash,powershell,nativets,mysql,oracledb,bun,postgresql,bigquery,snowflake,mssql,graphql,php,rust,ansible,csharp,nu,java,ruby,rlang,duckdb,dependency,flow,other"
+            # nsjail sandboxing in no-user-namespace mode (Talos blocks user
+            # namespaces); gives filesystem/env/resource isolation for jobs.
+            - name: DISABLE_NSJAIL
+              value: "false"
+            - name: DISABLE_NUSER
+              value: "true"
           podSecurityContext:
             runAsUser: 0
             runAsNonRoot: false
