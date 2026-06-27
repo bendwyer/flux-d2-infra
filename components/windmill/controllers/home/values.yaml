@@ -72,6 +72,10 @@ spec:
           controller: Deployment
           replicas: 2
           privileged: true
+          # Engage PID-namespace job isolation; the chart does not set this env.
+          extraEnv:
+            - name: FAVOR_UNSHARE_PID
+              value: "true"
           podSecurityContext:
             runAsUser: 0
             runAsNonRoot: false
