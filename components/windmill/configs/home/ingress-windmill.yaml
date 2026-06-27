@@ -12,6 +12,9 @@ metadata:
     gethomepage.dev/group: "Infrastructure"
     gethomepage.dev/icon: "windmill.png"
     gethomepage.dev/href: "https://windmill.tail0c49c.ts.net"
+    # Workload name differs from the ingress name, so point homepage's cluster
+    # status check at the app deployment (else the tile shows "not found").
+    gethomepage.dev/app: "windmill-app"
 spec:
   ingressClassName: tailscale
   tls:
