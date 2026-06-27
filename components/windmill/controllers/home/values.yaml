@@ -1,0 +1,57 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/fluxcd-community/flux2-schemas/refs/heads/main/helmrelease-helm-v2.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: windmill
+  namespace: windmill
+spec:
+  interval: 1h
+  values:
+    # Tailnet exposure is handled by a dedicated Tailscale Ingress (configs/home);
+    # disable the chart's bundled Ingress.
+    ingress:
+      enabled: false
+    windmill:
+      baseProtocol: https
+      baseDomain: windmill.tail0c49c.ts.net
+      # CNPG-generated connection secret (Cluster windmill-db -> windmill-db-app).
+      databaseUrlSecretName: windmill-db-app
+      databaseUrlSecretKey: uri
+      # Windmill's Infrastructure-as-Code operator: reconciles declared instance
+      # settings into Postgres (drift-reverted). Manages base_url now; the SSO
+      # (oauths) block against tsidp is a follow-up pending a registered OIDC
+      # client and live verification of the connector.
+      operator:
+        enabled: true
+        instanceSpec:
+          global_settings:
+            base_url: https://windmill.tail0c49c.ts.net
+      appReplicas: 1
+      # windmill-extra hosts the websocket gateway for the in-app editor LSP and
+      # debugger (:3000); the Tailscale ingress splits /ws to it (configs/home).
+      extraReplicas: 1
+      windmillExtra:
+        enableLsp: true
+      # multiplayer + indexer are EE-only; keep them off on the OSS build.
+      multiplayerReplicas: 0
+      indexer:
+        enabled: false
+      # Full entry, not a minimal override: a partial workerGroups item drops the
+      # chart defaults (privileged + root podSecurityContext + memory limit) that
+      # Windmill workers need to execute jobs. Keep them; just trim to one group
+      # at lower replicas and add a cpu/memory request so it is not BestEffort.
+      workerGroups:
+        - name: default
+          controller: Deployment
+          replicas: 2
+          privileged: true
+          podSecurityContext:
+            runAsUser: 0
+            runAsNonRoot: false
+          resources:
+            requests:
+              cpu: 200m
+              memory: 512Mi
+            limits:
+              memory: 2Gi

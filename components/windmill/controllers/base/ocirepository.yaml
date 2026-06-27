@@ -1,0 +1,15 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/fluxcd-community/flux2-schemas/refs/heads/main/ocirepository-source-v1.json
+apiVersion: source.toolkit.fluxcd.io/v1
+kind: OCIRepository
+metadata:
+  name: windmill
+  namespace: windmill
+spec:
+  interval: 1h
+  url: oci://ghcr.io/windmill-labs/charts/windmill
+  ref:
+    # No floating tag is published; pin a concrete chart version + digest.
+    # New minors are soaked before adoption (Renovate tracks the digest).
+    tag: "4.0.192"
+    digest: sha256:f3d8ff8a029694a1b6a84d34b069b22629e98a17d78a122befb359b1713e1329
