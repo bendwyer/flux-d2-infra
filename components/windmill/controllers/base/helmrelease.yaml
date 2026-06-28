@@ -7,6 +7,8 @@ metadata:
   namespace: windmill
 spec:
   interval: 1h
+  # Cold windmill-extra image pull on chart bumps outruns Helm's default 5m wait.
+  timeout: 15m
   chartRef:
     kind: OCIRepository
     name: windmill
