@@ -6,7 +6,7 @@ metadata:
   namespace: windmill
   annotations:
     tailscale.com/proxy-group: private-ingress
-    tailscale.com/tags: tag:k8s-private,tag:ci-windmill
+    tailscale.com/tags: tag:k8s-private
     tailscale.com/http-redirect: "true"
     gethomepage.dev/enabled: "true"
     gethomepage.dev/name: "Windmill"
