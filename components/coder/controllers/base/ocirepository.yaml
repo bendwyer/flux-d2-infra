@@ -10,8 +10,8 @@ spec:
   url: oci://ghcr.io/coder/chart/coder
   ref:
     # Tracks Coder's stable line; new minors/majors are soaked 35 days before adoption.
-    tag: "2.33.10"
-    digest: sha256:00938b76d6b2fb05bb7508bb9088a02ceb3c0444e2fbcb2706a7f937d40d3fe8
+    tag: "2.33.11"
+    digest: sha256:0e6a3379f4fbd9c5f468b248b9eebba6528b3eca51d1677026809b006929f91f
   layerSelector:
     mediaType: "application/vnd.cncf.helm.chart.content.v1.tar+gzip"
     operation: copy
