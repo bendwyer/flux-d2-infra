@@ -9,10 +9,10 @@ spec:
   interval: 1h
   url: oci://ghcr.io/siderolabs/charts/talos-cloud-controller-manager
   ref:
-    tag: "0.5.4"
+    tag: "0.5.5"
     # Pinned to the last-good 0.5.4 build. The rebuilt digest d3acd3c renders a
     # duplicate "metrics" port in the Service and Deployment (invalid). Revert of #679.
-    digest: "sha256:c43c147325116e8305ac7c49f14b6208627dc3e7bdb2c2a0bf116003a9ee39f2"
+    digest: "sha256:664740c63a15353f0dbc0bec76820c48a75dcff2a7836a1a1124caa1242d9d25"
   layerSelector:
     mediaType: "application/vnd.cncf.helm.chart.content.v1.tar+gzip"
     operation: copy
