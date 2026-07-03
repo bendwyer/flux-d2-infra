@@ -46,13 +46,6 @@
       "automerge": true
     },
     {
-      "description": "talos-ccm: block digest updates. Upstream rebuilt the 0.5.4 tag to a digest that renders a duplicate 'metrics' port (invalid Service/Deployment). Remove once a fixed chart (0.5.5+) ships; a new version tag is a patch update and still flows.",
-      "matchManagers": ["flux"],
-      "matchPackageNames": ["ghcr.io/siderolabs/charts/talos-cloud-controller-manager"],
-      "matchUpdateTypes": ["digest"],
-      "enabled": false
-    },
-    {
       "description": "Coder: track the published chart tags in GHCR directly (only real chart tags, so phantom versions like 2.33.6 can't be proposed). Automerge current-line patches immediately for prompt security/bugfix.",
       "matchManagers": ["flux"],
       "matchPackageNames": ["ghcr.io/coder/chart/coder"],
