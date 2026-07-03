@@ -18,10 +18,5 @@ spec:
       retries: 3
   upgrade:
     cleanupOnFail: true
-    # One-time migration: 0.5.5 moved the metrics port 50258 to 10458, and a
-    # server-side-apply merge keeps both entries (duplicate "metrics" port name,
-    # invalid). force replaces the Service/Deployment so the stale port is dropped.
-    # Remove once the release is on 0.5.5 and healthy.
-    force: true
     remediation:
       retries: 3
