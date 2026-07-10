@@ -10,4 +10,4 @@ spec:
   url: oci://ghcr.io/bendwyer/k8s-monitoring/opentelemetry-collector-mixin
   ref:
     tag: "2025.10.23"
-    digest: "sha256:393a3d2c9e53e110770d14b7634d674a05d8c79c83a92955ad885dc69acfd829"
+    digest: "sha256:c3ef4b2e18b65d6233eb04815d1c1803078cea035201fc8d0c3bba01b575805c"
