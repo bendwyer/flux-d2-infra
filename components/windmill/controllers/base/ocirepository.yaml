@@ -11,5 +11,5 @@ spec:
   ref:
     # No floating tag is published; pin a concrete chart version + digest.
     # New minors are soaked before adoption (Renovate tracks the digest).
-    tag: "4.0.201"
-    digest: sha256:59599b8e887920cd5c515d4f7d151b51893e2cdf07ae28497036161f7aa72916
+    tag: "4.0.202"
+    digest: sha256:b5fbe978b06294da380484f780186c53bc9aad625cebd0a01d2557852dfbaeb8
