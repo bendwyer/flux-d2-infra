@@ -9,5 +9,5 @@ spec:
   interval: 1h
   url: oci://ghcr.io/bendwyer/k8s-monitoring/node-exporter-mixin
   ref:
-    tag: "1.11.1"
-    digest: "sha256:0232f3f4d979a51a7058f2011005a32df5790807a6f4eed4791b4a040f1e5b31"
+    tag: "1.12.0"
+    digest: "sha256:789f0e81aa3b25465672a3cec9bcc1f81b2b902a524487df7f7bf28d3d223194"
