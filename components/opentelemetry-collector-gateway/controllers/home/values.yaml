@@ -124,6 +124,10 @@ spec:
                 static_configs:
                   - targets:
                       - argo-workflows-workflow-controller.argo-workflows.svc.cluster.local:8080
+              - job_name: tailscale-exit-nodes
+                static_configs:
+                  - targets:
+                      - tailscale-exit-nodes.tailscale-exit-nodes.svc.cluster.local:8080
       processors:
         # Override preset: drop `from: connection` — it misattributes OTLP-received metrics to the sender pod.
         k8sattributes:
