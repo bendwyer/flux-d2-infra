@@ -1,0 +1,31 @@
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: semaphore
+  namespace: semaphore
+  annotations:
+    tailscale.com/proxy-group: private-ingress
+    tailscale.com/tags: tag:k8s-private
+    tailscale.com/http-redirect: "true"
+    gethomepage.dev/enabled: "true"
+    gethomepage.dev/name: "Semaphore"
+    gethomepage.dev/group: "Infrastructure"
+    gethomepage.dev/icon: "semaphore.png"
+    gethomepage.dev/href: "https://semaphore.tail0c49c.ts.net"
+    gethomepage.dev/app: "semaphore"
+spec:
+  ingressClassName: tailscale
+  tls:
+    - hosts:
+        - semaphore
+  rules:
+    - http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: semaphore
+                port:
+                  number: 3000
