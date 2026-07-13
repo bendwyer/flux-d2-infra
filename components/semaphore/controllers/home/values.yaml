@@ -1,0 +1,82 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/fluxcd-community/flux2-schemas/refs/heads/main/helmrelease-helm-v2.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: semaphore
+  namespace: semaphore
+spec:
+  values:
+    fullnameOverride: semaphore
+    general:
+      host: https://semaphore.tail0c49c.ts.net
+      # Server runs tasks itself; no separate runner pods.
+      useRemoteRunner: false
+
+    # External CloudNativePG (semaphore-db). Host/port/name inlined; user + password
+    # come from the CNPG-generated semaphore-db-app secret (keys username/password
+    # match the chart defaults). Bundled DBs are disabled in the base HelmRelease.
+    database:
+      type: postgres
+      host: semaphore-db-rw.semaphore.svc.cluster.local
+      port: 5432
+      name: semaphore
+      usernameFromSecret: true
+      usernameKey: username
+      passwordKey: password
+      existingSecret: semaphore-db-app
+      options:
+        sslmode: require
+
+    # Cookie + access-key encryption keys from 1Password. MUST be supplied and
+    # persisted: the chart's auto-generate uses a Helm lookup that returns empty
+    # under GitOps and would rotate the key, making stored secrets undecryptable.
+    secrets:
+      existingSecret: semaphore-general
+
+    # Break-glass local admin alongside OIDC login.
+    admin:
+      create: true
+      existingSecret: semaphore-admin
+
+    # tsidp OIDC. Config is git-visible here; only the client secret comes from the
+    # semaphore-oidc Secret, mounted as a file (client_secret_file) so it never lands
+    # in the rendered ConfigMap. Mirrors the coder/windmill "config in git, secret
+    # from 1Password" pattern.
+    oidc:
+      enable: true
+      providers:
+        tsidp:
+          display_name: Tailscale
+          provider_url: https://idp.tail0c49c.ts.net
+          client_id: semaphore
+          client_secret_file: /etc/semaphore/oidc/client_secret
+          redirect_url: https://semaphore.tail0c49c.ts.net/api/auth/oidc/tsidp/redirect
+          username_claim: preferred_username
+          name_claim: name
+          email_claim: email
+          scopes:
+            - openid
+            - profile
+            - email
+    extraVolumes:
+      - name: oidc-client-secret
+        secret:
+          secretName: semaphore-oidc
+    extraVolumeMounts:
+      - name: oidc-client-secret
+        mountPath: /etc/semaphore/oidc
+        readOnly: true
+
+    # Workdir PVC (project repos); still used with an external DB.
+    persistence:
+      enabled: true
+      size: 10G
+
+    service:
+      type: ClusterIP
+      port: 3000
+
+    # Ingress is a separate Tailscale Ingress in configs/home.
+    ingress:
+      enabled: false
