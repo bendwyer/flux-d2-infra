@@ -52,8 +52,9 @@ spec:
           client_id_file: /etc/semaphore/oidc/client_id
           client_secret_file: /etc/semaphore/oidc/client_secret
           redirect_url: https://semaphore.tail0c49c.ts.net/api/auth/oidc/tsidp/redirect
+          # tsidp emits no `name` claim, so map the display name to preferred_username too.
           username_claim: preferred_username
-          name_claim: name
+          name_claim: preferred_username
           email_claim: email
           scopes:
             - openid
