@@ -39,17 +39,17 @@ spec:
       create: true
       existingSecret: semaphore-admin
 
-    # tsidp OIDC. Config is git-visible here; only the client secret comes from the
-    # semaphore-oidc Secret, mounted as a file (client_secret_file) so it never lands
-    # in the rendered ConfigMap. Mirrors the coder/windmill "config in git, secret
-    # from 1Password" pattern.
+    # tsidp OIDC. Non-sensitive config is git-visible here; the client_id and
+    # client_secret both come from the semaphore-oidc Secret, mounted as files
+    # (client_id_file/client_secret_file) so neither the tsidp-generated id nor
+    # the secret lands in git or the rendered ConfigMap.
     oidc:
       enable: true
       providers:
         tsidp:
           display_name: Tailscale
           provider_url: https://idp.tail0c49c.ts.net
-          client_id: semaphore
+          client_id_file: /etc/semaphore/oidc/client_id
           client_secret_file: /etc/semaphore/oidc/client_secret
           redirect_url: https://semaphore.tail0c49c.ts.net/api/auth/oidc/tsidp/redirect
           username_claim: preferred_username
