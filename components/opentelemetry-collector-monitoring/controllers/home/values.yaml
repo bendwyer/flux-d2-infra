@@ -52,7 +52,7 @@ spec:
                     target_label: __address__
                     replacement: $1:8888
       exporters:
-        prometheusremotewrite:
+        prometheus_remote_write:
           endpoint: http://prometheus-prometheus.prometheus.svc.cluster.local:9090/api/v1/write
           external_labels:
             cluster: home
@@ -78,7 +78,7 @@ spec:
               - memory_limiter
               - batch
             exporters:
-              - prometheusremotewrite
+              - prometheus_remote_write
         telemetry:
           metrics:
             level: detailed

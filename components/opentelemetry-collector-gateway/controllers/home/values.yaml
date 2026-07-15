@@ -130,7 +130,7 @@ spec:
                       - tailscale-exit-nodes.tailscale-exit-nodes.svc.cluster.local:8080
       processors:
         # Override preset: drop `from: connection` — it misattributes OTLP-received metrics to the sender pod.
-        k8sattributes:
+        k8s_attributes:
           pod_association:
             - sources:
                 - from: resource_attribute
@@ -142,10 +142,10 @@ spec:
           metric_statements:
             - context: scope
               statements:
-                - set(name, "")
-                - set(version, "")
+                - set(scope.name, "")
+                - set(scope.version, "")
       exporters:
-        prometheusremotewrite:
+        prometheus_remote_write:
           endpoint: http://prometheus-prometheus.prometheus.svc.cluster.local:9090/api/v1/write
           external_labels:
             cluster: home
@@ -174,7 +174,7 @@ spec:
               - transform
               - batch
             exporters:
-              - prometheusremotewrite
+              - prometheus_remote_write
           logs:
             receivers:
               - otlp
