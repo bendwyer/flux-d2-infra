@@ -10,9 +10,11 @@ spec:
   groups:
     - name: flux.rules
       rules:
+        # The operator publishes its own CRDs under separate metric names, so match all
+        # three: flux_resource_info omits FluxInstance and ResourceSet.
         - alert: FluxResourceFailing
           expr: |
-            flux_resource_info{ready="False",reason!~"DependencyNotReady"} == 1
+            {__name__=~"flux_(resource|instance|resourceset)_info",ready="False",reason!~"DependencyNotReady"} == 1
           for: 15m
           labels:
             severity: warning
@@ -27,7 +29,7 @@ spec:
 
         - alert: FluxResourceStalled
           expr: |
-            flux_resource_info{ready="False",reason!~"DependencyNotReady"} == 1
+            {__name__=~"flux_(resource|instance|resourceset)_info",ready="False",reason!~"DependencyNotReady"} == 1
           for: 30m
           labels:
             severity: critical
@@ -43,7 +45,7 @@ spec:
 
         - alert: FluxResourceSuspended
           expr: |
-            flux_resource_info{suspended="True"} == 1
+            {__name__=~"flux_(resource|instance|resourceset)_info",suspended="True"} == 1
           for: 24h
           labels:
             severity: info
@@ -53,8 +55,9 @@ spec:
             description: >-
               {{ $labels.kind }} {{ $labels.exported_namespace }}/{{ $labels.name }}
               has been suspended for over 24 hours. If this is intentional, silence
-              this alert. Otherwise, resume reconciliation with
-              `flux resume {{ $labels.kind | toLower }} -n {{ $labels.exported_namespace }} {{ $labels.name }}`.
+              this alert. Otherwise resume reconciliation: toolkit kinds use
+              `flux resume {{ $labels.kind | toLower }} -n {{ $labels.exported_namespace }} {{ $labels.name }}`,
+              while FluxInstance and ResourceSet use `flux-operator resume`.
 
         - alert: FluxOperatorAbsent
           expr: |
