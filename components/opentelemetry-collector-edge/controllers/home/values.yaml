@@ -76,30 +76,30 @@ spec:
                 # leaves the human-readable text in attributes["message"]; promote
                 # it to the log Body so Loki shows a real log line (the line Loki
                 # stores comes from Body, which would otherwise be empty).
-                - set(body, attributes["message"]) where attributes["message"] != nil
-                - delete_key(attributes, "message")
+                - set(log.body, log.attributes["message"]) where log.attributes["message"] != nil
+                - delete_key(log.attributes, "message")
                 # service.name is one of Loki's default-promoted resource attributes,
                 # so this becomes the `service_name` stream label. host.name is NOT
                 # promoted by default, so it lands as structured metadata (still
                 # queryable via `| host_name=...`), which is fine for a single device.
                 - set(resource.attributes["service.name"], "mikrotik")
-                - set(resource.attributes["host.name"], attributes["hostname"]) where attributes["hostname"] != nil
+                - set(resource.attributes["host.name"], log.attributes["hostname"]) where log.attributes["hostname"] != nil
                 # RouterOS encodes the level as a keyword in the leading topic list
                 # (e.g. "firewall,info", "dhcp,debug"), not in a way Loki picks up,
                 # so map it to OTLP severity. Anchored to the first whitespace token
                 # so the message text cannot false-match.
-                - set(severity_number, 5) where IsMatch(body, "^[^ ]*\\bdebug\\b")
-                - set(severity_text, "DEBUG") where IsMatch(body, "^[^ ]*\\bdebug\\b")
-                - set(severity_number, 9) where IsMatch(body, "^[^ ]*\\binfo\\b")
-                - set(severity_text, "INFO") where IsMatch(body, "^[^ ]*\\binfo\\b")
-                - set(severity_number, 13) where IsMatch(body, "^[^ ]*\\bwarning\\b")
-                - set(severity_text, "WARN") where IsMatch(body, "^[^ ]*\\bwarning\\b")
-                - set(severity_number, 17) where IsMatch(body, "^[^ ]*\\berror\\b")
-                - set(severity_text, "ERROR") where IsMatch(body, "^[^ ]*\\berror\\b")
-                - set(severity_number, 21) where IsMatch(body, "^[^ ]*\\bcritical\\b")
-                - set(severity_text, "FATAL") where IsMatch(body, "^[^ ]*\\bcritical\\b")
+                - set(log.severity_number, 5) where IsMatch(log.body, "^[^ ]*\\bdebug\\b")
+                - set(log.severity_text, "DEBUG") where IsMatch(log.body, "^[^ ]*\\bdebug\\b")
+                - set(log.severity_number, 9) where IsMatch(log.body, "^[^ ]*\\binfo\\b")
+                - set(log.severity_text, "INFO") where IsMatch(log.body, "^[^ ]*\\binfo\\b")
+                - set(log.severity_number, 13) where IsMatch(log.body, "^[^ ]*\\bwarning\\b")
+                - set(log.severity_text, "WARN") where IsMatch(log.body, "^[^ ]*\\bwarning\\b")
+                - set(log.severity_number, 17) where IsMatch(log.body, "^[^ ]*\\berror\\b")
+                - set(log.severity_text, "ERROR") where IsMatch(log.body, "^[^ ]*\\berror\\b")
+                - set(log.severity_number, 21) where IsMatch(log.body, "^[^ ]*\\bcritical\\b")
+                - set(log.severity_text, "FATAL") where IsMatch(log.body, "^[^ ]*\\bcritical\\b")
       exporters:
-        prometheusremotewrite:
+        prometheus_remote_write:
           endpoint: http://prometheus-prometheus.prometheus.svc.cluster.local:9090/api/v1/write
           external_labels:
             cluster: home
@@ -120,7 +120,7 @@ spec:
               - memory_limiter
               - batch
             exporters:
-              - prometheusremotewrite
+              - prometheus_remote_write
           logs:
             receivers:
               - otlp

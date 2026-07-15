@@ -34,7 +34,7 @@ spec:
         memory: 1536Mi
     clusterRole:
       create: true
-      # k8sattributes preset auto-appends pods/namespaces/replicasets.
+      # kubernetesAttributes preset auto-appends pods/namespaces/replicasets.
       rules:
         - apiGroups: [""]
           resources: [nodes]
