@@ -11,12 +11,25 @@ spec:
     kind: OCIRepository
     name: dragonfly-operator
   values:
+    # Engine image handed to every Dragonfly instance the operator creates.
+    # Upstream's default pull routes through an analytics layer that some DNS
+    # tools block, which breaks the pull, so both images come from GHCR instead
+    # (same images, published by upstream CI). The operator hardcodes the engine
+    # image to that same analytics-fronted registry, so it has to be bypassed
+    # here too. It is consumed verbatim rather than composed with a version,
+    # so the tag is pinned and Renovate owns bumping it.
+    dragonflyImage: "ghcr.io/dragonflydb/dragonfly:v1.39.0@sha256:0fa01a2b929e704c7a9300d23e7f52002ebd39e90996fb8bb63826aed92fa06f"
+
     # kube-rbac-proxy fronts /metrics with bearer-token auth. The OTel collectors
     # scrape over plain HTTP, so it would add a second image and an auth step for
     # no benefit; the manager serves metrics on :8080 directly without it.
     rbacProxy:
       enabled: false
     manager:
+      # GHCR for the same reason as dragonflyImage above. No tag needed: the
+      # chart's appVersion equals its version, so the pinned chart moves this.
+      image:
+        repository: ghcr.io/dragonflydb/operator
       resources:
         limits:
           memory: 256Mi

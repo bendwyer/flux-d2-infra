@@ -17,6 +17,16 @@
       ],
       "depNameTemplate": "hashicorp/tfc-agent",
       "datasourceTemplate": "docker"
+    },
+    {
+      "description": "Engine image the operator hands every Dragonfly instance. Pinned to GHCR because upstream's default routes through an analytics layer that some DNS tools block, and consumed verbatim so it must carry a tag. A flat chart value rather than an image.repository/tag pair, so no built-in manager reads it.",
+      "customType": "regex",
+      "managerFilePatterns": ["/components/dragonfly-operator/controllers/base/helmrelease\\.yaml$/"],
+      "matchStrings": [
+        "dragonflyImage:\\s+\"?ghcr\\.io/dragonflydb/dragonfly:(?<currentValue>[^@\\s\"]+)(?:@(?<currentDigest>sha256:[a-f0-9]+))?\"?"
+      ],
+      "depNameTemplate": "ghcr.io/dragonflydb/dragonfly",
+      "datasourceTemplate": "docker"
     }
   ],
   "packageRules": [
