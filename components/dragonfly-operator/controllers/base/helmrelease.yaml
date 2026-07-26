@@ -1,0 +1,25 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/fluxcd-community/flux2-schemas/refs/heads/main/helmrelease-helm-v2.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: dragonfly-operator
+  namespace: dragonfly-operator
+spec:
+  interval: 1h
+  chartRef:
+    kind: OCIRepository
+    name: dragonfly-operator
+  values:
+    # kube-rbac-proxy fronts /metrics with bearer-token auth. The OTel collectors
+    # scrape over plain HTTP, so it would add a second image and an auth step for
+    # no benefit; the manager serves metrics on :8080 directly without it.
+    rbacProxy:
+      enabled: false
+    manager:
+      resources:
+        limits:
+          memory: 256Mi
+        requests:
+          cpu: 50m
+          memory: 256Mi
