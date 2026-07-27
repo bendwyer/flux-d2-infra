@@ -8,8 +8,8 @@ spec:
   interval: 1h
   url: oci://cr.agentgateway.dev/charts/agentgateway
   ref:
-    tag: "1.3.1"
-    digest: "sha256:c50065466cf8f5042d8bd993a29bbcdc7411830a361e88ac49a9bc753e163227"
+    tag: "1.4.0"
+    digest: "sha256:4354886f4f97e1c1de7db68a44875f2cb84ed9f72efd39a0e9061e561c3fa084"
   layerSelector:
     mediaType: "application/vnd.cncf.helm.chart.content.v1.tar+gzip"
     operation: copy
