@@ -9,8 +9,8 @@ spec:
   interval: 1h
   url: oci://ghcr.io/grafana-community/helm-charts/grafana
   ref:
-    tag: "12.8.1"
-    digest: "sha256:c98906db1ac587328ae1bf1304c0653e981730ac2267f851565c7a91da970da8"
+    tag: "12.9.0"
+    digest: "sha256:c2eaf1ff68d4577f6bb0f8990c20c03533c15f6af9610bf014d5092ecb9bce06"
   layerSelector:
     mediaType: "application/vnd.cncf.helm.chart.content.v1.tar+gzip"
     operation: copy
