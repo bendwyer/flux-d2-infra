@@ -40,6 +40,11 @@ spec:
           host: flux-operator-mcp.flux-operator-mcp.svc.cluster.local
           port: 9090
           protocol: StreamableHTTP
+      - name: paperless
+        static:
+          host: paperless-mcp.agentgateway.svc.cluster.local
+          port: 5000
+          protocol: StreamableHTTP
       - name: cloudflare-docs
         static:
           host: docs.mcp.cloudflare.com
