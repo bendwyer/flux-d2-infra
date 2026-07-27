@@ -1,0 +1,56 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: paperless-mcp
+  namespace: agentgateway
+  labels:
+    app: paperless-mcp
+spec:
+  # Sessions are stateful: the server issues an Mcp-Session-Id and expects it
+  # back on later requests, so it cannot be load balanced across pods.
+  replicas: 1
+  selector:
+    matchLabels:
+      app: paperless-mcp
+  template:
+    metadata:
+      labels:
+        app: paperless-mcp
+    spec:
+      containers:
+        - name: paperless-mcp
+          image: ghcr.io/bendwyer/containers/paperless-mcp:0.3.2
+          env:
+            - name: PAPERLESS_BASE_URL
+              value: "http://paperless-ngx.paperless-ngx.svc.cluster.local:8000"
+            - name: PAPERLESS_API_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: paperless-mcp
+                  key: credential
+          ports:
+            - containerPort: 5000
+          resources:
+            requests:
+              cpu: 50m
+              memory: 128Mi
+            limits:
+              memory: 128Mi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: paperless-mcp
+  namespace: agentgateway
+  labels:
+    app: paperless-mcp
+spec:
+  selector:
+    app: paperless-mcp
+  ports:
+    - protocol: TCP
+      port: 5000
+      targetPort: 5000
+      appProtocol: agentgateway.dev/mcp
+  type: ClusterIP
