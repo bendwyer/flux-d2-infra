@@ -8,6 +8,16 @@
   "separateMinorPatch": true,
   "flux": { "managerFilePatterns": ["/components/.+\\.yaml$/"] },
   "github-actions": { "enabled": false },
+  "customDatasources": {
+    "coder-stable": {
+      "description": "GitHub releases 'latest' is Coder's stable pointer; the registry carries no channel info.",
+      "defaultRegistryUrlTemplate": "https://api.github.com/repos/coder/coder/releases/latest",
+      "format": "json",
+      "transformTemplates": [
+        "{\"releases\":[{\"version\": $substring(tag_name,1), \"releaseTimestamp\": published_at}],\"sourceUrl\":\"https://github.com/coder/coder\"}"
+      ]
+    }
+  },
   "customManagers": [
     {
       "customType": "regex",
@@ -27,6 +37,15 @@
       ],
       "depNameTemplate": "ghcr.io/dragonflydb/dragonfly",
       "datasourceTemplate": "docker"
+    },
+    {
+      "description": "Coder chart tag follows the stable channel, not the registry tag list. Bare tag: this datasource cannot resolve a digest (coder/coder#13771).",
+      "customType": "regex",
+      "managerFilePatterns": ["/components/coder/controllers/base/ocirepository\\.yaml$/"],
+      "matchStrings": ["tag:\\s+\"(?<currentValue>[^\"]+)\""],
+      "depNameTemplate": "coder-stable",
+      "versioningTemplate": "semver-coerced",
+      "datasourceTemplate": "custom.coder-stable"
     }
   ],
   "packageRules": [
@@ -38,7 +57,7 @@
     },
     {
       "description": "Automerge patch+minor for >=1.x",
-      "matchDatasources": ["docker", "helm", "git-refs", "github-tags"],
+      "matchDatasources": ["docker", "helm", "git-refs", "github-tags", "custom.coder-stable"],
       "matchCurrentVersion": "/^v?[1-9]/",
       "matchUpdateTypes": ["minor", "patch", "digest"],
       "automerge": true
@@ -56,20 +75,15 @@
       "automerge": true
     },
     {
-      "description": "Coder: track the published chart tags in GHCR directly (only real chart tags, so phantom versions like 2.33.6 can't be proposed). Automerge current-line patches immediately for prompt security/bugfix.",
-      "matchManagers": ["flux"],
+      "description": "Coder: docker view lists every tag with no channel info, superseded by custom.coder-stable.",
+      "matchDatasources": ["docker"],
       "matchPackageNames": ["ghcr.io/coder/chart/coder"],
-      "matchUpdateTypes": ["patch", "digest"],
-      "automerge": true,
-      "pinDigests": false
+      "enabled": false
     },
     {
-      "description": "Coder: soak new minor/major releases ~35d so we adopt a minor only once it is promoted to stable (stable = N-1, monthly cadence): https://coder.com/docs/install/releases",
-      "matchManagers": ["flux"],
-      "matchPackageNames": ["ghcr.io/coder/chart/coder"],
+      "description": "Coder: a minor here is a stable-channel promotion, so merge it deliberately. Patches inherit the standard automerge.",
+      "matchPackageNames": ["coder-stable"],
       "matchUpdateTypes": ["minor", "major"],
-      "minimumReleaseAge": "35 days",
-      "internalChecksFilter": "strict",
       "automerge": false
     }
   ]
