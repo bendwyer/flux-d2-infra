@@ -35,6 +35,10 @@ spec:
           value: "Tailscale"
         - name: CODER_OIDC_SCOPES
           value: "openid,profile,email"
+        # tsidp emits no email_verified claim. Coder 2.34.2 rejects logins when
+        # it is absent, where earlier versions silently treated them as verified.
+        - name: CODER_OIDC_IGNORE_EMAIL_VERIFIED
+          value: "true"
         - name: CODER_EXTERNAL_AUTH_0_ID
           value: "github"
         - name: CODER_EXTERNAL_AUTH_0_TYPE
