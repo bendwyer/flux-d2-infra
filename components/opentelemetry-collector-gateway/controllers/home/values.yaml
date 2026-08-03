@@ -142,8 +142,13 @@ spec:
           metric_statements:
             - context: scope
               statements:
-                - set(scope.name, "")
-                - set(scope.version, "")
+                # Drop otel_scope_name and otel_scope_version from scraped metrics,
+                # where they only name the Prometheus receiver and churn on every
+                # collector upgrade. Metrics pushed over OTLP keep them, since there
+                # they identify the application's instrumentation library.
+                # Clear version first, or the name match below has nothing to match.
+                - set(scope.version, "") where scope.name == "github.com/open-telemetry/opentelemetry-collector-contrib/receiver/prometheusreceiver"
+                - set(scope.name, "") where scope.name == "github.com/open-telemetry/opentelemetry-collector-contrib/receiver/prometheusreceiver"
       exporters:
         prometheus_remote_write:
           endpoint: http://prometheus-prometheus.prometheus.svc.cluster.local:9090/api/v1/write
