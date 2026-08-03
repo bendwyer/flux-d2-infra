@@ -65,6 +65,17 @@ spec:
                   - target_label: __address__
                     replacement: prometheus-snmp-exporter.prometheus-snmp-exporter.svc.cluster.local:9116
       processors:
+        # Drop otel_scope_name and otel_scope_version from the SNMP scrape, where
+        # they only name the Prometheus receiver and churn on every collector
+        # upgrade. Metrics pushed over OTLP keep them, since there they identify
+        # the application's instrumentation library.
+        # Clear version first, or the name match below has nothing to match.
+        transform/scope:
+          metric_statements:
+            - context: scope
+              statements:
+                - set(scope.version, "") where scope.name == "github.com/open-telemetry/opentelemetry-collector-contrib/receiver/prometheusreceiver"
+                - set(scope.name, "") where scope.name == "github.com/open-telemetry/opentelemetry-collector-contrib/receiver/prometheusreceiver"
         # Enrich raw syslog so it lands in Loki under a useful service/host.
         # Scoped to the logs/syslog pipeline only; the OTLP logs pipeline stays
         # pass-through (no resource rewriting) by design.
@@ -118,6 +129,7 @@ spec:
               - prometheus/snmp
             processors:
               - memory_limiter
+              - transform/scope
               - batch
             exporters:
               - prometheus_remote_write
