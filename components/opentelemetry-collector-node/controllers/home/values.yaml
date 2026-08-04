@@ -74,8 +74,13 @@ spec:
         # Pod identity for telemetry pushed by applications running on this
         # node. Separate from the chart preset's k8s_attributes, which is only
         # added to the pipelines named exactly logs, metrics and traces.
-        # Association is by connection, which is correct here and wrong on the
-        # gateway: a local pod's connection IP really is its own pod IP.
+        #
+        # Senders declare their own pod IP and that is matched first. Relying on
+        # the connection address alone attached nothing: applications reach this
+        # agent through a host port, and whatever address arrived matched no pod.
+        # Connection is kept as a fallback for anything that reaches the agent
+        # without declaring an IP.
+        #
         # service.* is deliberately not extracted: service.namespace becomes the
         # Prometheus job prefix, so extracting it would rename every series to
         # <namespace>/<service name> and split it from the same application
@@ -84,6 +89,9 @@ spec:
           filter:
             node_from_env_var: K8S_NODE_NAME
           pod_association:
+            - sources:
+                - from: resource_attribute
+                  name: k8s.pod.ip
             - sources:
                 - from: connection
           extract:
