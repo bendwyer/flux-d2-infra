@@ -75,11 +75,14 @@ spec:
         # node. Separate from the chart preset's k8s_attributes, which is only
         # added to the pipelines named exactly logs, metrics and traces.
         #
-        # Senders declare their own pod IP and that is matched first. Relying on
-        # the connection address alone attached nothing: applications reach this
-        # agent through a host port, and whatever address arrived matched no pod.
-        # Connection is kept as a fallback for anything that reaches the agent
-        # without declaring an IP.
+        # Senders declare their own pod IP, and that is the only way identity is
+        # resolved here. Matching on the connection address instead attached
+        # nothing, because applications reach this agent through a host port and
+        # the address arriving matched no pod. It is not kept as a fallback: the
+        # rule matches whatever address does arrive against the pod IPs on this
+        # node, and host-network pods have a pod IP equal to the node's, so a
+        # near-miss would stamp some unrelated pod's identity onto an
+        # application's telemetry rather than leaving it absent.
         #
         # service.* is deliberately not extracted: service.namespace becomes the
         # Prometheus job prefix, so extracting it would rename every series to
@@ -92,8 +95,6 @@ spec:
             - sources:
                 - from: resource_attribute
                   name: k8s.pod.ip
-            - sources:
-                - from: connection
           extract:
             metadata:
               - k8s.namespace.name
