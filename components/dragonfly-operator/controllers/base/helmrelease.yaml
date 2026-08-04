@@ -18,7 +18,7 @@ spec:
     # image to that same analytics-fronted registry, so it has to be bypassed
     # here too. It is consumed verbatim rather than composed with a version,
     # so the tag is pinned and Renovate owns bumping it.
-    dragonflyImage: "ghcr.io/dragonflydb/dragonfly:v1.39.0@sha256:0fa01a2b929e704c7a9300d23e7f52002ebd39e90996fb8bb63826aed92fa06f"
+    dragonflyImage: "ghcr.io/dragonflydb/dragonfly:v1.40.0@sha256:18228a84e2305d60de390f972f9622ec252120834b22c12b9e5025144b0b37fe"
 
     # kube-rbac-proxy fronts /metrics with bearer-token auth. The OTel collectors
     # scrape over plain HTTP, so it would add a second image and an auth step for
