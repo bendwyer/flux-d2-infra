@@ -21,10 +21,11 @@ spec:
     remediation:
       retries: 3
   values:
+    # Headroom for the web UI pod metrics collector added in operator 0.58.0.
     resources:
       requests:
         cpu: 100m
-        memory: 256Mi
+        memory: 512Mi
       limits:
         cpu: null
-        memory: 256Mi
+        memory: 512Mi
