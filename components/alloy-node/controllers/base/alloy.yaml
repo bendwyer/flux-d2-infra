@@ -16,9 +16,14 @@ spec:
   global:
     # The uids are per-container: the two images are built for different users.
     # fsGroup makes the storage volume writable by the group Alloy runs as.
+    #
+    # Group 0 is added because Talos writes pod logs root:root, group-readable,
+    # so membership of that group is what grants read access, not the uid. The
+    # collector this replaces reads them the same way, as uid 10001 with gid 0.
     podSecurityContext:
       runAsNonRoot: true
       fsGroup: 473
+      supplementalGroups: [0]
       seccompProfile:
         type: RuntimeDefault
   configReloader:
