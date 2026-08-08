@@ -20,10 +20,6 @@ spec:
         - nonResourceURLs: [/metrics, /metrics/cadvisor]
           verbs: [get]
     config:
-      receivers:
-        # Node-local scrapes moved to alloy-node. Logs and the application OTLP
-        # path below stay here.
-        prometheus: null
       processors:
         # Pod identity for telemetry pushed by applications running on this
         # node. Separate from the chart preset's k8s_attributes, which is only
@@ -75,7 +71,6 @@ spec:
               - batch
             exporters:
               - otlp_grpc
-          metrics: null
           # Applications on this node push to the agent's otlp receiver, which
           # has been listening on hostPort 4317 and 4318 all along but fed no
           # pipeline, so anything sent to it was accepted and dropped.
