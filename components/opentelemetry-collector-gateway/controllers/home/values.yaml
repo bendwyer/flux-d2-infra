@@ -24,124 +24,6 @@ spec:
           protocols:
             grpc:
               endpoint: 0.0.0.0:4319
-        prometheus:
-          config:
-            global:
-              scrape_interval: 30s
-            scrape_configs:
-              - job_name: kube-state-metrics
-                static_configs:
-                  - targets:
-                      - kube-state-metrics.kube-state-metrics.svc.cluster.local:8080
-              - job_name: apiserver
-                scheme: https
-                tls_config:
-                  insecure_skip_verify: true
-                bearer_token_file: /var/run/secrets/kubernetes.io/serviceaccount/token
-                static_configs:
-                  - targets:
-                      - kubernetes.default.svc.cluster.local:443
-              - job_name: prometheus
-                static_configs:
-                  - targets:
-                      - prometheus-prometheus.prometheus.svc.cluster.local:9090
-              - job_name: grafana
-                static_configs:
-                  - targets:
-                      - grafana.grafana.svc.cluster.local:80
-              - job_name: alertmanager
-                static_configs:
-                  - targets:
-                      - alertmanager.alertmanager.svc.cluster.local:9093
-              - job_name: loki
-                static_configs:
-                  - targets:
-                      - loki.loki.svc.cluster.local:3100
-              - job_name: kube-controller-manager
-                scheme: https
-                tls_config:
-                  insecure_skip_verify: true
-                bearer_token_file: /var/run/secrets/kubernetes.io/serviceaccount/token
-                kubernetes_sd_configs:
-                  - role: node
-                relabel_configs:
-                  - source_labels: [__meta_kubernetes_node_labelpresent_node_role_kubernetes_io_control_plane]
-                    regex: "true"
-                    action: keep
-                  - source_labels: [__address__]
-                    regex: (.+):(.+)
-                    target_label: __address__
-                    replacement: $1:10257
-              - job_name: kube-scheduler
-                scheme: https
-                tls_config:
-                  insecure_skip_verify: true
-                bearer_token_file: /var/run/secrets/kubernetes.io/serviceaccount/token
-                kubernetes_sd_configs:
-                  - role: node
-                relabel_configs:
-                  - source_labels: [__meta_kubernetes_node_labelpresent_node_role_kubernetes_io_control_plane]
-                    regex: "true"
-                    action: keep
-                  - source_labels: [__address__]
-                    regex: (.+):(.+)
-                    target_label: __address__
-                    replacement: $1:10259
-              - job_name: k8up
-                static_configs:
-                  - targets:
-                      - k8up-metrics.k8up.svc.cluster.local:8080
-              - job_name: pushgateway
-                honor_labels: true
-                static_configs:
-                  - targets:
-                      - prometheus-pushgateway.prometheus-pushgateway.svc.cluster.local:9091
-              - job_name: flux-system
-                kubernetes_sd_configs:
-                  - role: pod
-                    namespaces:
-                      names:
-                        - flux-system
-                relabel_configs:
-                  - source_labels: [__meta_kubernetes_pod_label_app_kubernetes_io_part_of]
-                    regex: flux
-                    action: keep
-                  - source_labels: [__meta_kubernetes_pod_container_port_name]
-                    regex: http-prom
-                    action: keep
-                  - source_labels: [__meta_kubernetes_pod_name]
-                    target_label: instance
-                  - source_labels: [__meta_kubernetes_pod_name]
-                    target_label: pod
-                  - source_labels: [__meta_kubernetes_namespace]
-                    target_label: namespace
-              - job_name: flux-operator
-                kubernetes_sd_configs:
-                  - role: pod
-                    namespaces:
-                      names:
-                        - flux-system
-                relabel_configs:
-                  - source_labels: [__meta_kubernetes_pod_label_app_kubernetes_io_name]
-                    regex: flux-operator
-                    action: keep
-                  - source_labels: [__meta_kubernetes_pod_container_port_name]
-                    regex: http-metrics
-                    action: keep
-                  - source_labels: [__meta_kubernetes_pod_name]
-                    target_label: instance
-                  - source_labels: [__meta_kubernetes_pod_name]
-                    target_label: pod
-                  - source_labels: [__meta_kubernetes_namespace]
-                    target_label: namespace
-              - job_name: argo-workflows
-                static_configs:
-                  - targets:
-                      - argo-workflows-workflow-controller.argo-workflows.svc.cluster.local:8080
-              - job_name: tailscale-exit-nodes
-                static_configs:
-                  - targets:
-                      - tailscale-exit-nodes.tailscale-exit-nodes.svc.cluster.local:8080
       processors:
         # Override preset: drop `from: connection` — it misattributes OTLP-received metrics to the sender pod.
         k8s_attributes:
@@ -152,17 +34,6 @@ spec:
             - sources:
                 - from: resource_attribute
                   name: k8s.pod.uid
-        transform:
-          metric_statements:
-            - context: scope
-              statements:
-                # Drop otel_scope_name and otel_scope_version from scraped metrics,
-                # where they only name the Prometheus receiver and churn on every
-                # collector upgrade. Metrics pushed over OTLP keep them, since there
-                # they identify the application's instrumentation library.
-                # Clear version first, or the name match below has nothing to match.
-                - set(scope.version, "") where scope.name == "github.com/open-telemetry/opentelemetry-collector-contrib/receiver/prometheusreceiver"
-                - set(scope.name, "") where scope.name == "github.com/open-telemetry/opentelemetry-collector-contrib/receiver/prometheusreceiver"
       exporters:
         prometheus_remote_write:
           endpoint: http://prometheus-prometheus.prometheus.svc.cluster.local:9090/api/v1/write
@@ -208,11 +79,9 @@ spec:
         pipelines:
           metrics:
             receivers:
-              - prometheus
               - otlp
             processors:
               - memory_limiter
-              - transform
               - batch
             exporters:
               - prometheus_remote_write
