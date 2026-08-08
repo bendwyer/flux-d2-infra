@@ -1,0 +1,72 @@
+---
+apiVersion: collectors.grafana.com/v1alpha1
+kind: Alloy
+metadata:
+  name: alloy-gateway
+  namespace: alloy-gateway
+spec:
+  # spec mirrors the Alloy Helm chart's values file one-for-one.
+  controller:
+    type: deployment
+    # Two replicas sharding the scrape targets between them, so a rolling
+    # restart reassigns targets instead of dropping them.
+    replicas: 2
+    volumes:
+      extra:
+        - name: storage
+          emptyDir: {}
+  global:
+    podSecurityContext:
+      runAsNonRoot: true
+      fsGroup: 473
+      seccompProfile:
+        type: RuntimeDefault
+  configReloader:
+    securityContext:
+      runAsUser: 65534
+      runAsGroup: 65534
+      readOnlyRootFilesystem: true
+      allowPrivilegeEscalation: false
+      capabilities:
+        drop: [ALL]
+  rbac:
+    create: true
+    rules:
+      - apiGroups: [""]
+        resources: [pods]
+        verbs: [get, list, watch]
+    clusterRules:
+      - apiGroups: [""]
+        resources: [nodes]
+        verbs: [get, list, watch]
+      - nonResourceURLs: [/metrics]
+        verbs: [get]
+  alloy:
+    clustering:
+      enabled: true
+    securityContext:
+      runAsUser: 473
+      runAsGroup: 473
+      readOnlyRootFilesystem: true
+      allowPrivilegeEscalation: false
+      capabilities:
+        drop: [ALL]
+    mounts:
+      extra:
+        - name: storage
+          mountPath: /tmp/alloy
+    extraEnv:
+      - name: POD_NAMESPACE
+        valueFrom:
+          fieldRef:
+            fieldPath: metadata.namespace
+      - name: POD_NAME
+        valueFrom:
+          fieldRef:
+            fieldPath: metadata.name
+    resources:
+      limits:
+        memory: 512Mi
+      requests:
+        cpu: 100m
+        memory: 512Mi
