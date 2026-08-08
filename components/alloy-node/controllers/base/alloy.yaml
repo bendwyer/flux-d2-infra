@@ -8,6 +8,28 @@ spec:
   # spec mirrors the Alloy Helm chart's values file one-for-one.
   controller:
     type: daemonset
+    # Writable target for the storage path, since the root filesystem is not.
+    volumes:
+      extra:
+        - name: storage
+          emptyDir: {}
+  global:
+    # The uids are per-container: the two images are built for different users.
+    # fsGroup makes the storage volume writable by the group Alloy runs as.
+    podSecurityContext:
+      runAsNonRoot: true
+      fsGroup: 473
+      seccompProfile:
+        type: RuntimeDefault
+  configReloader:
+    securityContext:
+      # 65534 is the nobody user this image is built for.
+      runAsUser: 65534
+      runAsGroup: 65534
+      readOnlyRootFilesystem: true
+      allowPrivilegeEscalation: false
+      capabilities:
+        drop: [ALL]
   rbac:
     create: true
     # The ClusterRole is rules plus clusterRules concatenated, and both carry
@@ -25,6 +47,21 @@ spec:
       - nonResourceURLs: [/metrics, /metrics/cadvisor]
         verbs: [get]
   alloy:
+    # Drop capabilities only while no eBPF component is configured: upstream
+    # calls out beyla.ebpf and pyroscope.ebpf as needing root or extra ones.
+    securityContext:
+      # 473 is the image's built-in alloy user, which owns /usr/bin/alloy and
+      # /etc/alloy. The image sets no USER, so it defaults to root.
+      runAsUser: 473
+      runAsGroup: 473
+      readOnlyRootFilesystem: true
+      allowPrivilegeEscalation: false
+      capabilities:
+        drop: [ALL]
+    mounts:
+      extra:
+        - name: storage
+          mountPath: /tmp/alloy
     # The chart's HOSTNAME is already spec.nodeName; declared here anyway to
     # keep the config off chart-internal names.
     extraEnv:
