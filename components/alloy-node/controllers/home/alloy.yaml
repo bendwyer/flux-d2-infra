@@ -163,15 +163,9 @@ spec:
 
         // Straight to Prometheus rather than through the gateway: no OTLP round
         // trip is the point, so the cluster label has to be added here instead.
-        //
-        // collector="alloy" is TEMPORARY. The OTel node collector still scrapes
-        // these same targets, and without a distinguishing label the two writers
-        // would collide on identical series. Remove it at cutover, in the same
-        // change that drops the OTel collector's metrics pipeline.
         prometheus.remote_write "default" {
         	external_labels = {
-        		cluster   = "home",
-        		collector = "alloy",
+        		cluster = "home",
         	}
 
         	endpoint {
