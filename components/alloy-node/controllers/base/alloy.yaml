@@ -10,9 +10,17 @@ spec:
     type: daemonset
   rbac:
     create: true
+    # The ClusterRole is rules plus clusterRules concatenated, and both carry
+    # broad chart defaults covering components this collector does not run, so
+    # both are overridden. Neither may be an empty list: the template renders
+    # them in sequence and a literal [] in the middle is invalid YAML.
+    rules:
+      - apiGroups: [""]
+        resources: [pods]
+        verbs: [get, list, watch]
     clusterRules:
       - apiGroups: [""]
-        resources: [nodes, nodes/proxy, nodes/metrics, pods]
+        resources: [nodes, nodes/metrics]
         verbs: [get, list, watch]
       - nonResourceURLs: [/metrics, /metrics/cadvisor]
         verbs: [get]
