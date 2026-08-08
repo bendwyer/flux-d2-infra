@@ -1,0 +1,13 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/fluxcd-community/flux2-schemas/refs/heads/main/ocirepository-source-v1.json
+apiVersion: source.toolkit.fluxcd.io/v1
+kind: OCIRepository
+metadata:
+  name: alloy-mixin
+  namespace: alloy-operator
+spec:
+  interval: 1h
+  url: oci://ghcr.io/bendwyer/k8s-monitoring/alloy-mixin
+  ref:
+    tag: "1.18.1"
+    digest: "sha256:1abc0fa9021b941e548b8c7d9eca70b8f788c56b8970f826a78aa7801b0b05ba"
