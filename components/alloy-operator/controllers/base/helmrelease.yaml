@@ -1,0 +1,16 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/fluxcd-community/flux2-schemas/refs/heads/main/helmrelease-helm-v2.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: alloy-operator
+  namespace: alloy-operator
+spec:
+  interval: 1h
+  chartRef:
+    kind: OCIRepository
+    name: alloy-operator
+  # Chart defaults are taken as-is: the operator only installs the
+  # collectors.grafana.com Alloy CRD and its controller. Per-collector shape is
+  # declared in the Alloy CRs, not here.
+  values: {}
