@@ -50,10 +50,6 @@ spec:
               - k8s.namespace.name
               - k8s.pod.name
       exporters:
-        otlp_grpc:
-          endpoint: opentelemetry-collector-gateway.opentelemetry-collector-gateway.svc.cluster.local:4317
-          tls:
-            insecure: true
         # Application telemetry goes to its own gateway port, so the gateway can
         # export it with resource attributes converted to labels. The scrape
         # traffic on 4317 must not get that treatment.
@@ -63,14 +59,6 @@ spec:
             insecure: true
       service:
         pipelines:
-          logs:
-            receivers:
-              - filelog
-            processors:
-              - memory_limiter
-              - batch
-            exporters:
-              - otlp_grpc
           # Applications on this node push to the agent's otlp receiver, which
           # has been listening on hostPort 4317 and 4318 all along but fed no
           # pipeline, so anything sent to it was accepted and dropped.

@@ -22,9 +22,10 @@ spec:
     image:
       repository: otel/opentelemetry-collector-contrib
     presets:
+      # Log collection moved to alloy-node, which reads the same files and
+      # writes to Loki directly. Disabling the preset also drops its host mounts.
       logsCollection:
-        enabled: true
-        includeCollectorLogs: false
+        enabled: false
       kubernetesAttributes:
         enabled: true
         extractAllPodLabels: true
@@ -40,22 +41,9 @@ spec:
         debug: null
       service:
         pipelines:
+          logs: null
           metrics: null
           traces: null
-      receivers:
-        filelog:
-          include:
-            - /var/log/pods/*/*/*.log
-          exclude:
-            - /var/log/pods/*/otc-container/*.log
-          include_file_path: true
-          include_file_name: false
-          operators:
-            - id: container-parser
-              type: container
-          retry_on_failure:
-            enabled: true
-          start_at: end
       processors:
         batch:
           send_batch_size: 1024
