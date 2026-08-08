@@ -18,6 +18,18 @@ spec:
         		target_label = "job"
         		replacement  = "alloy-node"
         	}
+
+        	// An in-process exporter has no pod identity of its own, so the labels a
+        	// pod scrape would have attached are set here instead.
+        	rule {
+        		target_label = "namespace"
+        		replacement  = sys.env("POD_NAMESPACE")
+        	}
+
+        	rule {
+        		target_label = "pod"
+        		replacement  = sys.env("POD_NAME")
+        	}
         }
 
         prometheus.scrape "self" {
