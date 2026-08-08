@@ -184,3 +184,74 @@ spec:
         		url = "http://prometheus-prometheus.prometheus.svc.cluster.local:9090/api/v1/write"
         	}
         }
+
+        // Pod logs, discovered per node and shipped straight to Loki. No aggregation
+        // hop: the collector writes to the backend itself.
+        discovery.relabel "pod_logs" {
+        	targets = discovery.kubernetes.local_pods.targets
+
+        	rule {
+        		source_labels = ["__meta_kubernetes_namespace"]
+        		target_label  = "namespace"
+        	}
+
+        	rule {
+        		source_labels = ["__meta_kubernetes_pod_name"]
+        		target_label  = "pod"
+        	}
+
+        	rule {
+        		source_labels = ["__meta_kubernetes_pod_container_name"]
+        		target_label  = "container"
+        	}
+
+        	rule {
+        		source_labels = ["__meta_kubernetes_namespace", "__meta_kubernetes_pod_name"]
+        		separator     = "/"
+        		target_label  = "job"
+        	}
+
+        	rule {
+        		source_labels = ["__meta_kubernetes_pod_uid", "__meta_kubernetes_pod_container_name"]
+        		separator     = "/"
+        		action        = "replace"
+        		replacement   = "/var/log/pods/*$1/*.log"
+        		target_label  = "__path__"
+        	}
+        }
+
+        local.file_match "pod_logs" {
+        	path_targets = discovery.relabel.pod_logs.output
+        }
+
+        // Positions live in the storage path, an emptyDir, so a recreated pod has none.
+        // Tail from the end in that case rather than replaying whole rotated files,
+        // matching what the collector this replaces did with start_at: end.
+        loki.source.file "pod_logs" {
+        	targets       = local.file_match.pod_logs.targets
+        	tail_from_end = true
+        	forward_to    = [loki.process.pod_logs.receiver]
+        }
+
+        // Talos runs containerd, so every log file is in CRI format.
+        loki.process "pod_logs" {
+        	stage.cri { }
+
+        	stage.labels {
+        		values = {
+        			stream = "",
+        		}
+        	}
+
+        	forward_to = [loki.write.default.receiver]
+        }
+
+        loki.write "default" {
+        	external_labels = {
+        		cluster = "home",
+        	}
+
+        	endpoint {
+        		url = "http://loki-gateway.loki.svc.cluster.local/loki/api/v1/push"
+        	}
+        }

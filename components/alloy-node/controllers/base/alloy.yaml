@@ -59,6 +59,8 @@ spec:
       capabilities:
         drop: [ALL]
     mounts:
+      # Host pod logs, read-only, for the log collection pipeline.
+      varlog: true
       extra:
         - name: storage
           mountPath: /tmp/alloy
