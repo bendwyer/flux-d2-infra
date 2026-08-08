@@ -320,12 +320,9 @@ spec:
         	}
         }
 
-        // collector="alloy" is TEMPORARY, dropped at cutover. The OTel gateway scrapes
-        // these same targets until then, and identical series would collide on ingest.
         prometheus.remote_write "default" {
         	external_labels = {
-        		cluster   = "home",
-        		collector = "alloy",
+        		cluster = "home",
         	}
 
         	endpoint {
