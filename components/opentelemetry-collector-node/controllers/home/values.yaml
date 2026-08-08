@@ -21,55 +21,9 @@ spec:
           verbs: [get]
     config:
       receivers:
-        prometheus:
-          config:
-            global:
-              scrape_interval: 30s
-            scrape_configs:
-              - job_name: node-exporter
-                static_configs:
-                  - targets:
-                      - ${env:OTEL_K8S_NODE_IP}:9100
-              - job_name: kubelet
-                scheme: https
-                tls_config:
-                  insecure_skip_verify: true
-                bearer_token_file: /var/run/secrets/kubernetes.io/serviceaccount/token
-                static_configs:
-                  - targets:
-                      - ${env:OTEL_K8S_NODE_IP}:10250
-              - job_name: cadvisor
-                scheme: https
-                tls_config:
-                  insecure_skip_verify: true
-                bearer_token_file: /var/run/secrets/kubernetes.io/serviceaccount/token
-                metrics_path: /metrics/cadvisor
-                static_configs:
-                  - targets:
-                      - ${env:OTEL_K8S_NODE_IP}:10250
-                relabel_configs:
-                  - target_label: job
-                    replacement: kubelet
-              - job_name: kube-proxy
-                static_configs:
-                  - targets:
-                      - ${env:OTEL_K8S_NODE_IP}:10249
-              - job_name: longhorn
-                kubernetes_sd_configs:
-                  - role: pod
-                    namespaces:
-                      names:
-                        - longhorn
-                relabel_configs:
-                  - source_labels: [__meta_kubernetes_pod_label_app]
-                    regex: longhorn-manager
-                    action: keep
-                  - source_labels: [__meta_kubernetes_pod_node_name]
-                    regex: ${env:OTEL_K8S_NODE_NAME}
-                    action: keep
-                  - source_labels: [__meta_kubernetes_pod_ip]
-                    target_label: __address__
-                    replacement: $1:9500
+        # Node-local scrapes moved to alloy-node. Logs and the application OTLP
+        # path below stay here.
+        prometheus: null
       processors:
         # Pod identity for telemetry pushed by applications running on this
         # node. Separate from the chart preset's k8s_attributes, which is only
@@ -121,14 +75,7 @@ spec:
               - batch
             exporters:
               - otlp_grpc
-          metrics:
-            receivers:
-              - prometheus
-            processors:
-              - memory_limiter
-              - batch
-            exporters:
-              - otlp_grpc
+          metrics: null
           # Applications on this node push to the agent's otlp receiver, which
           # has been listening on hostPort 4317 and 4318 all along but fed no
           # pipeline, so anything sent to it was accepted and dropped.
