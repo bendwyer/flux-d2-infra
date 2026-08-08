@@ -1,0 +1,7 @@
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: alloy-node
+  labels:
+    name: alloy-node
