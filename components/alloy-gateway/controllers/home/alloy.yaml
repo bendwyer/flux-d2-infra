@@ -1,0 +1,334 @@
+---
+apiVersion: collectors.grafana.com/v1alpha1
+kind: Alloy
+metadata:
+  name: alloy-gateway
+  namespace: alloy-gateway
+spec:
+  alloy:
+    configMap:
+      content: |-
+        // Alloy's own internal metrics. Not clustered: each replica must scrape the
+        // exporter running inside it, and sharding would drop one of them.
+        prometheus.exporter.self "gateway" { }
+
+        discovery.relabel "self" {
+        	targets = prometheus.exporter.self.gateway.targets
+
+        	rule {
+        		target_label = "job"
+        		replacement  = "alloy-gateway"
+        	}
+
+        	rule {
+        		target_label = "namespace"
+        		replacement  = sys.env("POD_NAMESPACE")
+        	}
+
+        	rule {
+        		target_label = "pod"
+        		replacement  = sys.env("POD_NAME")
+        	}
+        }
+
+        prometheus.scrape "self" {
+        	targets         = discovery.relabel.self.output
+        	scrape_interval = "30s"
+        	forward_to      = [prometheus.remote_write.default.receiver]
+        }
+
+        prometheus.scrape "kube_state_metrics" {
+        	targets         = [{__address__ = "kube-state-metrics.kube-state-metrics.svc.cluster.local:8080"}]
+        	job_name        = "kube-state-metrics"
+        	scrape_interval = "30s"
+        	forward_to      = [prometheus.remote_write.default.receiver]
+
+        	clustering {
+        		enabled = true
+        	}
+        }
+
+        prometheus.scrape "apiserver" {
+        	targets           = [{__address__ = "kubernetes.default.svc.cluster.local:443"}]
+        	job_name          = "apiserver"
+        	scrape_interval   = "30s"
+        	scheme            = "https"
+        	bearer_token_file = "/var/run/secrets/kubernetes.io/serviceaccount/token"
+        	forward_to        = [prometheus.remote_write.default.receiver]
+
+        	tls_config {
+        		insecure_skip_verify = true
+        	}
+
+        	clustering {
+        		enabled = true
+        	}
+        }
+
+        prometheus.scrape "prometheus" {
+        	targets         = [{__address__ = "prometheus-prometheus.prometheus.svc.cluster.local:9090"}]
+        	job_name        = "prometheus"
+        	scrape_interval = "30s"
+        	forward_to      = [prometheus.remote_write.default.receiver]
+
+        	clustering {
+        		enabled = true
+        	}
+        }
+
+        prometheus.scrape "grafana" {
+        	targets         = [{__address__ = "grafana.grafana.svc.cluster.local:80"}]
+        	job_name        = "grafana"
+        	scrape_interval = "30s"
+        	forward_to      = [prometheus.remote_write.default.receiver]
+
+        	clustering {
+        		enabled = true
+        	}
+        }
+
+        prometheus.scrape "alertmanager" {
+        	targets         = [{__address__ = "alertmanager.alertmanager.svc.cluster.local:9093"}]
+        	job_name        = "alertmanager"
+        	scrape_interval = "30s"
+        	forward_to      = [prometheus.remote_write.default.receiver]
+
+        	clustering {
+        		enabled = true
+        	}
+        }
+
+        prometheus.scrape "loki" {
+        	targets         = [{__address__ = "loki.loki.svc.cluster.local:3100"}]
+        	job_name        = "loki"
+        	scrape_interval = "30s"
+        	forward_to      = [prometheus.remote_write.default.receiver]
+
+        	clustering {
+        		enabled = true
+        	}
+        }
+
+        prometheus.scrape "k8up" {
+        	targets         = [{__address__ = "k8up-metrics.k8up.svc.cluster.local:8080"}]
+        	job_name        = "k8up"
+        	scrape_interval = "30s"
+        	forward_to      = [prometheus.remote_write.default.receiver]
+
+        	clustering {
+        		enabled = true
+        	}
+        }
+
+        // honor_labels keeps the labels pushed by the job that produced the metric.
+        prometheus.scrape "pushgateway" {
+        	targets         = [{__address__ = "prometheus-pushgateway.prometheus-pushgateway.svc.cluster.local:9091"}]
+        	job_name        = "pushgateway"
+        	scrape_interval = "30s"
+        	honor_labels    = true
+        	forward_to      = [prometheus.remote_write.default.receiver]
+
+        	clustering {
+        		enabled = true
+        	}
+        }
+
+        prometheus.scrape "argo_workflows" {
+        	targets         = [{__address__ = "argo-workflows-workflow-controller.argo-workflows.svc.cluster.local:8080"}]
+        	job_name        = "argo-workflows"
+        	scrape_interval = "30s"
+        	forward_to      = [prometheus.remote_write.default.receiver]
+
+        	clustering {
+        		enabled = true
+        	}
+        }
+
+        prometheus.scrape "tailscale_exit_nodes" {
+        	targets         = [{__address__ = "tailscale-exit-nodes.tailscale-exit-nodes.svc.cluster.local:8080"}]
+        	job_name        = "tailscale-exit-nodes"
+        	scrape_interval = "30s"
+        	forward_to      = [prometheus.remote_write.default.receiver]
+
+        	clustering {
+        		enabled = true
+        	}
+        }
+
+        // Talos serves the controller manager and scheduler on the control plane nodes
+        // only, so discovery is filtered to them and the port rewritten per component.
+        discovery.kubernetes "nodes" {
+        	role = "node"
+        }
+
+        discovery.relabel "control_plane" {
+        	targets = discovery.kubernetes.nodes.targets
+
+        	rule {
+        		source_labels = ["__meta_kubernetes_node_labelpresent_node_role_kubernetes_io_control_plane"]
+        		regex         = "true"
+        		action        = "keep"
+        	}
+        }
+
+        discovery.relabel "kube_controller_manager" {
+        	targets = discovery.relabel.control_plane.output
+
+        	rule {
+        		source_labels = ["__address__"]
+        		regex         = "(.+):(.+)"
+        		target_label  = "__address__"
+        		replacement   = "$1:10257"
+        	}
+        }
+
+        prometheus.scrape "kube_controller_manager" {
+        	targets           = discovery.relabel.kube_controller_manager.output
+        	job_name          = "kube-controller-manager"
+        	scrape_interval   = "30s"
+        	scheme            = "https"
+        	bearer_token_file = "/var/run/secrets/kubernetes.io/serviceaccount/token"
+        	forward_to        = [prometheus.remote_write.default.receiver]
+
+        	tls_config {
+        		insecure_skip_verify = true
+        	}
+
+        	clustering {
+        		enabled = true
+        	}
+        }
+
+        discovery.relabel "kube_scheduler" {
+        	targets = discovery.relabel.control_plane.output
+
+        	rule {
+        		source_labels = ["__address__"]
+        		regex         = "(.+):(.+)"
+        		target_label  = "__address__"
+        		replacement   = "$1:10259"
+        	}
+        }
+
+        prometheus.scrape "kube_scheduler" {
+        	targets           = discovery.relabel.kube_scheduler.output
+        	job_name          = "kube-scheduler"
+        	scrape_interval   = "30s"
+        	scheme            = "https"
+        	bearer_token_file = "/var/run/secrets/kubernetes.io/serviceaccount/token"
+        	forward_to        = [prometheus.remote_write.default.receiver]
+
+        	tls_config {
+        		insecure_skip_verify = true
+        	}
+
+        	clustering {
+        		enabled = true
+        	}
+        }
+
+        discovery.kubernetes "flux_pods" {
+        	role = "pod"
+
+        	namespaces {
+        		own_namespace = false
+        		names         = ["flux-system"]
+        	}
+        }
+
+        discovery.relabel "flux_system" {
+        	targets = discovery.kubernetes.flux_pods.targets
+
+        	rule {
+        		source_labels = ["__meta_kubernetes_pod_label_app_kubernetes_io_part_of"]
+        		regex         = "flux"
+        		action        = "keep"
+        	}
+
+        	rule {
+        		source_labels = ["__meta_kubernetes_pod_container_port_name"]
+        		regex         = "http-prom"
+        		action        = "keep"
+        	}
+
+        	rule {
+        		source_labels = ["__meta_kubernetes_pod_name"]
+        		target_label  = "instance"
+        	}
+
+        	rule {
+        		source_labels = ["__meta_kubernetes_pod_name"]
+        		target_label  = "pod"
+        	}
+
+        	rule {
+        		source_labels = ["__meta_kubernetes_namespace"]
+        		target_label  = "namespace"
+        	}
+        }
+
+        prometheus.scrape "flux_system" {
+        	targets         = discovery.relabel.flux_system.output
+        	job_name        = "flux-system"
+        	scrape_interval = "30s"
+        	forward_to      = [prometheus.remote_write.default.receiver]
+
+        	clustering {
+        		enabled = true
+        	}
+        }
+
+        discovery.relabel "flux_operator" {
+        	targets = discovery.kubernetes.flux_pods.targets
+
+        	rule {
+        		source_labels = ["__meta_kubernetes_pod_label_app_kubernetes_io_name"]
+        		regex         = "flux-operator"
+        		action        = "keep"
+        	}
+
+        	rule {
+        		source_labels = ["__meta_kubernetes_pod_container_port_name"]
+        		regex         = "http-metrics"
+        		action        = "keep"
+        	}
+
+        	rule {
+        		source_labels = ["__meta_kubernetes_pod_name"]
+        		target_label  = "instance"
+        	}
+
+        	rule {
+        		source_labels = ["__meta_kubernetes_pod_name"]
+        		target_label  = "pod"
+        	}
+
+        	rule {
+        		source_labels = ["__meta_kubernetes_namespace"]
+        		target_label  = "namespace"
+        	}
+        }
+
+        prometheus.scrape "flux_operator" {
+        	targets         = discovery.relabel.flux_operator.output
+        	job_name        = "flux-operator"
+        	scrape_interval = "30s"
+        	forward_to      = [prometheus.remote_write.default.receiver]
+
+        	clustering {
+        		enabled = true
+        	}
+        }
+
+        // collector="alloy" is TEMPORARY, dropped at cutover. The OTel gateway scrapes
+        // these same targets until then, and identical series would collide on ingest.
+        prometheus.remote_write "default" {
+        	external_labels = {
+        		cluster   = "home",
+        		collector = "alloy",
+        	}
+
+        	endpoint {
+        		url = "http://prometheus-prometheus.prometheus.svc.cluster.local:9090/api/v1/write"
+        	}
+        }
