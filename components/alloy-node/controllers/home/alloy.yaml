@@ -205,8 +205,10 @@ spec:
         		target_label  = "container"
         	}
 
+        	// namespace/container, which is what the Loki mixin groups by. A pod-derived
+        	// job fragments those groupings on every rollout and duplicates the pod label.
         	rule {
-        		source_labels = ["__meta_kubernetes_namespace", "__meta_kubernetes_pod_name"]
+        		source_labels = ["__meta_kubernetes_namespace", "__meta_kubernetes_pod_container_name"]
         		separator     = "/"
         		target_label  = "job"
         	}
@@ -241,6 +243,13 @@ spec:
         		values = {
         			stream = "",
         		}
+        	}
+
+        	// loki.source.file always promotes __path__ to a filename label and offers no
+        	// way to suppress it. Over pod and container it adds only the rotation index,
+        	// so it mints a stream per rotation, and nothing queries it.
+        	stage.label_drop {
+        		values = ["filename"]
         	}
 
         	forward_to = [loki.write.default.receiver]
