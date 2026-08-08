@@ -2,8 +2,8 @@
 apiVersion: collectors.grafana.com/v1alpha1
 kind: Alloy
 metadata:
-  name: alloy-gateway
-  namespace: alloy-gateway
+  name: alloy-singleton
+  namespace: alloy-singleton
 spec:
   # spec mirrors the Alloy Helm chart's values file one-for-one.
   controller:
