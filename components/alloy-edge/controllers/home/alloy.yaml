@@ -77,25 +77,28 @@ spec:
         	}
         	forward_to = [prometheus.remote_write.default.receiver]
         }
-        // The network device pushes RFC5424 syslog over UDP to a LAN VIP. Handled by
+        // The network device pushes BSD syslog over UDP to a LAN VIP. Handled by
         // Loki's own source rather than an OTLP receiver and transform, since these logs
         // only ever go to Loki and the round trip through OTLP buys nothing.
         loki.source.syslog "network_devices" {
         	listener {
-        		address       = "0.0.0.0:5514"
-        		protocol      = "udp"
-        		syslog_format = "rfc5424"
+        		address  = "0.0.0.0:5514"
+        		protocol = "udp"
 
+        		// RouterOS offers cef, default and syslog for remote-log-format, and its
+        		// "syslog" is BSD-syslog, so RFC3164 is the only real syslog it speaks.
+        		// The BSD timestamp carries no year, hence the default below. Note that
+        		// setting syslog-time-format=iso8601 on the device breaks this parser.
+        		syslog_format                   = "rfc3164"
+        		rfc3164_default_to_current_year = true
         		// service_name is the label Loki would otherwise derive for itself, and
         		// the one these logs are queried by.
         		labels = {
         			service_name = "mikrotik",
         		}
         	}
-
         	forward_to = [loki.process.network_devices.receiver]
         }
-
         // RouterOS puts its level in the leading topic list, for example
         // "firewall,warning ...", rather than in the syslog priority. Loki's own level
         // detection reads info, warning and error out of that but returns unknown for
@@ -112,7 +115,6 @@ spec:
         			detected_level = "level",
         		}
         	}
-
         	forward_to = [loki.write.default.receiver]
         }
 
