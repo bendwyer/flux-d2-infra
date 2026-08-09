@@ -53,6 +53,14 @@ spec:
       extra:
         - name: storage
           mountPath: /tmp/alloy
+    # Declares the syslog listener on the pod. The LAN-facing LoadBalancer in
+    # configs/home targets this port directly; 514 is privileged and the
+    # container runs non-root, so the listener sits on 5514.
+    extraPorts:
+      - name: syslog-udp
+        port: 5514
+        targetPort: 5514
+        protocol: UDP
     extraEnv:
       - name: POD_NAMESPACE
         valueFrom:

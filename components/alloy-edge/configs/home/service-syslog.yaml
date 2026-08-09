@@ -1,0 +1,23 @@
+---
+# LAN-facing syslog endpoint for the network device (and any future ones).
+# MetalLB assigns the requested IP from the `lan-ingress` pool. Kept separate
+# from the chart's ClusterIP Service so this stays a single-protocol
+# LoadBalancer. External 514/UDP maps to the container's 5514, since 514 is
+# privileged and the collector runs non-root.
+apiVersion: v1
+kind: Service
+metadata:
+  name: alloy-edge-syslog
+  namespace: alloy-edge
+  annotations:
+    metallb.io/loadBalancerIPs: "192.168.10.46"
+spec:
+  type: LoadBalancer
+  selector:
+    app.kubernetes.io/name: alloy
+    app.kubernetes.io/instance: alloy-edge
+  ports:
+    - name: syslog-udp
+      port: 514
+      targetPort: 5514
+      protocol: UDP

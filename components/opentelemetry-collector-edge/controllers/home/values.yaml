@@ -8,65 +8,18 @@ metadata:
 spec:
   interval: 1h
   values:
-    # Slightly more headroom than the OTLP-only baseline (256Mi) now that this
-    # collector also runs a syslog receiver and an SNMP scrape.
+    # Headroom left over from when this collector also ran the syslog receiver
+    # and the SNMP scrape. Both have moved to alloy-edge and OTLP is all that
+    # remains, so this can drop back once that moves too and the component goes.
     resources:
       limits:
         memory: 384Mi
       requests:
         cpu: 50m
         memory: 384Mi
-    # Expose the syslog UDP listener. Port 514 is privileged and the
-    # collector-contrib container runs non-root, so it listens on 5514; the
-    # MetalLB LoadBalancer Service (configs/home/service-syslog.yaml) maps
-    # external 514 to container 5514.
-    ports:
-      syslog:
-        enabled: true
-        containerPort: 5514
-        servicePort: 5514
-        protocol: UDP
     config:
       receivers:
-        # The MikroTik router pushes RFC 5424 syslog over UDP to the MetalLB VIP.
-        syslog:
-          udp:
-            listen_address: 0.0.0.0:5514
-          protocol: rfc5424
       processors:
-        # Enrich raw syslog so it lands in Loki under a useful service/host.
-        # Scoped to the logs/syslog pipeline only; the OTLP logs pipeline stays
-        # pass-through (no resource rewriting) by design.
-        transform/syslog:
-          log_statements:
-            - context: log
-              statements:
-                # The syslog receiver parses RFC 5424 fields into attributes and
-                # leaves the human-readable text in attributes["message"]; promote
-                # it to the log Body so Loki shows a real log line (the line Loki
-                # stores comes from Body, which would otherwise be empty).
-                - set(log.body, log.attributes["message"]) where log.attributes["message"] != nil
-                - delete_key(log.attributes, "message")
-                # service.name is one of Loki's default-promoted resource attributes,
-                # so this becomes the `service_name` stream label. host.name is NOT
-                # promoted by default, so it lands as structured metadata (still
-                # queryable via `| host_name=...`), which is fine for a single device.
-                - set(resource.attributes["service.name"], "mikrotik")
-                - set(resource.attributes["host.name"], log.attributes["hostname"]) where log.attributes["hostname"] != nil
-                # RouterOS encodes the level as a keyword in the leading topic list
-                # (e.g. "firewall,info", "dhcp,debug"), not in a way Loki picks up,
-                # so map it to OTLP severity. Anchored to the first whitespace token
-                # so the message text cannot false-match.
-                - set(log.severity_number, 5) where IsMatch(log.body, "^[^ ]*\\bdebug\\b")
-                - set(log.severity_text, "DEBUG") where IsMatch(log.body, "^[^ ]*\\bdebug\\b")
-                - set(log.severity_number, 9) where IsMatch(log.body, "^[^ ]*\\binfo\\b")
-                - set(log.severity_text, "INFO") where IsMatch(log.body, "^[^ ]*\\binfo\\b")
-                - set(log.severity_number, 13) where IsMatch(log.body, "^[^ ]*\\bwarning\\b")
-                - set(log.severity_text, "WARN") where IsMatch(log.body, "^[^ ]*\\bwarning\\b")
-                - set(log.severity_number, 17) where IsMatch(log.body, "^[^ ]*\\berror\\b")
-                - set(log.severity_text, "ERROR") where IsMatch(log.body, "^[^ ]*\\berror\\b")
-                - set(log.severity_number, 21) where IsMatch(log.body, "^[^ ]*\\bcritical\\b")
-                - set(log.severity_text, "FATAL") where IsMatch(log.body, "^[^ ]*\\bcritical\\b")
       exporters:
         prometheus_remote_write:
           endpoint: http://prometheus-prometheus.prometheus.svc.cluster.local:9090/api/v1/write
@@ -94,15 +47,6 @@ spec:
               - otlp
             processors:
               - memory_limiter
-              - batch
-            exporters:
-              - otlp_http/loki
-          logs/syslog:
-            receivers:
-              - syslog
-            processors:
-              - memory_limiter
-              - transform/syslog
               - batch
             exporters:
               - otlp_http/loki
