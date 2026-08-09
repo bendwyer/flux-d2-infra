@@ -77,9 +77,46 @@ spec:
         	}
         	forward_to = [prometheus.remote_write.default.receiver]
         }
-        // The network device pushes BSD syslog over UDP to a LAN VIP. Handled by
-        // Loki's own source rather than an OTLP receiver and transform, since these logs
-        // only ever go to Loki and the round trip through OTLP buys nothing.
+        // The device sends no hostname, so the RFC3164 parser takes the RouterOS topic
+        // list ("system,info,account") as the hostname field and the stored line starts
+        // at the message text. Recover the topics from there, and take the level from
+        // the priority rather than the line: syslog-severity is auto on the device, so
+        // the real per-message severity is on the wire. RFC spellings are normalised to
+        // the short forms Grafana colours. Emitting `level` rather than `detected_level`
+        // is deliberate: Loki derives detected_level from it, whereas setting that name
+        // directly collides with Loki's own detection and it files its result as
+        // detected_level_extracted instead.
+        loki.relabel "syslog" {
+        	forward_to = []
+
+        	rule {
+        		source_labels = ["__syslog_message_hostname"]
+        		target_label  = "topics"
+        	}
+
+        	rule {
+        		source_labels = ["__syslog_message_severity"]
+        		target_label  = "level"
+        	}
+
+        	rule {
+        		source_labels = ["level"]
+        		regex         = "informational"
+        		target_label  = "level"
+        		replacement   = "info"
+        	}
+
+        	rule {
+        		source_labels = ["level"]
+        		regex         = "warning"
+        		target_label  = "level"
+        		replacement   = "warn"
+        	}
+        }
+
+        // The device pushes BSD syslog over UDP to a LAN VIP. Handled by Loki's own
+        // source rather than an OTLP receiver and transform, since these logs only ever
+        // go to Loki and the round trip through OTLP buys nothing.
         loki.source.syslog "network_devices" {
         	listener {
         		address  = "0.0.0.0:5514"
@@ -91,31 +128,16 @@ spec:
         		// setting syslog-time-format=iso8601 on the device breaks this parser.
         		syslog_format                   = "rfc3164"
         		rfc3164_default_to_current_year = true
+
         		// service_name is the label Loki would otherwise derive for itself, and
         		// the one these logs are queried by.
         		labels = {
         			service_name = "mikrotik",
         		}
         	}
-        	forward_to = [loki.process.network_devices.receiver]
-        }
-        // RouterOS puts its level in the leading topic list, for example
-        // "firewall,warning ...", rather than in the syslog priority. Loki's own level
-        // detection reads info, warning and error out of that but returns unknown for
-        // critical and debug, so extract it explicitly. Matching "warn" rather than
-        // "warning" yields Loki's canonical spelling, and the greedy prefix takes the
-        // last keyword when a line carries several topics.
-        loki.process "network_devices" {
-        	stage.regex {
-        		expression = "^[^ ]*(?P<level>debug|info|warn|error|critical)"
-        	}
 
-        	stage.structured_metadata {
-        		values = {
-        			detected_level = "level",
-        		}
-        	}
-        	forward_to = [loki.write.default.receiver]
+        	relabel_rules = loki.relabel.syslog.rules
+        	forward_to    = [loki.write.default.receiver]
         }
 
         loki.write "default" {
