@@ -36,6 +36,50 @@ spec:
         	scrape_interval = "30s"
         	forward_to      = [prometheus.remote_write.default.receiver]
         }
+        // The router is polled by the standalone snmp_exporter in multi-target mode:
+        // this scrape hands it a target and it performs the SNMPv3 query. Scraped
+        // natively rather than through an OTLP conversion, so the counter names arrive
+        // unsuffixed, which is what snmp-observ-lib queries.
+        discovery.relabel "snmp_mikrotik" {
+        	targets = [{
+        		__address__ = "192.168.10.1",
+        		instance    = "mikrotik-router",
+        	}]
+
+        	// Keep the polled address on every series as `target` for scrape debugging;
+        	// `instance` carries the device name.
+        	rule {
+        		source_labels = ["__address__"]
+        		target_label  = "__param_target"
+        	}
+
+        	rule {
+        		source_labels = ["__address__"]
+        		target_label  = "target"
+        	}
+
+        	rule {
+        		target_label = "__address__"
+        		replacement  = "prometheus-snmp-exporter.prometheus-snmp-exporter.svc.cluster.local:9116"
+        	}
+        }
+
+        prometheus.scrape "snmp_mikrotik" {
+        	targets         = discovery.relabel.snmp_mikrotik.output
+        	job_name        = "snmp-mikrotik"
+        	scrape_interval = "60s"
+        	scrape_timeout  = "30s"
+        	metrics_path    = "/snmp"
+
+        	params = {
+        		// hrDevice (hrProcessorLoad = CPU) and hrStorage (memory) are built-in
+        		// snmp_exporter modules; RouterOS serves both via HOST-RESOURCES-MIB.
+        		module = ["if_mib", "mikrotik", "system", "hrStorage", "hrDevice"],
+        		auth   = ["mikrotik_v3"],
+        	}
+
+        	forward_to = [prometheus.remote_write.default.receiver]
+        }
 
         prometheus.remote_write "default" {
         	external_labels = {
