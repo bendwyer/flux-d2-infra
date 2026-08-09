@@ -45,7 +45,6 @@ spec:
         		__address__ = "192.168.10.1",
         		instance    = "mikrotik-router",
         	}]
-
         	// Keep the polled address on every series as `target` for scrape debugging;
         	// `instance` carries the device name.
         	rule {
@@ -70,15 +69,61 @@ spec:
         	scrape_interval = "60s"
         	scrape_timeout  = "30s"
         	metrics_path    = "/snmp"
-
-        	params = {
+        	params          = {
         		// hrDevice (hrProcessorLoad = CPU) and hrStorage (memory) are built-in
         		// snmp_exporter modules; RouterOS serves both via HOST-RESOURCES-MIB.
         		module = ["if_mib", "mikrotik", "system", "hrStorage", "hrDevice"],
         		auth   = ["mikrotik_v3"],
         	}
-
         	forward_to = [prometheus.remote_write.default.receiver]
+        }
+        // The network device pushes RFC5424 syslog over UDP to a LAN VIP. Handled by
+        // Loki's own source rather than an OTLP receiver and transform, since these logs
+        // only ever go to Loki and the round trip through OTLP buys nothing.
+        loki.source.syslog "network_devices" {
+        	listener {
+        		address       = "0.0.0.0:5514"
+        		protocol      = "udp"
+        		syslog_format = "rfc5424"
+
+        		// service_name is the label Loki would otherwise derive for itself, and
+        		// the one these logs are queried by.
+        		labels = {
+        			service_name = "mikrotik",
+        		}
+        	}
+
+        	forward_to = [loki.process.network_devices.receiver]
+        }
+
+        // RouterOS puts its level in the leading topic list, for example
+        // "firewall,warning ...", rather than in the syslog priority. Loki's own level
+        // detection reads info, warning and error out of that but returns unknown for
+        // critical and debug, so extract it explicitly. Matching "warn" rather than
+        // "warning" yields Loki's canonical spelling, and the greedy prefix takes the
+        // last keyword when a line carries several topics.
+        loki.process "network_devices" {
+        	stage.regex {
+        		expression = "^[^ ]*(?P<level>debug|info|warn|error|critical)"
+        	}
+
+        	stage.structured_metadata {
+        		values = {
+        			detected_level = "level",
+        		}
+        	}
+
+        	forward_to = [loki.write.default.receiver]
+        }
+
+        loki.write "default" {
+        	external_labels = {
+        		cluster = "home",
+        	}
+
+        	endpoint {
+        		url = "http://loki-gateway.loki.svc.cluster.local/loki/api/v1/push"
+        	}
         }
 
         prometheus.remote_write "default" {
