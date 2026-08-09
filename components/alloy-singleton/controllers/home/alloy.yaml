@@ -355,25 +355,26 @@ spec:
         	}
 
         	output {
-        		logs    = [otelcol.exporter.loki.apps.input]
+        		logs    = [otelcol.exporter.otlphttp.apps.input]
         		metrics = [otelcol.exporter.prometheus.apps.input]
         	}
         }
 
-        otelcol.exporter.loki "apps" {
-        	forward_to = [loki.write.default.receiver]
+        // Loki's own OTLP ingestion does the mapping: 17 resource attributes become
+        // index labels and everything else becomes structured metadata, with the body
+        // as the line. otelcol.exporter.loki instead serialises the whole record into
+        // the line and can only promote attributes to labels, which for these events
+        // would mean indexing session and prompt ids.
+        otelcol.exporter.otlphttp "apps" {
+        	client {
+        		endpoint = "http://loki-gateway.loki.svc.cluster.local/otlp"
+
+        		tls {
+        			insecure = true
+        		}
+        	}
         }
 
         otelcol.exporter.prometheus "apps" {
         	forward_to = [prometheus.remote_write.default.receiver]
-        }
-
-        loki.write "default" {
-        	external_labels = {
-        		cluster = "home",
-        	}
-
-        	endpoint {
-        		url = "http://loki-gateway.loki.svc.cluster.local/loki/api/v1/push"
-        	}
         }
