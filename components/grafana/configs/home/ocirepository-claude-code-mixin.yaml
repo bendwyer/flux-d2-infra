@@ -10,4 +10,4 @@ spec:
   url: oci://ghcr.io/bendwyer/k8s-monitoring/claude-code-mixin
   ref:
     tag: "2026.3.24"
-    digest: "sha256:c20a965b305c5ca8e6e950f16da42c1daef539c870bceeed8255acac2b5af5bc"
+    digest: "sha256:4af4ffc5453e8782f61f04a0f788dbb8dc2e7e1cd9a72449a5a3a7fb819e5b85"
