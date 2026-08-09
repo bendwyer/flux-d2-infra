@@ -77,9 +77,12 @@ spec:
         	}
         	forward_to = [prometheus.remote_write.default.receiver]
         }
-        // The device sends no hostname, so the RFC3164 parser takes the RouterOS topic
-        // list ("system,info,account") as the hostname field and the stored line starts
-        // at the message text. Recover the topics from there, and take the level from
+        // The device sends its hostname, so under RFC3164 the RouterOS topic list
+        // ("system,info,account") lands in the tag rather than the hostname, and the
+        // stored line starts at the message text. Recover the topics from the tag and
+        // keep the hostname as `host`: it is constant for one device, but it is the
+        // only thing distinguishing senders if another is pointed at this listener.
+        // Take the level from
         // the priority rather than the line: syslog-severity is auto on the device, so
         // the real per-message severity is on the wire. RFC spellings are normalised to
         // the short forms Grafana colours. Emitting `level` rather than `detected_level`
@@ -90,8 +93,13 @@ spec:
         	forward_to = []
 
         	rule {
-        		source_labels = ["__syslog_message_hostname"]
+        		source_labels = ["__syslog_message_app_name"]
         		target_label  = "topics"
+        	}
+
+        	rule {
+        		source_labels = ["__syslog_message_hostname"]
+        		target_label  = "host"
         	}
 
         	rule {
@@ -113,7 +121,6 @@ spec:
         		replacement   = "warn"
         	}
         }
-
         // The device pushes BSD syslog over UDP to a LAN VIP. Handled by Loki's own
         // source rather than an OTLP receiver and transform, since these logs only ever
         // go to Loki and the round trip through OTLP buys nothing.
@@ -121,21 +128,18 @@ spec:
         	listener {
         		address  = "0.0.0.0:5514"
         		protocol = "udp"
-
         		// RouterOS offers cef, default and syslog for remote-log-format, and its
         		// "syslog" is BSD-syslog, so RFC3164 is the only real syslog it speaks.
         		// The BSD timestamp carries no year, hence the default below. Note that
         		// setting syslog-time-format=iso8601 on the device breaks this parser.
         		syslog_format                   = "rfc3164"
         		rfc3164_default_to_current_year = true
-
         		// service_name is the label Loki would otherwise derive for itself, and
         		// the one these logs are queried by.
         		labels = {
         			service_name = "mikrotik",
         		}
         	}
-
         	relabel_rules = loki.relabel.syslog.rules
         	forward_to    = [loki.write.default.receiver]
         }
