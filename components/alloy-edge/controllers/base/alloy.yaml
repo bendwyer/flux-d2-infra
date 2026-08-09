@@ -61,6 +61,16 @@ spec:
         port: 5514
         targetPort: 5514
         protocol: UDP
+      # OTLP from outside the cluster. Only 4318 is reachable externally, via
+      # the Tailscale ingress in configs/home; 4317 is here for in-cluster use.
+      - name: otlp-grpc
+        port: 4317
+        targetPort: 4317
+        protocol: TCP
+      - name: otlp-http
+        port: 4318
+        targetPort: 4318
+        protocol: TCP
     extraEnv:
       - name: POD_NAMESPACE
         valueFrom:

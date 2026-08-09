@@ -153,6 +153,62 @@ spec:
         		url = "http://loki-gateway.loki.svc.cluster.local/loki/api/v1/push"
         	}
         }
+        // OTLP pushed from outside the cluster, currently Claude Code on the Mac
+        // reaching the Tailscale ingress. No k8sattributes here: the senders are not
+        // pods, and this collector holds no Kubernetes credentials by design.
+        otelcol.receiver.otlp "external" {
+        	grpc {
+        		endpoint = "0.0.0.0:4317"
+        	}
+
+        	http {
+        		endpoint = "0.0.0.0:4318"
+        	}
+
+        	output {
+        		logs    = [otelcol.exporter.otlphttp.external.input]
+        		metrics = [otelcol.processor.transform.external.input]
+        	}
+        }
+
+        // Resource attributes do not become Prometheus labels on their own; they land
+        // on target_info instead. The collector being replaced copied them all with
+        // resource_to_telemetry_conversion. Promoting the four that carry meaning keeps
+        // these series identical to the in-cluster senders, which do the same thing.
+        otelcol.processor.transform "external" {
+        	error_mode = "ignore"
+
+        	metric_statements {
+        		context = "datapoint"
+
+        		statements = [
+        			`set(attributes["host.arch"], resource.attributes["host.arch"])`,
+        			`set(attributes["os.type"], resource.attributes["os.type"])`,
+        			`set(attributes["os.version"], resource.attributes["os.version"])`,
+        			`set(attributes["service.version"], resource.attributes["service.version"])`,
+        		]
+        	}
+
+        	output {
+        		metrics = [otelcol.exporter.prometheus.external.input]
+        	}
+        }
+
+        // Loki's own OTLP ingestion maps resource attributes to index labels and the
+        // rest to structured metadata, with the body as the line.
+        otelcol.exporter.otlphttp "external" {
+        	client {
+        		endpoint = "http://loki-gateway.loki.svc.cluster.local/otlp"
+
+        		tls {
+        			insecure = true
+        		}
+        	}
+        }
+
+        otelcol.exporter.prometheus "external" {
+        	forward_to = [prometheus.remote_write.default.receiver]
+        }
 
         prometheus.remote_write "default" {
         	external_labels = {
