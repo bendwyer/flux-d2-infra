@@ -1,0 +1,48 @@
+---
+apiVersion: collectors.grafana.com/v1alpha1
+kind: Alloy
+metadata:
+  name: alloy-edge
+  namespace: alloy-edge
+spec:
+  alloy:
+    configMap:
+      content: |-
+        // Alloy's own internal metrics. An in-process exporter has no pod identity of
+        // its own, so the labels a pod scrape would have attached are set here instead.
+        prometheus.exporter.self "edge" { }
+
+        discovery.relabel "self" {
+        	targets = prometheus.exporter.self.edge.targets
+
+        	rule {
+        		target_label = "job"
+        		replacement  = "alloy-edge"
+        	}
+
+        	rule {
+        		target_label = "namespace"
+        		replacement  = sys.env("POD_NAMESPACE")
+        	}
+
+        	rule {
+        		target_label = "pod"
+        		replacement  = sys.env("POD_NAME")
+        	}
+        }
+
+        prometheus.scrape "self" {
+        	targets         = discovery.relabel.self.output
+        	scrape_interval = "30s"
+        	forward_to      = [prometheus.remote_write.default.receiver]
+        }
+
+        prometheus.remote_write "default" {
+        	external_labels = {
+        		cluster = "home",
+        	}
+
+        	endpoint {
+        		url = "http://prometheus-prometheus.prometheus.svc.cluster.local:9090/api/v1/write"
+        	}
+        }

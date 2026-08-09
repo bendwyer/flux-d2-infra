@@ -1,0 +1,72 @@
+---
+apiVersion: collectors.grafana.com/v1alpha1
+kind: Alloy
+metadata:
+  name: alloy-edge
+  namespace: alloy-edge
+spec:
+  # spec mirrors the Alloy Helm chart's values file one-for-one.
+  controller:
+    type: deployment
+    # Single replica. The signals this collector will take on are a UDP syslog
+    # listener behind one MetalLB VIP and one SNMP target, neither of which
+    # shards, so a second replica would duplicate work rather than divide it.
+    replicas: 1
+    volumes:
+      extra:
+        - name: storage
+          emptyDir: {}
+  global:
+    podSecurityContext:
+      runAsNonRoot: true
+      fsGroup: 473
+      seccompProfile:
+        type: RuntimeDefault
+  configReloader:
+    securityContext:
+      runAsUser: 65534
+      runAsGroup: 65534
+      readOnlyRootFilesystem: true
+      allowPrivilegeEscalation: false
+      capabilities:
+        drop: [ALL]
+  # No Kubernetes API access at all, which is the defining property of the edge
+  # role: it terminates traffic from outside the cluster, so it holds no
+  # credential worth stealing. Nothing here discovers Kubernetes objects, and
+  # nothing may be added that does. The chart's default rules are broad, so this
+  # has to be turned off explicitly rather than left unset.
+  rbac:
+    create: false
+  serviceAccount:
+    # Nothing here talks to the API server, so the pod does not need a token
+    # mounted at all. The chart automounts one by default.
+    automountServiceAccountToken: false
+  alloy:
+    securityContext:
+      runAsUser: 473
+      runAsGroup: 473
+      readOnlyRootFilesystem: true
+      allowPrivilegeEscalation: false
+      capabilities:
+        drop: [ALL]
+    mounts:
+      extra:
+        - name: storage
+          mountPath: /tmp/alloy
+    extraEnv:
+      - name: POD_NAMESPACE
+        valueFrom:
+          fieldRef:
+            fieldPath: metadata.namespace
+      - name: POD_NAME
+        valueFrom:
+          fieldRef:
+            fieldPath: metadata.name
+    # Matches what the collector being replaced is allocated, since this will
+    # end up carrying the same three signals.
+    resources:
+      limits:
+        memory: 384Mi
+      requests:
+        cpu: 50m
+        memory: 384Mi
