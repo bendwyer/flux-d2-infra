@@ -33,49 +33,7 @@ spec:
           udp:
             listen_address: 0.0.0.0:5514
           protocol: rfc5424
-        # Scrape the snmp_exporter in multi-target mode for the router. The
-        # exporter performs the actual SNMPv3 poll of 192.168.10.1:161.
-        # Named `prometheus/snmp` so it never collides with the chart's default
-        # `prometheus` self-scrape receiver.
-        prometheus/snmp:
-          config:
-            scrape_configs:
-              - job_name: snmp-mikrotik
-                scrape_interval: 60s
-                scrape_timeout: 30s
-                metrics_path: /snmp
-                params:
-                  # hrDevice (hrProcessorLoad = CPU) and hrStorage (memory) are
-                  # built-in snmp_exporter modules; RouterOS serves both via
-                  # HOST-RESOURCES-MIB (verified with `/system resource cpu print oid`).
-                  module: [if_mib, mikrotik, system, hrStorage, hrDevice]
-                  auth: [mikrotik_v3]
-                static_configs:
-                  - targets:
-                      - 192.168.10.1
-                    labels:
-                      instance: mikrotik-router
-                relabel_configs:
-                  # Keep the polled IP on every series as `target` (the SNMP query
-                  # endpoint, for scrape debugging); `instance` carries the device name.
-                  - source_labels: [__address__]
-                    target_label: __param_target
-                  - source_labels: [__address__]
-                    target_label: target
-                  - target_label: __address__
-                    replacement: prometheus-snmp-exporter.prometheus-snmp-exporter.svc.cluster.local:9116
       processors:
-        # Drop otel_scope_name and otel_scope_version from the SNMP scrape, where
-        # they only name the Prometheus receiver and churn on every collector
-        # upgrade. Metrics pushed over OTLP keep them, since there they identify
-        # the application's instrumentation library.
-        # Clear version first, or the name match below has nothing to match.
-        transform/scope:
-          metric_statements:
-            - context: scope
-              statements:
-                - set(scope.version, "") where scope.name == "github.com/open-telemetry/opentelemetry-collector-contrib/receiver/prometheusreceiver"
-                - set(scope.name, "") where scope.name == "github.com/open-telemetry/opentelemetry-collector-contrib/receiver/prometheusreceiver"
         # Enrich raw syslog so it lands in Loki under a useful service/host.
         # Scoped to the logs/syslog pipeline only; the OTLP logs pipeline stays
         # pass-through (no resource rewriting) by design.
@@ -126,10 +84,8 @@ spec:
           metrics:
             receivers:
               - otlp
-              - prometheus/snmp
             processors:
               - memory_limiter
-              - transform/scope
               - batch
             exporters:
               - prometheus_remote_write
