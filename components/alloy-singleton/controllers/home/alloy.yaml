@@ -119,7 +119,6 @@ spec:
         		enabled = true
         	}
         }
-
         // honor_labels keeps the labels pushed by the job that produced the metric.
         prometheus.scrape "pushgateway" {
         	targets         = [{__address__ = "prometheus-pushgateway.prometheus-pushgateway.svc.cluster.local:9091"}]
@@ -154,7 +153,6 @@ spec:
         		enabled = true
         	}
         }
-
         // Talos serves the controller manager and scheduler on the control plane nodes
         // only, so discovery is filtered to them and the port rewritten per component.
         discovery.kubernetes "nodes" {
@@ -329,7 +327,6 @@ spec:
         		url = "http://prometheus-prometheus.prometheus.svc.cluster.local:9090/api/v1/write"
         	}
         }
-
         // OTLP from applications in the cluster, currently Claude Code in Coder
         // workspaces. Reached through this component's Service, so the connection
         // address is the sender's pod IP and k8sattributes resolves identity without
@@ -356,10 +353,32 @@ spec:
 
         	output {
         		logs    = [otelcol.exporter.otlphttp.apps.input]
+        		metrics = [otelcol.processor.transform.apps.input]
+        	}
+        }
+        // Resource attributes do not become Prometheus labels on their own; they land on
+        // target_info instead. The edge collector copies all of them onto every series, so
+        // without this the same metric has one label shape from a workspace and another
+        // from outside the cluster, and a filter on os_type silently returns half the data.
+        // Promoting the four by name is what upstream recommends over
+        // resource_to_telemetry_conversion, which would convert everything.
+        otelcol.processor.transform "apps" {
+        	error_mode = "ignore"
+
+        	metric_statements {
+        		context    = "datapoint"
+        		statements = [
+        			`set(attributes["host.arch"], resource.attributes["host.arch"])`,
+        			`set(attributes["os.type"], resource.attributes["os.type"])`,
+        			`set(attributes["os.version"], resource.attributes["os.version"])`,
+        			`set(attributes["service.version"], resource.attributes["service.version"])`,
+        		]
+        	}
+
+        	output {
         		metrics = [otelcol.exporter.prometheus.apps.input]
         	}
         }
-
         // Loki's own OTLP ingestion does the mapping: 17 resource attributes become
         // index labels and everything else becomes structured metadata, with the body
         // as the line. otelcol.exporter.loki instead serialises the whole record into
