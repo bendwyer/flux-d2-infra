@@ -32,8 +32,13 @@ spec:
   rbac:
     create: true
     rules:
+      # namespaces and replicasets are what otelcol.processor.k8sattributes
+      # needs on top of pods to resolve a sender's identity.
       - apiGroups: [""]
-        resources: [pods]
+        resources: [pods, namespaces]
+        verbs: [get, list, watch]
+      - apiGroups: [apps]
+        resources: [replicasets]
         verbs: [get, list, watch]
     clusterRules:
       - apiGroups: [""]
@@ -55,6 +60,16 @@ spec:
       extra:
         - name: storage
           mountPath: /tmp/alloy
+    # Exposes the OTLP receiver on this component's Service.
+    extraPorts:
+      - name: otlp-grpc
+        port: 4317
+        targetPort: 4317
+        protocol: TCP
+      - name: otlp-http
+        port: 4318
+        targetPort: 4318
+        protocol: TCP
     extraEnv:
       - name: POD_NAMESPACE
         valueFrom:

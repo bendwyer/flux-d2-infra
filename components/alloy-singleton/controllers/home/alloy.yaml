@@ -329,3 +329,51 @@ spec:
         		url = "http://prometheus-prometheus.prometheus.svc.cluster.local:9090/api/v1/write"
         	}
         }
+
+        // OTLP from applications in the cluster, currently Claude Code in Coder
+        // workspaces. Reached through this component's Service, so the connection
+        // address is the sender's pod IP and k8sattributes resolves identity without
+        // the sender having to declare it.
+        otelcol.receiver.otlp "apps" {
+        	grpc {
+        		endpoint = "0.0.0.0:4317"
+        	}
+
+        	http {
+        		endpoint = "0.0.0.0:4318"
+        	}
+
+        	output {
+        		logs    = [otelcol.processor.k8sattributes.apps.input]
+        		metrics = [otelcol.processor.k8sattributes.apps.input]
+        	}
+        }
+
+        otelcol.processor.k8sattributes "apps" {
+        	extract {
+        		metadata = ["k8s.namespace.name", "k8s.pod.name"]
+        	}
+
+        	output {
+        		logs    = [otelcol.exporter.loki.apps.input]
+        		metrics = [otelcol.exporter.prometheus.apps.input]
+        	}
+        }
+
+        otelcol.exporter.loki "apps" {
+        	forward_to = [loki.write.default.receiver]
+        }
+
+        otelcol.exporter.prometheus "apps" {
+        	forward_to = [prometheus.remote_write.default.receiver]
+        }
+
+        loki.write "default" {
+        	external_labels = {
+        		cluster = "home",
+        	}
+
+        	endpoint {
+        		url = "http://loki-gateway.loki.svc.cluster.local/loki/api/v1/push"
+        	}
+        }
