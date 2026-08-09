@@ -36,12 +36,16 @@ spec:
               k8up Job {{ $labels.namespace }}/{{ $labels.job_name }} has had
               {{ $value }} pod failure(s) and is still active (within backoffLimit).
               Likely a transient backend hiccup; will resolve on retry.
+        # k8up names these counters `..._counter`, without the `_total` that
+        # Prometheus convention would suggest. They briefly carried the suffix
+        # because the scrape passed through OTLP, whose add_metric_suffixes
+        # appended it; a native scrape emits the real name. Do not add it back.
         - alert: K8upBackupFailed
           expr: |
-            k8up_jobs_failed_counter_total{jobType="backup"} > 0
+            k8up_jobs_failed_counter{jobType="backup"} > 0
             unless
-            k8up_jobs_failed_counter_total{jobType="backup"}
-              == k8up_jobs_failed_counter_total{jobType="backup"} offset 30m
+            k8up_jobs_failed_counter{jobType="backup"}
+              == k8up_jobs_failed_counter{jobType="backup"} offset 30m
           for: 1m
           labels:
             severity: critical
@@ -55,7 +59,7 @@ spec:
               30 minutes after the counter stops growing.
         - alert: K8upBackupNotRunning
           expr: |
-            sum by (namespace) (increase(k8up_jobs_successful_counter_total{jobType="backup"}[25h])) == 0
+            sum by (namespace) (increase(k8up_jobs_successful_counter{jobType="backup"}[25h])) == 0
             and on(namespace) k8up_schedules_gauge > 0
           for: 1m
           labels:
