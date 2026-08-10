@@ -77,12 +77,13 @@ spec:
         	}
         	forward_to = [prometheus.remote_write.default.receiver]
         }
-        // The device sends its hostname, so under RFC3164 the RouterOS topic list
-        // ("system,info,account") lands in the tag rather than the hostname, and the
-        // stored line starts at the message text. Recover the topics from the tag and
-        // keep the hostname as `host`: it is constant for one device, but it is the
-        // only thing distinguishing senders if another is pointed at this listener.
-        // Take the level from
+        // `topics` is the RFC3164 tag. The device fills it from a per-rule prefix, one
+        // alphanumeric token naming the category, so a line is labelled by the rule that
+        // logged it rather than by its own topic list; the parser strips it from the
+        // stored body. Rules carrying no prefix produce no label, which is deliberate
+        // for the severity ones, since severity is already `level`. Keep the hostname as
+        // `host`: it is constant for one device, but it is the only thing distinguishing
+        // senders if another is pointed at this listener. Take the level from
         // the priority rather than the line: syslog-severity is auto on the device, so
         // the real per-message severity is on the wire. RFC spellings are normalised to
         // the short forms Grafana colours. Emitting `level` rather than `detected_level`
