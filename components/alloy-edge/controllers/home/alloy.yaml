@@ -77,10 +77,7 @@ spec:
         	}
         	forward_to = [prometheus.remote_write.default.receiver]
         }
-        // The device sends its hostname, so under RFC3164 the RouterOS topic list
-        // ("system,info,account") lands in the tag rather than the hostname, and the
-        // stored line starts at the message text. Recover the topics from the tag and
-        // keep the hostname as `host`: it is constant for one device, but it is the
+        // Keep the hostname as `host`: it is constant for one device, but it is the
         // only thing distinguishing senders if another is pointed at this listener.
         // Take the level from
         // the priority rather than the line: syslog-severity is auto on the device, so
@@ -91,11 +88,6 @@ spec:
         // detected_level_extracted instead.
         loki.relabel "syslog" {
         	forward_to = []
-
-        	rule {
-        		source_labels = ["__syslog_message_app_name"]
-        		target_label  = "topics"
-        	}
 
         	rule {
         		source_labels = ["__syslog_message_hostname"]
@@ -141,7 +133,42 @@ spec:
         		}
         	}
         	relabel_rules = loki.relabel.syslog.rules
-        	forward_to    = [loki.write.default.receiver]
+        	forward_to    = [loki.process.syslog.receiver]
+        }
+        // With add-topics-string set on the device's logging action, RouterOS puts its
+        // topic list back at the front of the message. It is bare text, not a
+        // colon-terminated RFC3164 tag, so the parser leaves it in the line and
+        // __syslog_message_app_name stays empty; only parsing the line recovers it. The
+        // severity half is already `level`, so what this adds is the category: firewall,
+        // dhcp, script. One device emits a handful of combinations, so it is cheap as a
+        // label.
+        loki.process "syslog" {
+        	// The line filter is the guard. A sender without add-topics-string, meaning
+        	// SwOS or anything below RouterOS 7.22, emits no prefix at all, and the stages
+        	// below would take its first word as the label and cut it from the line.
+        	// Unmatched lines pass through untouched.
+        	stage.match {
+        		selector = `{service_name="mikrotik"} |~ "^[a-z0-9_-]+,"`
+
+        		// The captures split on the literal space between them: topics takes the
+        		// leading list, message the remainder.
+        		stage.pattern {
+        			pattern = "<topics> <message>"
+        		}
+
+        		stage.labels {
+        			values = {
+        				topics = "",
+        			}
+        		}
+
+        		// Drop the prefix from the stored line now that it is a label.
+        		stage.output {
+        			source = "message"
+        		}
+        	}
+
+        	forward_to = [loki.write.default.receiver]
         }
 
         loki.write "default" {
