@@ -10,3 +10,4 @@ resources:
   - recurringjob-filesystem-trim.yaml
   - recurringjob-snapshot-cleanup.yaml
   - storageclass-longhorn-scratch.yaml
+  - storageclass-longhorn-single.yaml

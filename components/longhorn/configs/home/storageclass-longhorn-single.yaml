@@ -1,0 +1,22 @@
+---
+# For workloads that replicate their own data, such as a CloudNativePG cluster
+# running three instances. Each instance gets one volume replica, so the data
+# still exists three times, but the redundancy sits at the layer that can fail
+# over to another node rather than at the volume layer, which cannot.
+#
+# dataLocality best-effort keeps a replica on the node running the instance
+# where possible. It stays a scheduling preference, not strict-local, so the
+# volume attaches from any node and a drain is never blocked by placement.
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: longhorn-single
+provisioner: driver.longhorn.io
+allowVolumeExpansion: true
+reclaimPolicy: Delete
+volumeBindingMode: Immediate
+parameters:
+  numberOfReplicas: "1"
+  staleReplicaTimeout: "30"
+  dataLocality: "best-effort"
+  fsType: "ext4"
