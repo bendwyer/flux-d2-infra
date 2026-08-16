@@ -1,0 +1,16 @@
+---
+# Longhorn snapshots each replica before a rebuild and never reclaims them.
+# `default` is a volume label Longhorn only ever adds, so nothing falls out.
+apiVersion: longhorn.io/v1beta2
+kind: RecurringJob
+metadata:
+  name: snapshot-cleanup
+  namespace: longhorn
+spec:
+  cron: "0 3 * * *"
+  task: snapshot-cleanup
+  groups:
+    - default
+  concurrency: 2
+  # Ignored for this task; Longhorn forces it to 0.
+  retain: 0

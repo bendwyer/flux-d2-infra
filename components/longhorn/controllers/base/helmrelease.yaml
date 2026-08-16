@@ -27,4 +27,6 @@ spec:
       allowCollectingLonghornUsageMetrics: false
       defaultDataPath: /var/mnt/longhorn
       deletingConfirmationFlag: true
+      # Single-replica volumes would otherwise block a node drain outright.
+      nodeDrainPolicy: block-for-eviction-if-contains-last-replica
       storageReservedPercentageForDefaultDisk: 0
