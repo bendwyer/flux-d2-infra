@@ -25,6 +25,10 @@ spec:
   values:
     defaultSettings:
       allowCollectingLonghornUsageMetrics: false
+      # Volumes otherwise keep the engine they were created with, so a chart
+      # upgrade leaves them behind one version at a time. One per node keeps the
+      # rollout serialised.
+      concurrentAutomaticEngineUpgradePerNodeLimit: 1
       defaultDataPath: /var/mnt/longhorn
       deletingConfirmationFlag: true
       # Single-replica volumes would otherwise block a node drain outright.
