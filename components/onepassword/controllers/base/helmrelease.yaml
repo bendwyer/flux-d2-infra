@@ -21,21 +21,16 @@ spec:
   # upgrade:
   #   remediation:
   #     retries: 3
+  # Both secrets are seeded out of band before Flux runs, because they are what the
+  # operator needs in order to fetch every other secret. Naming them here rather than
+  # passing their contents through values means the chart templates no Secret of its
+  # own, so there is one copy of each and none in Helm release storage.
   values:
     connect:
-      credentials_base64: "" # set via valuesFrom
+      credentialsName: onepassword-connect-credentials
     operator:
       autoRestart: true
       create: true
       token:
-        value: "" # set via valuesFrom
+        name: onepassword-token
       pollingInterval: 60
-  valuesFrom:
-    - kind: Secret
-      name: onepassword-credentials
-      valuesKey: 1password-credentials.json
-      targetPath: connect.credentials_base64
-    - kind: Secret
-      name: onepassword-token
-      valuesKey: token
-      targetPath: operator.token.value
