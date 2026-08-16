@@ -1,0 +1,15 @@
+---
+# Reclaims blocks freed inside the filesystem; ordered after snapshot-cleanup
+# so it sees the space that cleanup releases.
+apiVersion: longhorn.io/v1beta2
+kind: RecurringJob
+metadata:
+  name: filesystem-trim
+  namespace: longhorn
+spec:
+  cron: "0 4 * * *"
+  task: filesystem-trim
+  groups:
+    - default
+  concurrency: 2
+  retain: 0

@@ -7,4 +7,6 @@ resources:
   - ingress-longhorn.yaml
   - kustomization-longhorn-dashboards.yaml
   - ocirepository-longhorn-dashboards.yaml
+  - recurringjob-filesystem-trim.yaml
+  - recurringjob-snapshot-cleanup.yaml
   - storageclass-longhorn-scratch.yaml
