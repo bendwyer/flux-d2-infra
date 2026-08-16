@@ -5,8 +5,16 @@ metadata:
   name: semaphore-db
   namespace: semaphore
 spec:
-  instances: 1
+  # Three instances on single-replica volumes hold the same three copies of the
+  # data as one instance on the default three-replica class, but a node drain
+  # becomes a switchover rather than downtime.
+  instances: 3
+  # required, not the defaulted preferred: with one copy per volume, two
+  # instances sharing a node would put two of the three copies on one disk.
+  affinity:
+    podAntiAffinityType: required
   storage:
+    storageClass: longhorn-single
     size: 10Gi
   resources:
     requests:
