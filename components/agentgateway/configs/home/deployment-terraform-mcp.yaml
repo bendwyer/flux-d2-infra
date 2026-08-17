@@ -18,7 +18,7 @@ spec:
     spec:
       containers:
         - name: terraform-mcp
-          image: ghcr.io/bendwyer/containers/terraform-mcp:0.5.1
+          image: ghcr.io/bendwyer/containers/terraform-mcp:0.5.2@sha256:ffb83d853f554aed6b73179e901e9e9da950fa931a4c48fdd954a94138d4f130
           args:
             - streamable-http
             - --transport-port
