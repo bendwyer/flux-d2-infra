@@ -1,0 +1,25 @@
+---
+# Read-only, and cluster-scoped because the CNPG clusters are spread across namespaces.
+# `kubectl wait` needs watch as well as get and list.
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: omni-upgrade-gate
+rules:
+  - apiGroups:
+      - longhorn.io
+    resources:
+      - nodes
+      - volumes
+    verbs:
+      - get
+      - list
+      - watch
+  - apiGroups:
+      - postgresql.cnpg.io
+    resources:
+      - clusters
+    verbs:
+      - get
+      - list
+      - watch
