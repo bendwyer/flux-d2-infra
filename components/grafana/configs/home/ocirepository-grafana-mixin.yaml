@@ -9,5 +9,5 @@ spec:
   interval: 1h
   url: oci://ghcr.io/bendwyer/k8s-monitoring/grafana-mixin
   ref:
-    tag: "13.1.4"
-    digest: "sha256:e676adb725aa9e35451ddb7e7eaa841916ac3271fd41fc619a81aa715f872d6f"
+    tag: "13.2.0"
+    digest: "sha256:cf6e860307e8e3ce82dd05cd45b5e49e687f932064568830d6ce5b85aa84e37e"
