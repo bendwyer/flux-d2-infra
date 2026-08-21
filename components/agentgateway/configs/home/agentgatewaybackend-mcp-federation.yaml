@@ -6,6 +6,9 @@ metadata:
   namespace: agentgateway
 spec:
   mcp:
+    # The default, FailClosed, fails every call when any one target is broken.
+    # This keeps the healthy targets serving.
+    failureMode: FailOpen
     targets:
       - name: github
         static:
