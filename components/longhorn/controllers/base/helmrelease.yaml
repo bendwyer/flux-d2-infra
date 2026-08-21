@@ -31,6 +31,6 @@ spec:
       concurrentAutomaticEngineUpgradePerNodeLimit: 1
       defaultDataPath: /var/mnt/longhorn
       deletingConfirmationFlag: true
-      # Single-replica volumes would otherwise block a node drain outright.
-      nodeDrainPolicy: block-for-eviction-if-contains-last-replica
+      # Drains once the replica has stopped, without copying it to another node first.
+      nodeDrainPolicy: allow-if-replica-is-stopped
       storageReservedPercentageForDefaultDisk: 0
