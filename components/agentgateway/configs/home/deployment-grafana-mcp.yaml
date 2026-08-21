@@ -24,6 +24,9 @@ spec:
             - streamable-http
             - --address
             - 0.0.0.0:8000
+            # Accept any Host header. Only the gateway can reach this service.
+            - --allowed-hosts
+            - "*"
           env:
             - name: GRAFANA_URL
               value: "http://grafana.grafana.svc.cluster.local"
