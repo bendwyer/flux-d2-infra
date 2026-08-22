@@ -173,6 +173,52 @@ spec:
         	forward_to      = [prometheus.remote_write.default.receiver]
         }
 
+        // The gateway proxy declares metrics on 15020, but its provisioned Service
+        // publishes only the listener port, so discovery has to address the pod.
+        discovery.relabel "agentgateway" {
+        	targets = discovery.kubernetes.local_pods.targets
+
+        	rule {
+        		source_labels = ["__meta_kubernetes_pod_label_gateway_networking_k8s_io_gateway_class_name"]
+        		action        = "keep"
+        		regex         = "agentgateway"
+        	}
+
+        	rule {
+        		source_labels = ["__meta_kubernetes_pod_container_port_number"]
+        		action        = "keep"
+        		regex         = "15020"
+        	}
+
+        	// The upstream dashboard selects on these three; a PodMonitor would supply
+        	// them, and a plain scrape does not.
+        	rule {
+        		source_labels = ["__meta_kubernetes_namespace"]
+        		target_label  = "namespace"
+        	}
+
+        	rule {
+        		source_labels = ["__meta_kubernetes_pod_name"]
+        		target_label  = "pod"
+        	}
+
+        	rule {
+        		source_labels = ["__meta_kubernetes_pod_label_gateway_networking_k8s_io_gateway_name"]
+        		target_label  = "gateway_networking_k8s_io_gateway_name"
+        	}
+
+        	rule {
+        		target_label = "job"
+        		replacement  = "agentgateway"
+        	}
+        }
+
+        prometheus.scrape "agentgateway" {
+        	targets         = discovery.relabel.agentgateway.output
+        	scrape_interval = "30s"
+        	forward_to      = [prometheus.remote_write.default.receiver]
+        }
+
         // Straight to Prometheus rather than through the gateway: no OTLP round
         // trip is the point, so the cluster label has to be added here instead.
         prometheus.remote_write "default" {
