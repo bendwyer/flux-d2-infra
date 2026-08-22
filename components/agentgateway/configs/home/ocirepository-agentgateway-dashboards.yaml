@@ -1,0 +1,13 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/fluxcd-community/flux2-schemas/refs/heads/main/ocirepository-source-v1.json
+apiVersion: source.toolkit.fluxcd.io/v1
+kind: OCIRepository
+metadata:
+  name: agentgateway-dashboards
+  namespace: agentgateway
+spec:
+  interval: 1h
+  url: oci://ghcr.io/bendwyer/k8s-monitoring/agentgateway
+  ref:
+    tag: "2026.6.22"
+    digest: "sha256:2637096ddd4dd38d8f0956b07dc0311eedd4d7e4a7433ef06e3e58452bc11683"
