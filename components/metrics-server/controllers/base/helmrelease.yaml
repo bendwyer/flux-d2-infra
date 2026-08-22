@@ -7,14 +7,9 @@ metadata:
   namespace: metrics-server
 spec:
   interval: 1h
-  chart:
-    spec:
-      chart: metrics-server
-      version: "3.14.0"
-      sourceRef:
-        kind: HelmRepository
-        name: metrics-server
-        namespace: metrics-server
+  chartRef:
+    kind: OCIRepository
+    name: metrics-server
   # install:
   #   remediation:
   #     retries: 3
