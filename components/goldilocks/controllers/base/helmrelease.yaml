@@ -7,14 +7,9 @@ metadata:
   namespace: goldilocks
 spec:
   interval: 1h
-  chart:
-    spec:
-      chart: goldilocks
-      version: "10.6.0"
-      sourceRef:
-        kind: HelmRepository
-        name: fairwinds-stable
-        namespace: goldilocks
+  chartRef:
+    kind: OCIRepository
+    name: goldilocks
   # install:
   #   remediation:
   #     retries: 3
