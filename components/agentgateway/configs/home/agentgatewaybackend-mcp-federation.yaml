@@ -56,30 +56,20 @@ spec:
           policies:
             tls:
               sni: docs.mcp.cloudflare.com
-      - name: cloudflare-observability
+      # Server-side Code Mode: two tools cover the whole API, so product-specific
+      # targets are not needed and new products need no federation change.
+      - name: cloudflare-api
         static:
-          host: observability.mcp.cloudflare.com
+          host: mcp.cloudflare.com
           port: 443
           path: /mcp
           protocol: StreamableHTTP
           policies:
             tls:
-              sni: observability.mcp.cloudflare.com
+              sni: mcp.cloudflare.com
             auth:
               secretRef:
-                name: cloudflare-observability-mcp
-      - name: cloudflare-bindings
-        static:
-          host: bindings.mcp.cloudflare.com
-          port: 443
-          path: /mcp
-          protocol: StreamableHTTP
-          policies:
-            tls:
-              sni: bindings.mcp.cloudflare.com
-            auth:
-              secretRef:
-                name: cloudflare-bindings-mcp
+                name: cloudflare-api-mcp
       - name: ovh
         static:
           host: mcp.eu.ovhcloud.com
