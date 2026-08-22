@@ -7,14 +7,9 @@ metadata:
   namespace: vertical-pod-autoscaler
 spec:
   interval: 1h
-  chart:
-    spec:
-      chart: vpa
-      version: "4.12.5"
-      sourceRef:
-        kind: HelmRepository
-        name: fairwinds-stable
-        namespace: vertical-pod-autoscaler
+  chartRef:
+    kind: OCIRepository
+    name: vertical-pod-autoscaler
   values:
     admissionController:
       enabled: false
