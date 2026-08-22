@@ -80,3 +80,15 @@ spec:
             auth:
               secretRef:
                 name: cloudflare-bindings-mcp
+      - name: ovh
+        static:
+          host: mcp.eu.ovhcloud.com
+          port: 443
+          path: /mcp
+          protocol: StreamableHTTP
+          policies:
+            tls:
+              sni: mcp.eu.ovhcloud.com
+            auth:
+              secretRef:
+                name: ovh-mcp

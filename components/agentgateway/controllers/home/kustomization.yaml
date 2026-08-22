@@ -11,3 +11,4 @@ resources:
   - onepassworditem-cloudflare-observability-mcp.yaml
   - onepassworditem-cloudflare-bindings-mcp.yaml
   - onepassworditem-paperless-mcp.yaml
+  - onepassworditem-ovh-mcp.yaml
