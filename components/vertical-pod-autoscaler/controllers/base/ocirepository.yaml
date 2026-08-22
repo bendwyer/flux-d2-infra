@@ -1,0 +1,16 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/fluxcd-community/flux2-schemas/refs/heads/main/ocirepository-source-v1.json
+apiVersion: source.toolkit.fluxcd.io/v1
+kind: OCIRepository
+metadata:
+  name: vertical-pod-autoscaler
+  namespace: vertical-pod-autoscaler
+spec:
+  interval: 1h
+  url: oci://ghcr.io/bendwyer/d2-mirror/charts/vpa
+  ref:
+    tag: "4.12.5"
+    digest: "sha256:fc82a41c6385f62c4d443c6a011cebaecfe0ef4f4462fd8a509b1a3779a363d9"
+  layerSelector:
+    mediaType: "application/vnd.cncf.helm.chart.content.v1.tar+gzip"
+    operation: copy
