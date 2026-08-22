@@ -1,0 +1,14 @@
+---
+apiVersion: source.toolkit.fluxcd.io/v1
+kind: GitRepository
+metadata:
+  name: vertical-pod-autoscaler
+  namespace: vertical-pod-autoscaler
+spec:
+  interval: 6h
+  url: https://github.com/kubernetes/autoscaler
+  ref:
+    tag: vertical-pod-autoscaler-1.7.1
+  ignore: |
+    /*
+    !/vertical-pod-autoscaler/deploy/vpa-v1-crd-gen.yaml
