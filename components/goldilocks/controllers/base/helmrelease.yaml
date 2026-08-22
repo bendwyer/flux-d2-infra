@@ -26,5 +26,3 @@ spec:
       flags:
         enable-cost: false
         on-by-default: "true"
-    image:
-      tag: "v4.14.18"
