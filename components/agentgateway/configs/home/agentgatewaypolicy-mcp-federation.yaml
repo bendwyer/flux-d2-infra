@@ -1,0 +1,20 @@
+---
+apiVersion: agentgateway.dev/v1alpha1
+kind: AgentgatewayPolicy
+metadata:
+  name: mcp-federation
+  namespace: agentgateway
+spec:
+  targetRefs:
+    - group: agentgateway.dev
+      kind: AgentgatewayBackend
+      name: mcp-federation
+  backend:
+    mcp:
+      authorization:
+        # Deny rather than Require: a failed expression leaves the tool reachable,
+        # where a failed Require would filter tools across every federated target.
+        action: Deny
+        policy:
+          matchExpressions:
+            - 'mcp.tool.target == "sidero-docs" && mcp.tool.name == "submit_feedback"'
