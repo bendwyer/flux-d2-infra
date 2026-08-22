@@ -14,6 +14,7 @@ resources:
   - gateway.yaml
   - httproute.yaml
   - agentgatewaybackend-mcp-federation.yaml
+  - agentgatewaypolicy-mcp-federation.yaml
   - ingress-mcp.yaml
   # Dashboards
   - ocirepository-agentgateway-dashboards.yaml
