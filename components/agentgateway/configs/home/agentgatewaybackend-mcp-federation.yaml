@@ -6,6 +6,8 @@ metadata:
   namespace: agentgateway
 spec:
   mcp:
+    # Without this, one unreachable target fails initialize for all of them.
+    failureMode: FailOpen
     targets:
       - name: github
         static:
