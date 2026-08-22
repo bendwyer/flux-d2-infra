@@ -153,6 +153,19 @@ spec:
         		enabled = true
         	}
         }
+
+        // xDS and config-sync health for the controller. The gateway proxies it
+        // programs are scraped per node, since only they carry the MCP metrics.
+        prometheus.scrape "agentgateway_controller" {
+        	targets         = [{__address__ = "agentgateway.agentgateway.svc.cluster.local:9092"}]
+        	job_name        = "agentgateway-controller"
+        	scrape_interval = "30s"
+        	forward_to      = [prometheus.remote_write.default.receiver]
+
+        	clustering {
+        		enabled = true
+        	}
+        }
         // Talos serves the controller manager and scheduler on the control plane nodes
         // only, so discovery is filtered to them and the port rewritten per component.
         discovery.kubernetes "nodes" {
