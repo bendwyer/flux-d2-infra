@@ -7,14 +7,9 @@ metadata:
   namespace: onepassword
 spec:
   interval: 1h
-  chart:
-    spec:
-      chart: connect
-      version: "2.4.1"
-      sourceRef:
-        kind: HelmRepository
-        name: 1password
-        namespace: onepassword
+  chartRef:
+    kind: OCIRepository
+    name: onepassword-connect
   # install:
   #   remediation:
   #     retries: 3
