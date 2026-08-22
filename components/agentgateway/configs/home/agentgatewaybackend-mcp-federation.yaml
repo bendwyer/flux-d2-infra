@@ -56,8 +56,9 @@ spec:
           policies:
             tls:
               sni: docs.mcp.cloudflare.com
-      # Server-side Code Mode: two tools cover the whole API, so product-specific
-      # targets are not needed and new products need no federation change.
+      # Server-side Code Mode: a search and execute pair covers the whole API, so
+      # product-specific targets are not needed and new products need no
+      # federation change.
       - name: cloudflare-api
         static:
           host: mcp.cloudflare.com
@@ -70,6 +71,15 @@ spec:
             auth:
               secretRef:
                 name: cloudflare-api-mcp
+      - name: sidero-docs
+        static:
+          host: docs.siderolabs.com
+          port: 443
+          path: /mcp
+          protocol: StreamableHTTP
+          policies:
+            tls:
+              sni: docs.siderolabs.com
       - name: ovh
         static:
           host: mcp.eu.ovhcloud.com
