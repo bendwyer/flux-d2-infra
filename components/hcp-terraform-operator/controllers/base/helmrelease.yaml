@@ -10,6 +10,12 @@ spec:
   chartRef:
     kind: OCIRepository
     name: hcp-terraform-operator
+  # Helm installs a chart's crds/ directory once and never upgrades it. The CRDs
+  # are applied by hcp-terraform-operator-crds instead, which server-side applies them.
+  install:
+    crds: Skip
+  upgrade:
+    crds: Skip
   values:
     replicaCount: 1
     operator:
