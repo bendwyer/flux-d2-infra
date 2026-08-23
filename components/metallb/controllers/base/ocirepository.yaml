@@ -1,0 +1,16 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/fluxcd-community/flux2-schemas/refs/heads/main/ocirepository-source-v1.json
+apiVersion: source.toolkit.fluxcd.io/v1
+kind: OCIRepository
+metadata:
+  name: metallb
+  namespace: metallb
+spec:
+  interval: 1h
+  url: oci://ghcr.io/bendwyer/d2-mirror/charts/metallb
+  ref:
+    tag: "0.16.1"
+    digest: "sha256:fce8488843290973447cc7a2f74bb00eec4573a63f9f84141b0cfd5ac4b1629a"
+  layerSelector:
+    mediaType: "application/vnd.cncf.helm.chart.content.v1.tar+gzip"
+    operation: copy
