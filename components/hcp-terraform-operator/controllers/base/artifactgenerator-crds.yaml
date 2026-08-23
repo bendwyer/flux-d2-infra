@@ -1,0 +1,18 @@
+---
+apiVersion: source.extensions.fluxcd.io/v1beta1
+kind: ArtifactGenerator
+metadata:
+  name: hcp-terraform-operator-crds
+  namespace: hcp-terraform-operator
+spec:
+  sources:
+    - alias: chart
+      kind: OCIRepository
+      name: hcp-terraform-operator
+  artifacts:
+    - name: hcp-terraform-operator-crds
+      # Tied to the chart's revision, so the CRDs move only when the chart does.
+      originRevision: "@chart"
+      copy:
+        - from: "@chart/hcp-terraform-operator/crds/**"
+          to: "@artifact/"
