@@ -6,9 +6,9 @@ metadata:
   namespace: vertical-pod-autoscaler
 spec:
   interval: 1h
-  path: vertical-pod-autoscaler/deploy
+  path: .
   prune: false
   wait: true
   sourceRef:
-    kind: GitRepository
-    name: vertical-pod-autoscaler
+    kind: ExternalArtifact
+    name: vertical-pod-autoscaler-crds

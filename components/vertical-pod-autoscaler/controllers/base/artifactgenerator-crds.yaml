@@ -1,0 +1,18 @@
+---
+apiVersion: source.extensions.fluxcd.io/v1beta1
+kind: ArtifactGenerator
+metadata:
+  name: vertical-pod-autoscaler-crds
+  namespace: vertical-pod-autoscaler
+spec:
+  sources:
+    - alias: chart
+      kind: OCIRepository
+      name: vertical-pod-autoscaler
+  artifacts:
+    - name: vertical-pod-autoscaler-crds
+      # Tied to the chart's revision, so the CRDs move only when the chart does.
+      originRevision: "@chart"
+      copy:
+        - from: "@chart/vpa/crds/**"
+          to: "@artifact/"
