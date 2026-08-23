@@ -1,0 +1,16 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/fluxcd-community/flux2-schemas/refs/heads/main/ocirepository-source-v1.json
+apiVersion: source.toolkit.fluxcd.io/v1
+kind: OCIRepository
+metadata:
+  name: tailscale
+  namespace: tailscale
+spec:
+  interval: 1h
+  url: oci://ghcr.io/bendwyer/d2-mirror/charts/tailscale-operator
+  ref:
+    tag: "1.102.3"
+    digest: "sha256:e7467c5c025ed3c6766bc21058ce33e15683a16f06db7e5b4c1faad891b34eed"
+  layerSelector:
+    mediaType: "application/vnd.cncf.helm.chart.content.v1.tar+gzip"
+    operation: copy
