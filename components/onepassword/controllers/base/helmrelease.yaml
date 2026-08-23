@@ -10,12 +10,16 @@ spec:
   chartRef:
     kind: OCIRepository
     name: onepassword-connect
-  # install:
-  #   remediation:
-  #     retries: 3
-  # upgrade:
-  #   remediation:
-  #     retries: 3
+  # Helm installs a chart's crds/ directory once and never upgrades it. The CRD
+  # is applied by onepassword-connect-crds instead, which server-side applies it.
+  install:
+    crds: Skip
+    # remediation:
+    #   retries: 3
+  upgrade:
+    crds: Skip
+    # remediation:
+    #   retries: 3
   # Both secrets are seeded out of band before Flux runs, because they are what the
   # operator needs in order to fetch every other secret. Naming them here rather than
   # passing their contents through values means the chart templates no Secret of its

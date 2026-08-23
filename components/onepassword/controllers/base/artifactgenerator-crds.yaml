@@ -1,0 +1,18 @@
+---
+apiVersion: source.extensions.fluxcd.io/v1beta1
+kind: ArtifactGenerator
+metadata:
+  name: onepassword-connect-crds
+  namespace: onepassword
+spec:
+  sources:
+    - alias: chart
+      kind: OCIRepository
+      name: onepassword-connect
+  artifacts:
+    - name: onepassword-connect-crds
+      # Tied to the chart's revision, so the CRD moves only when the chart does.
+      originRevision: "@chart"
+      copy:
+        - from: "@chart/connect/crds/**"
+          to: "@artifact/"
