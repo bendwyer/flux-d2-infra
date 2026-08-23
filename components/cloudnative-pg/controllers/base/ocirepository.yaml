@@ -1,0 +1,16 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/fluxcd-community/flux2-schemas/refs/heads/main/ocirepository-source-v1.json
+apiVersion: source.toolkit.fluxcd.io/v1
+kind: OCIRepository
+metadata:
+  name: cloudnative-pg
+  namespace: cloudnative-pg
+spec:
+  interval: 1h
+  url: oci://ghcr.io/bendwyer/d2-mirror/charts/cloudnative-pg
+  ref:
+    tag: "0.29.0"
+    digest: "sha256:7e2c9ea5d4a123e6c3efd3b16f8a7dfc6d9f5d1200c2a442e86eb346e512c990"
+  layerSelector:
+    mediaType: "application/vnd.cncf.helm.chart.content.v1.tar+gzip"
+    operation: copy
