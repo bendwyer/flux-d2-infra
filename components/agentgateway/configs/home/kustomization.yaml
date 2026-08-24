@@ -12,6 +12,7 @@ resources:
   - deployment-paperless-mcp.yaml
   # Agentgateway configuration
   - gateway.yaml
+  - agentgatewayparameters-mcp-gateway.yaml
   - httproute.yaml
   - agentgatewaybackend-mcp-federation.yaml
   - agentgatewaypolicy-mcp-federation.yaml

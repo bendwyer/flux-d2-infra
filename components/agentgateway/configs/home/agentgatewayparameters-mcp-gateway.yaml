@@ -1,0 +1,12 @@
+---
+apiVersion: agentgateway.dev/v1alpha1
+kind: AgentgatewayParameters
+metadata:
+  name: mcp-gateway
+  namespace: agentgateway
+spec:
+  service:
+    spec:
+      # Access is through the Tailscale ingress, and lan-ingress does not
+      # autoAssign, so the controller's default LoadBalancer stays pending forever.
+      type: ClusterIP
