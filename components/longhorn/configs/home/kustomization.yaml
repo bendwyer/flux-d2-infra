@@ -6,6 +6,7 @@ resources:
   - ../base
   - ingress-longhorn.yaml
   - kustomization-longhorn-dashboards.yaml
+  - networkpolicy-longhorn-manager-metrics.yaml
   - ocirepository-longhorn-dashboards.yaml
   - recurringjob-filesystem-trim.yaml
   - recurringjob-snapshot-cleanup.yaml
