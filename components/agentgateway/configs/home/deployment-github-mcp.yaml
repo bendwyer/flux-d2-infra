@@ -18,7 +18,7 @@ spec:
     spec:
       containers:
         - name: github-mcp
-          image: ghcr.io/bendwyer/containers/github-mcp:1.10.1@sha256:bc2cd9d59560a9fe01219b9ab7a4dfd91ff8d86de4a25bdba30231a6ea2a6da9
+          image: ghcr.io/bendwyer/containers/github-mcp:1.11@sha256:93deeee5a6a81b87f5abcc74f83e62701bfd598a78625a3db8e6de67d4d43ef6
           args:
             - http
             - --port
