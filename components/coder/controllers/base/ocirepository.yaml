@@ -10,7 +10,7 @@ spec:
   url: oci://ghcr.io/coder/chart/coder
   ref:
     # Digest is omitted due to coder/coder#13771.
-    tag: "2.35.6"
+    tag: "2.36.4"
   layerSelector:
     mediaType: "application/vnd.cncf.helm.chart.content.v1.tar+gzip"
     operation: copy
