@@ -1,0 +1,54 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/CustomResourceDefinition/catalog/refs/heads/main/schema/tailscale.com/proxyclass_v1alpha1.json
+apiVersion: tailscale.com/v1alpha1
+kind: ProxyClass
+metadata:
+  name: unprivileged
+spec:
+  statefulSet:
+    pod:
+      # For proxies that use kernel networking: the ProxyGroups and the Connector. The
+      # operator runs those as privileged containers, which is enough to reach the node's
+      # root namespace, but tailscaled only needs to create and configure a tun device.
+      # Tailscale's guidance reaches the same two network capabilities and supplies
+      # /dev/net/tun from a device plugin, which would mean a privileged DaemonSet on
+      # every node; MKNOD lets containerboot create the device node itself instead.
+      # Devices it creates are still gated by the runtime, so a node for a disk or
+      # /dev/mem cannot be opened.
+      tailscaleContainer:
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+              - ALL
+            add:
+              - NET_ADMIN
+              - NET_RAW
+              - MKNOD
+      # The operator's sysctler init container stays privileged. It writes
+      # net.ipv4.ip_forward, and /proc/sys is mounted read-only in any pod that is not
+      # privileged, so the tailscale namespace keeps enforce: privileged either way.
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/CustomResourceDefinition/catalog/refs/heads/main/schema/tailscale.com/proxyclass_v1alpha1.json
+apiVersion: tailscale.com/v1alpha1
+kind: ProxyClass
+metadata:
+  name: no-capabilities
+spec:
+  statefulSet:
+    pod:
+      # The default for every proxy the operator mints from an Ingress or a Service,
+      # set as proxyConfig.defaultProxyClass on the HelmRelease. Those are userspace
+      # proxies, which need no capabilities at all, and without a ProxyClass they would
+      # otherwise inherit the container runtime's whole default set.
+      #
+      # A Service annotated for egress, or one of type LoadBalancer, gets a kernel
+      # networking proxy instead and will fail to start under this class. That is
+      # deliberate: it forces an explicit tailscale.com/proxy-class: unprivileged
+      # annotation rather than silently producing a privileged pod.
+      tailscaleContainer:
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+              - ALL
