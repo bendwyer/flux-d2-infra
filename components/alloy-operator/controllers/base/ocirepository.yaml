@@ -9,8 +9,8 @@ spec:
   interval: 1h
   url: oci://ghcr.io/grafana/helm-charts/alloy-operator
   ref:
-    tag: "0.6.3"
-    digest: "sha256:00327a1dbf1fe07fdcb276dfc57e3e083c06e2b1186d9462ebf293cb1c8a432b"
+    tag: "0.7.1"
+    digest: "sha256:e80723b37ed997cd1f3b894dc97a5a15db2cefbe6caac3e2d7937a98a2f0b558"
   layerSelector:
     mediaType: "application/vnd.cncf.helm.chart.content.v1.tar+gzip"
     operation: copy
