@@ -8,6 +8,7 @@ spec:
   type: ingress
   replicas: 2
   hostnamePrefix: shared-ingress
+  proxyClass: unprivileged
   tags:
     - tag:k8s-shared
 ---
@@ -20,6 +21,7 @@ spec:
   type: ingress
   replicas: 1
   hostnamePrefix: private-ingress
+  proxyClass: unprivileged
   tags:
     - tag:k8s-private
 ---
@@ -32,5 +34,6 @@ spec:
   type: egress
   replicas: 1
   hostnamePrefix: egress
+  proxyClass: unprivileged
   tags:
     - tag:k8s-egress

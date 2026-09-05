@@ -27,6 +27,11 @@ spec:
     proxyConfig:
       image:
         repository: ghcr.io/tailscale/tailscale
+      # Applies to proxies the operator mints from an Ingress or a Service; ProxyGroups
+      # and the Connector name their class directly. The ProxyClass itself is created by
+      # the configs Kustomization, which reconciles after this one, so on a cold start
+      # the operator logs that the class is not ready and retries until it appears.
+      defaultProxyClass: no-capabilities
     oauthSecretVolume:
       secret:
         secretName: tailscale
