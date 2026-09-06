@@ -20,7 +20,7 @@ spec:
     spec:
       containers:
         - name: paperless-mcp
-          image: ghcr.io/bendwyer/containers/paperless-mcp:0.5@sha256:e101f11ad2f4a707ce9e3acf5746ddfd3662ce155214f8e6c1ceb679d1009f35
+          image: ghcr.io/bendwyer/containers/paperless-mcp:0.5@sha256:942ca876c012b53435139927aad9657deb4fbc54ef736b9fbefff25d3ba5a330
           env:
             - name: PAPERLESS_BASE_URL
               value: "http://paperless-ngx.paperless-ngx.svc.cluster.local:8000"
