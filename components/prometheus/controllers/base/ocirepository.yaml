@@ -9,8 +9,8 @@ spec:
   interval: 1h
   url: oci://ghcr.io/prometheus-community/charts/kube-prometheus-stack
   ref:
-    tag: "89.2.4"
-    digest: "sha256:fba57324d1784c4bda49baa43500aa3f669269189050c9a07d9abfaae13518f5"
+    tag: "91.4.0"
+    digest: "sha256:0032315f2580f488ce433ff9d18de24ce631857ff7f1d73693171eeeb7affd52"
   layerSelector:
     mediaType: "application/vnd.cncf.helm.chart.content.v1.tar+gzip"
     operation: copy
