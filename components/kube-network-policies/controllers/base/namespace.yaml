@@ -1,0 +1,8 @@
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: kube-network-policies
+  labels:
+    name: kube-network-policies
+    # pod-security.kubernetes.io/enforce set in flux-d2-fleet ResourceSet
