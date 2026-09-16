@@ -116,6 +116,31 @@ spec:
         	forward_to      = [prometheus.remote_write.default.receiver]
         }
 
+        // The policy engine runs on the host network, so it is addressed on the node IP
+        // like kube-proxy. The port and metric names are the same whether the engine is
+        // the copy Talos bundles into flannel or the one we deploy, so this job spans
+        // the swap and the before and after stay comparable.
+        discovery.relabel "kube_network_policies" {
+        	targets = discovery.kubernetes.local_node.targets
+
+        	rule {
+        		source_labels = ["__meta_kubernetes_node_address_InternalIP"]
+        		target_label  = "__address__"
+        		replacement   = "$1:9080"
+        	}
+
+        	rule {
+        		target_label = "job"
+        		replacement  = "kube-network-policies"
+        	}
+        }
+
+        prometheus.scrape "kube_network_policies" {
+        	targets         = discovery.relabel.kube_network_policies.output
+        	scrape_interval = "30s"
+        	forward_to      = [prometheus.remote_write.default.receiver]
+        }
+
         // node-exporter declares its port, so discovery addresses it directly
         // rather than assuming a host port on the node IP.
         discovery.relabel "node_exporter" {
