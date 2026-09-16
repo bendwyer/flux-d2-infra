@@ -1,0 +1,20 @@
+---
+apiVersion: source.extensions.fluxcd.io/v1beta1
+kind: ArtifactGenerator
+metadata:
+  name: prometheus-crds
+  namespace: prometheus
+spec:
+  sources:
+    - alias: chart
+      kind: OCIRepository
+      name: prometheus
+  artifacts:
+    - name: prometheus-crds
+      # Tied to the chart's revision, so the CRDs move only when the chart does.
+      originRevision: "@chart"
+      copy:
+        # One level deeper than the other components: kube-prometheus-stack keeps
+        # its CRDs in a subchart rather than at the top level.
+        - from: "@chart/kube-prometheus-stack/charts/crds/crds/**"
+          to: "@artifact/"

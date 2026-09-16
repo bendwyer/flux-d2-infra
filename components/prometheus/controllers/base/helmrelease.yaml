@@ -10,11 +10,18 @@ spec:
   chartRef:
     kind: OCIRepository
     name: prometheus
+  # Helm installs a chart's crds/ directory once and never upgrades it. The CRDs
+  # are applied by prometheus-crds instead, which server-side applies them.
+  install:
+    crds: Skip
+  upgrade:
+    crds: Skip
   values:
     fullnameOverride: "prometheus"
 
+    # Drops the crds subchart, so prometheus-crds is the only writer.
     crds:
-      enabled: true
+      enabled: false
 
     # --- Disable all bundled components — deployed as standalone ---
     grafana:
