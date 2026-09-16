@@ -1,0 +1,84 @@
+---
+# The NetworkPolicy and ClusterNetworkPolicy enforcement engine. The npa-v1alpha2
+# build is a separate binary rather than a flag, which is why Talos cannot deploy it.
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: kube-network-policies
+  namespace: kube-network-policies
+  labels:
+    app: kube-network-policies
+spec:
+  selector:
+    matchLabels:
+      app: kube-network-policies
+  updateStrategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 0
+      maxUnavailable: 1
+  template:
+    metadata:
+      labels:
+        app: kube-network-policies
+    spec:
+      # The nftables rules and the nfqueue live in the host network namespace.
+      hostNetwork: true
+      dnsPolicy: ClusterFirst
+      priorityClassName: system-node-critical
+      nodeSelector:
+        kubernetes.io/os: linux
+      # A node without the engine forwards traffic with nothing evaluating policy on it.
+      tolerations:
+        - operator: Exists
+      serviceAccountName: kube-network-policies
+      containers:
+        - name: kube-network-policies
+          image: registry.k8s.io/networking/kube-network-policies:v1.1.1-npa-v1alpha2@sha256:3d7ba4bbf5cd9774b3562ee36a5c6860b071f5a25d73b75982d1b5a807c07d42
+          command:
+            - /bin/netpol
+          args:
+            - --hostname-override=$(MY_NODE_NAME)
+            # v2 builds a per-packet logging evaluator, which is where the log volume and
+            # a chunk of the per-packet cost comes from. It is also the only level that
+            # logs denials, so pair it with --logging-format=json when debugging one.
+            - --v=1
+            # Resolving pod IPs from the runtime closes a startup race, but Talos disables
+            # NRI in containerd before 1.14.
+            - --disable-nri=true
+            # The PREROUTING DNS workaround targets the pre-6.12 conntrack race.
+            - --netfilter-bug-1766-fix=false
+          env:
+            - name: MY_NODE_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: spec.nodeName
+          ports:
+            - name: metrics
+              containerPort: 9080
+              protocol: TCP
+          readinessProbe:
+            httpGet:
+              path: /metrics
+              port: metrics
+            initialDelaySeconds: 5
+            periodSeconds: 30
+          resources:
+            limits:
+              memory: 128Mi
+            requests:
+              cpu: 100m
+              memory: 128Mi
+          # Upstream and Talos both ship privileged: true. Programming nftables and
+          # reading the nfqueue need NET_ADMIN and the host netns, not privilege.
+          securityContext:
+            privileged: false
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities:
+              drop:
+                - ALL
+              add:
+                - NET_ADMIN
+            seccompProfile:
+              type: RuntimeDefault

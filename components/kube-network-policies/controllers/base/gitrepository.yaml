@@ -1,0 +1,14 @@
+---
+apiVersion: source.toolkit.fluxcd.io/v1
+kind: GitRepository
+metadata:
+  name: network-policy-api
+  namespace: kube-network-policies
+spec:
+  interval: 6h
+  url: https://github.com/kubernetes-sigs/network-policy-api
+  ref:
+    tag: v0.2.0
+  ignore: |
+    /*
+    !/config/crd

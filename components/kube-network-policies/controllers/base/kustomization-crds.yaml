@@ -1,0 +1,17 @@
+---
+# The standard channel carries tier, priority and the namespaces/pods/networks peers.
+# The experimental channel adds domainNames and nodes peers; take it when a rule needs
+# an FQDN.
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: network-policy-api-crds
+  namespace: kube-network-policies
+spec:
+  interval: 1h
+  path: config/crd/standard
+  prune: false
+  wait: true
+  sourceRef:
+    kind: GitRepository
+    name: network-policy-api

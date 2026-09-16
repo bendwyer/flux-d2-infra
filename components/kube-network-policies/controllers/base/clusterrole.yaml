@@ -1,0 +1,31 @@
+---
+# Read-only. The engine resolves a packet to a pod, then evaluates the policies that
+# select it, so it watches pods, namespaces and nodes alongside both policy APIs.
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: kube-network-policies
+rules:
+  - apiGroups:
+      - ""
+    resources:
+      - pods
+      - namespaces
+      - nodes
+    verbs:
+      - list
+      - watch
+  - apiGroups:
+      - networking.k8s.io
+    resources:
+      - networkpolicies
+    verbs:
+      - list
+      - watch
+  - apiGroups:
+      - policy.networking.k8s.io
+    resources:
+      - clusternetworkpolicies
+    verbs:
+      - list
+      - watch
