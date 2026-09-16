@@ -170,6 +170,35 @@ spec:
         	forward_to      = [prometheus.remote_write.default.receiver]
         }
 
+        // Talos deploys CoreDNS with its metrics port declared, so each node scrapes
+        // only the replica it hosts.
+        discovery.relabel "coredns" {
+        	targets = discovery.kubernetes.local_pods.targets
+
+        	rule {
+        		source_labels = ["__meta_kubernetes_namespace", "__meta_kubernetes_pod_label_k8s_app"]
+        		action        = "keep"
+        		regex         = "kube-system;kube-dns"
+        	}
+
+        	rule {
+        		source_labels = ["__meta_kubernetes_pod_container_port_number"]
+        		action        = "keep"
+        		regex         = "9153"
+        	}
+
+        	rule {
+        		target_label = "job"
+        		replacement  = "coredns"
+        	}
+        }
+
+        prometheus.scrape "coredns" {
+        	targets         = discovery.relabel.coredns.output
+        	scrape_interval = "30s"
+        	forward_to      = [prometheus.remote_write.default.receiver]
+        }
+
         // longhorn-manager binds :9500 on the pod IP, which it does not declare.
         discovery.relabel "longhorn" {
         	targets = discovery.kubernetes.local_pods.targets
