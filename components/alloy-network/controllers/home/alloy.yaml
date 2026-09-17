@@ -1,0 +1,86 @@
+---
+apiVersion: collectors.grafana.com/v1alpha1
+kind: Alloy
+metadata:
+  name: alloy-network
+  namespace: alloy-network
+spec:
+  alloy:
+    configMap:
+      content: |-
+        // Alloy's own internal metrics. alloy_* series, not otelcol_*.
+        prometheus.exporter.self "network" { }
+
+        discovery.relabel "self" {
+        	targets = prometheus.exporter.self.network.targets
+
+        	rule {
+        		target_label = "job"
+        		replacement  = "alloy-network"
+        	}
+
+        	rule {
+        		target_label = "namespace"
+        		replacement  = sys.env("POD_NAMESPACE")
+        	}
+
+        	rule {
+        		target_label = "pod"
+        		replacement  = sys.env("POD_NAME")
+        	}
+        }
+
+        prometheus.scrape "self" {
+        	targets         = discovery.relabel.self.output
+        	scrape_interval = "30s"
+        	forward_to      = [prometheus.remote_write.default.receiver]
+        }
+
+        // Network flow metrics only, with every network setting at Beyla's default,
+        // including the socket_filter event source.
+        beyla.ebpf "default" {
+        	attributes {
+        		kubernetes {
+        			enable       = "true"
+        			cluster_name = "home"
+        		}
+
+        		// Beyla's default flow attributes, plus the transport and the endpoint
+        		// types, which separate pod traffic from node-to-node traffic.
+        		select {
+        			attr    = "beyla_network_flow_bytes"
+        			include = [
+        				"k8s.src.owner.name",
+        				"k8s.src.namespace",
+        				"k8s.dst.owner.name",
+        				"k8s.dst.namespace",
+        				"k8s.cluster.name",
+        				"transport",
+        				"k8s.src.type",
+        				"k8s.dst.type",
+        			]
+        		}
+        	}
+
+        	metrics {
+        		features = ["network"]
+        	}
+        }
+
+        prometheus.scrape "beyla" {
+        	targets         = beyla.ebpf.default.targets
+        	honor_labels    = true
+        	scrape_interval = "30s"
+        	forward_to      = [prometheus.remote_write.default.receiver]
+        }
+
+        // Straight to Prometheus, labelled the same way as the other collectors.
+        prometheus.remote_write "default" {
+        	external_labels = {
+        		cluster = "home",
+        	}
+
+        	endpoint {
+        		url = "http://prometheus-prometheus.prometheus.svc.cluster.local:9090/api/v1/write"
+        	}
+        }
