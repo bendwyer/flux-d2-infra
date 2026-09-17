@@ -9,5 +9,5 @@ spec:
   interval: 1h
   url: oci://ghcr.io/bendwyer/k8s-monitoring/loki-mixin
   ref:
-    tag: "3.7.7"
-    digest: "sha256:2800c976586b63ba24c939351a506c92983439cccaa6d0dcb9e9ca6f931a8f9c"
+    tag: "3.7.8"
+    digest: "sha256:8e83ba9577361e08ca9b7285e6939e12f3be087388e762b998247f806a6b7ed8"
