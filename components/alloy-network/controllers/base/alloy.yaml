@@ -1,0 +1,88 @@
+---
+apiVersion: collectors.grafana.com/v1alpha1
+kind: Alloy
+metadata:
+  name: alloy-network
+  namespace: alloy-network
+spec:
+  # spec mirrors the Alloy Helm chart's values file one-for-one.
+  controller:
+    type: daemonset
+    # The socket filter only sees the interfaces of the network namespace it runs
+    # in, so node-level flows need the host's. Beyla's own chart sets all three.
+    hostNetwork: true
+    hostPID: true
+    dnsPolicy: ClusterFirstWithHostNet
+    volumes:
+      extra:
+        - name: tmp
+          emptyDir: {}
+  configReloader:
+    securityContext:
+      # 65534 is the nobody user this image is built for.
+      runAsUser: 65534
+      runAsGroup: 65534
+      readOnlyRootFilesystem: true
+      allowPrivilegeEscalation: false
+      capabilities:
+        drop: [ALL]
+  rbac:
+    create: true
+    # Exactly what Beyla's own chart grants its Kubernetes decoration. The chart
+    # defaults also read secrets and configmaps cluster-wide, which a root pod in
+    # the host PID namespace should not hold.
+    rules:
+      - apiGroups: [apps]
+        resources: [replicasets]
+        verbs: [list, watch]
+      - apiGroups: [""]
+        resources: [pods, services]
+        verbs: [get, list, watch]
+    clusterRules:
+      - apiGroups: [""]
+        resources: [nodes]
+        verbs: [get, list, watch]
+  alloy:
+    # The unprivileged root setup Alloy recommends for beyla.ebpf. SYS_RESOURCE
+    # only applies before kernel 5.11, and SYS_ADMIN only to library-level
+    # instrumentation, which is not enabled.
+    securityContext:
+      runAsUser: 0
+      privileged: false
+      # Alloy hands the capabilities to Beyla through the ambient set, which
+      # no_new_privs would block.
+      allowPrivilegeEscalation: true
+      readOnlyRootFilesystem: true
+      capabilities:
+        drop: [ALL]
+        add:
+          - BPF
+          - NET_ADMIN
+          - NET_RAW
+          - PERFMON
+          - DAC_READ_SEARCH
+          - SYS_PTRACE
+          - CHECKPOINT_RESTORE
+    mounts:
+      extra:
+        # Covers the storage path, /tmp/alloy, since the root filesystem is not
+        # writable.
+        - name: tmp
+          mountPath: /tmp
+    # Self-metrics come from an in-process exporter, so the namespace and pod
+    # labels the Alloy dashboards expect have to be supplied.
+    extraEnv:
+      - name: POD_NAMESPACE
+        valueFrom:
+          fieldRef:
+            fieldPath: metadata.namespace
+      - name: POD_NAME
+        valueFrom:
+          fieldRef:
+            fieldPath: metadata.name
+    resources:
+      limits:
+        memory: 512Mi
+      requests:
+        cpu: 100m
+        memory: 512Mi

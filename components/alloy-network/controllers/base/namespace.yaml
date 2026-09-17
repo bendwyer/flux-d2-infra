@@ -1,0 +1,8 @@
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: alloy-network
+  labels:
+    name: alloy-network
+    # pod-security.kubernetes.io/enforce set in flux-d2-fleet ResourceSet
