@@ -67,7 +67,7 @@ spec:
             limits:
               memory: 128Mi
             requests:
-              cpu: 100m
+              cpu: 200m
               memory: 128Mi
           # Upstream and Talos both ship privileged: true. Programming nftables and
           # reading the nfqueue need NET_ADMIN and the host netns, not privilege.
