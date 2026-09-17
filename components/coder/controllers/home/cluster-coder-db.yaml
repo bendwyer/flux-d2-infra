@@ -13,6 +13,9 @@ spec:
   # instances sharing a node would put two of the three copies on one disk.
   affinity:
     podAntiAffinityType: required
+  # Talos's drain timeout is a hardcoded 300s.
+  stopDelay: 120 # default 1800
+  smartShutdownTimeout: 30 # default 180
   storage:
     storageClass: longhorn-single
     size: 10Gi
