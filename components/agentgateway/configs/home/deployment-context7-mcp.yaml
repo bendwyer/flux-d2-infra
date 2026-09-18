@@ -18,7 +18,7 @@ spec:
     spec:
       containers:
         - name: context7-mcp
-          image: ghcr.io/bendwyer/containers/context7-mcp:4.1@sha256:c37543b3e6e9b3c44b004f92188f070216bbcd2432aa94d0ff685ac3a605aec5
+          image: ghcr.io/bendwyer/containers/context7-mcp:4.1@sha256:f18f3da9108998eb85fc7cc7b72024dfc81a28f90ebedaa75e0d918b92af4e91
           args:
             - --transport
             - http
