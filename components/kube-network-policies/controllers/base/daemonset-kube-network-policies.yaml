@@ -48,6 +48,10 @@ spec:
             - --disable-nri=true
             # The PREROUTING DNS workaround targets the pre-6.12 conntrack race.
             - --netfilter-bug-1766-fix=false
+            # Fail open lets the kernel accept packets the queue could not deliver during a
+            # netlink receive overflow, so a deny is bypassed and no counter records it.
+            # Failing closed drops them instead, which is visible in nfqueue_user_dropped.
+            - --fail-open=false
           env:
             - name: MY_NODE_NAME
               valueFrom:
