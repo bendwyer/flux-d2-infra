@@ -1,6 +1,7 @@
 ---
-# Reclaims blocks freed inside the filesystem; ordered after snapshot-cleanup
-# so it sees the space that cleanup releases.
+# Reclaims blocks freed inside the filesystem; ordered after snapshot-daily
+# so it sees the system snapshots that job purges. Blocks already in the base
+# snapshot are not reclaimed until they are overwritten.
 apiVersion: longhorn.io/v1beta2
 kind: RecurringJob
 metadata:
