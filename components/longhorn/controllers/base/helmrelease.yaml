@@ -28,4 +28,10 @@ spec:
       deletingConfirmationFlag: true
       # Drains once the replica has stopped, without copying it to another node first.
       nodeDrainPolicy: allow-if-replica-is-stopped
+      # Fast rebuild skips only snapshots with a current checksum. Hash each
+      # snapshot when it is created, and again daily after snapshot-daily and
+      # filesystem-trim have rewritten the base. fast-check rehashes only files
+      # that changed.
+      snapshotDataIntegrityImmediateCheckAfterSnapshotCreation: '{"v1":"true","v2":"true"}'
+      snapshotDataIntegrityCronjob: '{"v1":"0 5 * * *","v2":"0 5 * * *"}'
       storageReservedPercentageForDefaultDisk: 0

@@ -1,0 +1,21 @@
+---
+# Longhorn only checksums user-created snapshots, and fast rebuild can only skip
+# a checksummed file. This keeps each volume's data in one such snapshot, so a
+# replica returning from a reboot syncs about a day of writes instead of walking
+# the whole volume. A stable base also survives a second replica failing
+# mid-rebuild, which otherwise forces a full copy (longhorn/longhorn#9335).
+#
+# The task also purges system snapshots, which is all snapshot-cleanup did.
+# `default` is a volume label Longhorn only ever adds, so nothing falls out.
+apiVersion: longhorn.io/v1beta2
+kind: RecurringJob
+metadata:
+  name: snapshot-daily
+  namespace: longhorn
+spec:
+  cron: "0 3 * * *"
+  task: snapshot
+  groups:
+    - default
+  concurrency: 2
+  retain: 1

@@ -9,6 +9,6 @@ resources:
   - networkpolicy-longhorn-manager-metrics.yaml
   - ocirepository-longhorn-dashboards.yaml
   - recurringjob-filesystem-trim.yaml
-  - recurringjob-snapshot-cleanup.yaml
+  - recurringjob-snapshot-daily.yaml
   - storageclass-longhorn-scratch.yaml
   - storageclass-longhorn-single.yaml
