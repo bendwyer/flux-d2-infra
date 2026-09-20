@@ -57,10 +57,23 @@ spec:
               Investigate the failed Backup resources and the corresponding pod
               logs in Loki for the underlying restic error. This alert auto-resolves
               30 minutes after the counter stops growing.
+        # The two guards below are not redundant; each answers a different way
+        # this fires without a backup being broken.
+        #
+        # k8up never decrements its schedule gauge when a Schedule is deleted, so
+        # a namespace that no longer exists keeps reporting schedules and keeps
+        # this firing forever. Requiring the namespace to exist settles it from
+        # kube-state-metrics, which does track deletion.
+        #
+        # A schedule younger than the window has had no opportunity to run, so
+        # every newly added backup would page until its first success. Requiring
+        # the schedule to have existed a window ago gives it exactly one cycle.
         - alert: K8upBackupNotRunning
           expr: |
             sum by (namespace) (increase(k8up_jobs_successful_counter{jobType="backup"}[25h])) == 0
             and on(namespace) k8up_schedules_gauge > 0
+            and on(namespace) k8up_schedules_gauge offset 25h > 0
+            and on(namespace) kube_namespace_created
           for: 1m
           labels:
             severity: critical
