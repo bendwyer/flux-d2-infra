@@ -18,7 +18,7 @@ spec:
     spec:
       containers:
         - name: grafana-mcp
-          image: ghcr.io/bendwyer/containers/grafana-mcp:1.5.1@sha256:dd14d28a83a00e350b21304b726c5cca897d816b924854c1a061a4206d89a335
+          image: ghcr.io/bendwyer/containers/grafana-mcp:1.5.1@sha256:595eac118894bef55e919696ce0d0ce791e2df38aa931def465b737f9dd4e60d
           args:
             - --transport
             - streamable-http
