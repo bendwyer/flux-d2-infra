@@ -27,10 +27,12 @@ spec:
       - crd
     domainFilters:
       - bdwr.cloud
-    # Never deletes. The zone holds records this does not own, including the one
-    # the ddns job maintains, so deletion stays off until TXT ownership has been
-    # observed working on a record it created itself.
-    policy: upsert-only
+    # Deletes, so retiring a workload takes its record with it rather than
+    # leaving one to be removed by hand. What keeps that off everything else is
+    # the TXT registry below: a record without an ownership TXT naming this
+    # owner is skipped, never deleted, which is what protects the record the
+    # ddns job maintains.
+    policy: sync
     registry: txt
     txtOwnerId: d2-home
     # A CNAME cannot coexist with any other record at the same name, so the
