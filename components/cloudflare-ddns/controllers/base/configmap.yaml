@@ -1,0 +1,74 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/yannh/kubernetes-json-schema/master/master-standalone-strict/configmap-v1.json
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: cloudflare-ddns
+  namespace: cloudflare-ddns
+data:
+  update.sh: |
+    #!/bin/sh
+    set -eu
+
+    # Cloudflare's own view of the source address is the one that has to end up
+    # in the record, so ask it rather than a third-party echo service. This
+    # measures the pod's egress path, which reaches the WAN because the pod is
+    # not on the tailnet: no sidecar, no host network, so it follows the node's
+    # default route. Keep it that way; a Tailscale sidecar here would publish
+    # the exit node's address and nothing below would catch it.
+    #
+    # -4 because the record is an A record. Without it an IPv6-capable path
+    # answers with the v6 address and every run fails validation.
+    # Captured before extracting, because a pipeline would report sed's status
+    # and turn an unreachable endpoint into a malformed-address error.
+    trace=$(curl -4 -fsS --max-time 10 https://cloudflare.com/cdn-cgi/trace) || {
+      echo "could not reach the Cloudflare trace endpoint" >&2
+      exit 1
+    }
+    ip=$(printf '%s\n' "$trace" | sed -n 's/^ip=//p')
+
+    refuse() {
+      echo "refusing to publish '$ip': $1" >&2
+      exit 1
+    }
+
+    # shellcheck disable=SC2086 # deliberate split of the dotted quad
+    oldifs=$IFS; IFS=.; set -- $ip; IFS=$oldifs
+    [ "$#" -eq 4 ] || refuse "not a dotted quad"
+    for octet in "$@"; do
+      case "$octet" in "" | *[!0-9]*) refuse "not numeric" ;; esac
+      [ "$octet" -le 255 ] || refuse "octet out of range"
+    done
+
+    # Only a publicly routable address belongs in the record. 100.64.0.0/10 is
+    # the one that matters: every Tailscale address lives in it, so this is what
+    # stops a tailnet address ever being published.
+    if [ "$1" -eq 0 ] || [ "$1" -eq 10 ] || [ "$1" -eq 127 ] || [ "$1" -ge 224 ] \
+      || { [ "$1" -eq 100 ] && [ "$2" -ge 64 ] && [ "$2" -le 127 ]; } \
+      || { [ "$1" -eq 172 ] && [ "$2" -ge 16 ] && [ "$2" -le 31 ]; } \
+      || { [ "$1" -eq 192 ] && [ "$2" -eq 168 ]; } \
+      || { [ "$1" -eq 169 ] && [ "$2" -eq 254 ]; }
+    then
+      refuse "not a public address"
+    fi
+
+    # Written on every run rather than compared first. The record is idempotent,
+    # a read to avoid a write costs the same call it saves, and writing
+    # unconditionally also repairs an edit made outside this job.
+    response=$(curl -fsS --max-time 20 -X PUT \
+      "https://api.cloudflare.com/client/v4/zones/${CF_ZONE_ID}/dns_records/${CF_RECORD_ID}" \
+      -H "Authorization: Bearer ${CF_API_TOKEN}" \
+      -H "Content-Type: application/json" \
+      --data "{\"type\":\"A\",\"name\":\"${CF_RECORD_NAME}\",\"content\":\"${ip}\",\"ttl\":1,\"proxied\":false}")
+
+    # A 4xx fails the curl above, but the API also answers 200 with success
+    # false, so the body decides.
+    case "$response" in
+      *'"success":true'*)
+        echo "${CF_RECORD_NAME} set to ${ip}"
+        ;;
+      *)
+        echo "cloudflare rejected the update: ${response}" >&2
+        exit 1
+        ;;
+    esac

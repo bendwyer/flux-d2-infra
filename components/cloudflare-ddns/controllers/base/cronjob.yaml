@@ -1,0 +1,65 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/yannh/kubernetes-json-schema/master/master-standalone-strict/cronjob-batch-v1.json
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: cloudflare-ddns
+  namespace: cloudflare-ddns
+spec:
+  schedule: "*/5 * * * *"
+  # A run takes seconds; overlapping ones would only race on the same record.
+  concurrencyPolicy: Forbid
+  startingDeadlineSeconds: 120
+  successfulJobsHistoryLimit: 1
+  failedJobsHistoryLimit: 3
+  jobTemplate:
+    spec:
+      # The next schedule is a cheaper retry than a backoff loop.
+      backoffLimit: 1
+      template:
+        spec:
+          restartPolicy: Never
+          # Talks only to Cloudflare, so it has no use for a token.
+          automountServiceAccountToken: false
+          securityContext:
+            runAsNonRoot: true
+            runAsUser: 100
+            runAsGroup: 100
+            seccompProfile:
+              type: RuntimeDefault
+          containers:
+            - name: cloudflare-ddns
+              image: curlimages/curl:8.22.0@sha256:58adaa4e8dca9c988bae2aba4ab3434a0bb2da16bbe3f92dec39ec7785166777
+              command: ["/bin/sh", "/scripts/update.sh"]
+              env:
+                - name: CF_ZONE_ID
+                  value: b63fe20798a4df99803092fc3c696852
+                - name: CF_RECORD_ID
+                  value: b410ee099bbe42a629e34a901d12f3f1
+                - name: CF_RECORD_NAME
+                  value: home.bdwr.cloud
+                - name: CF_API_TOKEN
+                  valueFrom:
+                    secretKeyRef:
+                      name: cloudflare-ddns
+                      key: credential
+              securityContext:
+                allowPrivilegeEscalation: false
+                readOnlyRootFilesystem: true
+                capabilities:
+                  drop: ["ALL"]
+              resources:
+                limits:
+                  memory: 32Mi
+                requests:
+                  cpu: 10m
+                  memory: 32Mi
+              volumeMounts:
+                - name: scripts
+                  mountPath: /scripts
+                  readOnly: true
+          volumes:
+            - name: scripts
+              configMap:
+                name: cloudflare-ddns
+                defaultMode: 0555
