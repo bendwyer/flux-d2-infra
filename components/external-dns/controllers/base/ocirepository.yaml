@@ -1,0 +1,16 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/fluxcd-community/flux2-schemas/refs/heads/main/ocirepository-source-v1.json
+apiVersion: source.toolkit.fluxcd.io/v1
+kind: OCIRepository
+metadata:
+  name: external-dns
+  namespace: external-dns
+spec:
+  interval: 1h
+  url: oci://ghcr.io/bendwyer/d2-mirror/charts/external-dns
+  ref:
+    tag: "1.22.0"
+    digest: "sha256:2591abfa272806d61abf46539e058ad7dc9c8a4349ab245e2e36484cd3fc645d"
+  layerSelector:
+    mediaType: "application/vnd.cncf.helm.chart.content.v1.tar+gzip"
+    operation: copy

@@ -1,0 +1,54 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/fluxcd-community/flux2-schemas/refs/heads/main/helmrelease-helm-v2.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: external-dns
+  namespace: external-dns
+spec:
+  interval: 1h
+  chartRef:
+    kind: OCIRepository
+    name: external-dns
+  # Helm installs a chart's crds/ directory once and never upgrades it. The CRDs
+  # are applied by external-dns-crds instead, which server-side applies them.
+  install:
+    crds: Skip
+  upgrade:
+    crds: Skip
+  values:
+    provider:
+      name: cloudflare
+    # Records are declared by DNSEndpoint objects living beside the workload that
+    # needs them. Service and Ingress are deliberately excluded: the addresses
+    # reachable that way are a LAN MetalLB address or a node ExternalIP, which is
+    # a tailnet address on these nodes, and neither belongs in public DNS.
+    sources:
+      - crd
+    domainFilters:
+      - bdwr.cloud
+    # Never deletes. The zone holds records this does not own, including the one
+    # the ddns job maintains, so deletion stays off until TXT ownership has been
+    # observed working on a record it created itself.
+    policy: upsert-only
+    registry: txt
+    txtOwnerId: d2-home
+    # A CNAME cannot coexist with any other record at the same name, so the
+    # ownership TXT has to sit somewhere else. This cannot be changed later
+    # without orphaning every ownership record written under it.
+    txtPrefix: "_edns-"
+    env:
+      - name: CF_API_TOKEN
+        valueFrom:
+          secretKeyRef:
+            name: external-dns
+            key: credential
+    # The chart's default security contexts already run non-root with a read-only
+    # root, no capabilities and RuntimeDefault seccomp, so only resources, which
+    # it leaves empty, are set here.
+    resources:
+      requests:
+        cpu: 10m
+        memory: 64Mi
+      limits:
+        memory: 128Mi
