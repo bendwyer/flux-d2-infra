@@ -1,0 +1,18 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/yannh/kubernetes-json-schema/master/master-standalone-strict/service-v1.json
+apiVersion: v1
+kind: Service
+metadata:
+  name: omni-exporter
+  namespace: omni-exporter
+  labels:
+    app: omni-exporter
+spec:
+  selector:
+    app: omni-exporter
+  ports:
+    - name: metrics
+      protocol: TCP
+      port: 10048
+      targetPort: metrics
+  type: ClusterIP

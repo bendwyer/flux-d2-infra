@@ -166,6 +166,20 @@ spec:
         		enabled = true
         	}
         }
+        // Per-object Omni state. Scrapes render from an in-memory view kept by watches,
+        // so the interval costs nothing beyond a reachability probe bounded by a few
+        // seconds, which is what the scrape timeout has to clear.
+        prometheus.scrape "omni_exporter" {
+        	targets         = [{__address__ = "omni-exporter.omni-exporter.svc.cluster.local:10048"}]
+        	job_name        = "omni-exporter"
+        	scrape_interval = "30s"
+        	scrape_timeout  = "15s"
+        	forward_to      = [prometheus.remote_write.default.receiver]
+
+        	clustering {
+        		enabled = true
+        	}
+        }
         // Talos serves the controller manager and scheduler on the control plane nodes
         // only, so discovery is filtered to them and the port rewritten per component.
         discovery.kubernetes "nodes" {
