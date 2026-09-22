@@ -1,0 +1,79 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/yannh/kubernetes-json-schema/master/master-standalone-strict/deployment-apps-v1.json
+# Per-object Omni state as Prometheus metrics: clusters, machines, machine sets,
+# upgrades and etcd backups. Omni's own omni_ metrics are instance-level aggregates
+# on an endpoint the SaaS does not expose.
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: omni-exporter
+  namespace: omni-exporter
+  labels:
+    app: omni-exporter
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: omni-exporter
+  template:
+    metadata:
+      labels:
+        app: omni-exporter
+    spec:
+      # Reads Omni over the internet and nothing from the Kubernetes API.
+      automountServiceAccountToken: false
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 65532
+        runAsGroup: 65532
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+        - name: omni-exporter
+          image: ghcr.io/siderolabs/omni_exporter:v0.1.0@sha256:584ea21f2078673e0aa3a552491718affe6f75a84fbbe5651f5649d21056563c
+          args:
+            # Upstream advises the file over OMNI_SERVICE_ACCOUNT_KEY, which exposes
+            # the key to anything that can read the process environment.
+            - --omni.service-account-key-file=/etc/omni/key
+          env:
+            # The endpoint names the Omni account, so it comes from the item rather
+            # than this file, which is public.
+            - name: OMNI_ENDPOINT
+              valueFrom:
+                secretKeyRef:
+                  name: omni-exporter
+                  key: OMNI_ENDPOINT
+          volumeMounts:
+            - name: key
+              mountPath: /etc/omni
+              readOnly: true
+          ports:
+            - name: metrics
+              containerPort: 10048
+              protocol: TCP
+          # The landing page, not /metrics: rendering metrics probes Omni, and a
+          # probe failure there is a metric to alert on rather than cause to restart.
+          readinessProbe:
+            httpGet:
+              path: /
+              port: metrics
+            periodSeconds: 30
+          resources:
+            limits:
+              memory: 128Mi
+            requests:
+              cpu: 50m
+              memory: 128Mi
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities:
+              drop: ["ALL"]
+      volumes:
+        - name: key
+          secret:
+            secretName: omni-exporter
+            items:
+              - key: OMNI_SERVICE_ACCOUNT_KEY
+                path: key
+
