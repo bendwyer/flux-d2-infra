@@ -16,6 +16,9 @@ spec:
     spec:
       # The next schedule is a cheaper retry than a backoff loop.
       backoffLimit: 1
+      # Under KubeJobFailed's 15m hold, so one failed run never pages and a
+      # WAN outage stops paging once it ends. CloudflareDDNSStale is the alert.
+      ttlSecondsAfterFinished: 600
       template:
         spec:
           restartPolicy: Never
