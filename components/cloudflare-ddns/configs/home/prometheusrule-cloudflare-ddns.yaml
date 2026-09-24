@@ -1,0 +1,28 @@
+---
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: cloudflare-ddns
+  namespace: cloudflare-ddns
+  labels:
+    app.kubernetes.io/part-of: k8s-monitoring
+spec:
+  groups:
+    - name: cloudflare-ddns.rules
+      rules:
+        # Every successful run writes the current address, so the record can be
+        # wrong only while runs are failing. Alerting on the gap rather than on
+        # a failed Job means it resolves on the first success after an outage.
+        - alert: CloudflareDDNSStale
+          expr: |
+            time() - kube_cronjob_status_last_successful_time{cronjob="cloudflare-ddns"} > 1800
+          for: 1m
+          labels:
+            severity: warning
+          annotations:
+            summary: "home.bdwr.cloud has not been updated in over 30 minutes"
+            description: >-
+              No cloudflare-ddns run has succeeded for
+              {{ $value | humanizeDuration }}, so the record may no longer
+              match the WAN address. A WAN outage explains this and clears on
+              its own; otherwise check the failed runs' logs in Loki.
