@@ -9,5 +9,5 @@ spec:
   interval: 1h
   url: oci://ghcr.io/bendwyer/k8s-monitoring/prometheus-mixin
   ref:
-    tag: "3.14.0"
-    digest: "sha256:970f9ecad35b11611642b97301daacdc6768acabab5b6556cf274e964b26c1d6"
+    tag: "3.15.0"
+    digest: "sha256:e8db088cdc0a2d9028ef26f211350e639b964ccea1cc39b56597b966c6bb4f52"
