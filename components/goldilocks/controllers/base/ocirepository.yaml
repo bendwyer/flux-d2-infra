@@ -9,8 +9,8 @@ spec:
   interval: 1h
   url: oci://ghcr.io/bendwyer/d2-mirror/charts/goldilocks
   ref:
-    tag: "11.1.1"
-    digest: "sha256:3506570489774ecd1ff2bbeeb2dc851aa27c8c70c6dd97370d054183993e2e6d"
+    tag: "11.2.0"
+    digest: "sha256:1f784eb03a753b54f137e789b4f7c020a1195742207eafc42fff9475f8027c7b"
   layerSelector:
     mediaType: "application/vnd.cncf.helm.chart.content.v1.tar+gzip"
     operation: copy
