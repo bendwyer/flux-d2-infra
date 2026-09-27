@@ -1,11 +1,12 @@
 ---
 # yaml-language-server: $schema=https://docs.stacklok.com/api-specs/toolhive-crds/mcpauthzconfigs.schema.json
-# Shared by VirtualMCPServers mcp and workspaces-operator. MCPAuthzConfig
-# workspaces-dev repeats these rules and adds one, so change both together.
+# MCPAuthzConfig mcp plus the dev tier's one restriction. A gateway takes a
+# single policy reference, so the shared rules are repeated here; change both
+# together.
 apiVersion: toolhive.stacklok.dev/v1beta1
 kind: MCPAuthzConfig
 metadata:
-  name: mcp
+  name: workspaces-dev
   namespace: toolhive
 spec:
   type: cedarv1
@@ -13,6 +14,9 @@ spec:
     policies:
       - 'permit(principal, action == Action::"list_tools", resource);'
       - 'permit(principal, action == Action::"call_tool", resource);'
+      # The dev tier has no cluster access. Aggregation excludeAll would only
+      # hide these tools, not block calls to them; Cedar does both.
+      - 'forbid(principal, action == Action::"call_tool", resource) when { resource.name like "flux-operator_*" };'
       # Deletes go through a human-authenticated identity, never the gateway,
       # whatever a backend's own permissions allow. Cedar sees the name the
       # gateway advertises, backend prefix included. Backends separate words
