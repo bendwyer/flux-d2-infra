@@ -7,7 +7,7 @@
   "rebaseWhen": "behind-base-branch",
   "separateMinorPatch": true,
   "flux": { "managerFilePatterns": ["/components/.+\\.yaml$/"] },
-  "kubernetes": { "managerFilePatterns": ["/components/.+/(deployment|daemonset|cronjob|job|statefulset)(-.+)?\\.yaml$/"] },
+  "kubernetes": { "managerFilePatterns": ["/components/.+/(deployment|daemonset|cronjob|job|statefulset|mcpserver)(-.+)?\\.yaml$/"] },
   "github-actions": { "enabled": false },
   "customDatasources": {
     "coder-stable": {

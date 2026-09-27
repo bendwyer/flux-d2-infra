@@ -32,5 +32,7 @@ spec:
           # advertises, which carries the backend prefix set by the aggregation's
           # conflict resolution, so the pattern matches any backend's delete tool.
           - 'forbid(principal, action == Action::"call_tool", resource) when { resource.name like "*_delete_*" };'
+          # Sidero's docs server sends feedback to Sidero; nothing here should.
+          - 'forbid(principal, action == Action::"call_tool", resource) when { resource.name == "sidero-docs_submit_feedback" };'
   outgoingAuth:
     source: discovered

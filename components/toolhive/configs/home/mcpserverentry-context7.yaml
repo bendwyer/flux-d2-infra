@@ -1,0 +1,17 @@
+---
+# yaml-language-server: $schema=https://docs.stacklok.com/api-specs/toolhive-crds/mcpserverentries.schema.json
+# Hosted rather than run locally: the local server is only a client for this
+# same service, so running it here adds a pod and an image without removing
+# the dependency.
+apiVersion: toolhive.stacklok.dev/v1beta1
+kind: MCPServerEntry
+metadata:
+  name: context7
+  namespace: toolhive
+spec:
+  remoteUrl: https://mcp.context7.com/mcp
+  transport: streamable-http
+  externalAuthConfigRef:
+    name: context7
+  groupRef:
+    name: mcp

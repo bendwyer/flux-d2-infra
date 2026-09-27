@@ -1,0 +1,12 @@
+---
+# yaml-language-server: $schema=https://docs.stacklok.com/api-specs/toolhive-crds/mcpserverentries.schema.json
+apiVersion: toolhive.stacklok.dev/v1beta1
+kind: MCPServerEntry
+metadata:
+  name: cloudflare-docs
+  namespace: toolhive
+spec:
+  remoteUrl: https://docs.mcp.cloudflare.com/mcp
+  transport: streamable-http
+  groupRef:
+    name: mcp

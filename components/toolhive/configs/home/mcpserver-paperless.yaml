@@ -1,0 +1,28 @@
+---
+# yaml-language-server: $schema=https://docs.stacklok.com/api-specs/toolhive-crds/mcpservers.schema.json
+apiVersion: toolhive.stacklok.dev/v1beta1
+kind: MCPServer
+metadata:
+  name: paperless
+  namespace: toolhive
+spec:
+  image: ghcr.io/bendwyer/containers/paperless-mcp:0.6@sha256:b2978ad75386e9135edbad9cd6a2dee28ee4903bfaffd43522dfc606083c03c2
+  transport: stdio
+  # Without it the server listens for HTTP instead.
+  args:
+    - --stdio
+  groupRef:
+    name: mcp
+  env:
+    - name: PAPERLESS_BASE_URL
+      value: "http://paperless-ngx.paperless-ngx.svc.cluster.local:8000"
+  secrets:
+    - name: paperless-mcp
+      key: credential
+      targetEnvName: PAPERLESS_API_TOKEN
+  resources:
+    requests:
+      cpu: 50m
+      memory: 128Mi
+    limits:
+      memory: 128Mi

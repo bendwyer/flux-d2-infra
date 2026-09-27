@@ -6,6 +6,18 @@ resources:
   - ../base
   - mcpoidcconfig-tsidp.yaml
   - mcpgroup-mcp.yaml
-  - mcpserverentry-flux-operator-mcp.yaml
+  - mcpexternalauthconfig-cloudflare-api.yaml
+  - mcpexternalauthconfig-context7.yaml
+  - mcpexternalauthconfig-ovh.yaml
+  - mcpserver-github.yaml
+  - mcpserver-grafana.yaml
+  - mcpserver-paperless.yaml
+  - mcpserver-terraform.yaml
+  - mcpserverentry-cloudflare-api.yaml
+  - mcpserverentry-cloudflare-docs.yaml
+  - mcpserverentry-context7.yaml
+  - mcpserverentry-flux-operator.yaml
+  - mcpserverentry-ovh.yaml
+  - mcpserverentry-sidero-docs.yaml
   - virtualmcpserver-mcp.yaml
   - ingress-toolhive.yaml

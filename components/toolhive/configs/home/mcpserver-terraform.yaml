@@ -1,0 +1,27 @@
+---
+# yaml-language-server: $schema=https://docs.stacklok.com/api-specs/toolhive-crds/mcpservers.schema.json
+apiVersion: toolhive.stacklok.dev/v1beta1
+kind: MCPServer
+metadata:
+  name: terraform
+  namespace: toolhive
+spec:
+  image: docker.io/hashicorp/terraform-mcp-server:1.3.0@sha256:423a6b8e2ee06affcf090892f40c86469caba45fd2448ffa8ca5d717a174f7d5
+  transport: stdio
+  groupRef:
+    name: mcp
+  env:
+    - name: TFE_ADDRESS
+      value: "https://app.terraform.io"
+    - name: ENABLE_TF_OPERATIONS
+      value: "true"
+  secrets:
+    - name: terraform-mcp
+      key: credential
+      targetEnvName: TFE_TOKEN
+  resources:
+    requests:
+      cpu: 50m
+      memory: 128Mi
+    limits:
+      memory: 128Mi
