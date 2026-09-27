@@ -1,0 +1,28 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/yannh/kubernetes-json-schema/master/master-standalone-strict/networkpolicy-networking-v1.json
+# VirtualMCPServer workspaces-operator has no authentication of its own, so only
+# Coder workspace pods of the operator tier may reach it. The workspace template
+# sets the tier label.
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: workspaces-operator
+  namespace: toolhive
+spec:
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/name: virtualmcpserver
+      app.kubernetes.io/instance: workspaces-operator
+  policyTypes:
+    - Ingress
+  ingress:
+    - from:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: coder-workspaces
+          podSelector:
+            matchLabels:
+              tier: operator
+      ports:
+        - protocol: TCP
+          port: 4483

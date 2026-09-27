@@ -1,0 +1,21 @@
+---
+# yaml-language-server: $schema=https://docs.stacklok.com/api-specs/toolhive-crds/virtualmcpservers.schema.json
+# The dev tier's gateway for Coder workspaces. It takes no token: a
+# VirtualMCPServer cannot validate ServiceAccount tokens here, because it
+# fetches the cluster's signing keys without credentials and Talos refuses
+# anonymous API requests. NetworkPolicy workspaces-dev admits only dev-tier
+# workspace pods instead.
+apiVersion: toolhive.stacklok.dev/v1beta1
+kind: VirtualMCPServer
+metadata:
+  name: workspaces-dev
+  namespace: toolhive
+spec:
+  groupRef:
+    name: mcp
+  incomingAuth:
+    type: anonymous
+    authzConfigRef:
+      name: workspaces-dev
+  outgoingAuth:
+    source: discovered

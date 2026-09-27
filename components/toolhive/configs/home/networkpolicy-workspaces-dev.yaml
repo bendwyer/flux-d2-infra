@@ -1,25 +1,28 @@
 ---
 # yaml-language-server: $schema=https://raw.githubusercontent.com/yannh/kubernetes-json-schema/master/master-standalone-strict/networkpolicy-networking-v1.json
-# VirtualMCPServer workspaces has no authentication of its own, so only the
-# proxy that checks workspace tokens may reach it.
+# VirtualMCPServer workspaces-dev has no authentication of its own, so only
+# Coder workspace pods of the dev tier may reach it. The workspace template
+# sets the tier label.
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
-  name: workspaces
+  name: workspaces-dev
   namespace: toolhive
 spec:
   podSelector:
     matchLabels:
       app.kubernetes.io/name: virtualmcpserver
-      app.kubernetes.io/instance: workspaces
+      app.kubernetes.io/instance: workspaces-dev
   policyTypes:
     - Ingress
   ingress:
     - from:
-        - podSelector:
+        - namespaceSelector:
             matchLabels:
-              app.kubernetes.io/name: mcpremoteproxy
-              app.kubernetes.io/instance: workspaces-auth
+              kubernetes.io/metadata.name: coder-workspaces
+          podSelector:
+            matchLabels:
+              tier: dev
       ports:
         - protocol: TCP
           port: 4483
