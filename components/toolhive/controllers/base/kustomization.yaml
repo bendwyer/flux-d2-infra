@@ -7,3 +7,4 @@ resources:
   - ocirepository-toolhive-crds.yaml
   - helmrelease.yaml
   - helmrelease-toolhive-crds.yaml
+  - clusterrole-toolhive-view.yaml
