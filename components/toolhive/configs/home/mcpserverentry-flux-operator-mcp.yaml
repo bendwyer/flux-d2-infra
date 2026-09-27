@@ -1,4 +1,5 @@
 ---
+# yaml-language-server: $schema=https://docs.stacklok.com/api-specs/toolhive-crds/mcpserverentries.schema.json
 # flux-operator-mcp is deployed by its own component; this entry only points
 # the gateway at its Service. allowPrivateEndpoint is required for a
 # cluster.local address, which ToolHive otherwise refuses.

@@ -1,4 +1,5 @@
 ---
+# yaml-language-server: $schema=https://docs.stacklok.com/api-specs/toolhive-crds/mcpoidcconfigs.schema.json
 # tsidp issues opaque access tokens rather than JWTs, so ToolHive validates each
 # one by calling tsidp's RFC 7662 introspection endpoint, which it finds in
 # tsidp's discovery document. tsidp only answers introspection for a registered
