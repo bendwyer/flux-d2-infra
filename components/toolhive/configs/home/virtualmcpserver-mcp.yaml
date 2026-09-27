@@ -15,11 +15,11 @@ spec:
     type: oidc
     oidcConfigRef:
       name: tsidp
-      audience: "https://toolhive.tail0c49c.ts.net/mcp"
+      audience: "https://mcp.tail0c49c.ts.net/mcp"
       # Advertised to clients in the protected resource metadata and the 401
       # challenge. Left unset it defaults to the internal Service URL, which
       # clients outside the cluster can neither reach nor get a token for.
-      resourceUrl: "https://toolhive.tail0c49c.ts.net/mcp"
+      resourceUrl: "https://mcp.tail0c49c.ts.net/mcp"
       scopes: ["openid"]
     authzConfigRef:
       name: mcp
