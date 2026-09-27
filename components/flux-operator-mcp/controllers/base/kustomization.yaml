@@ -5,3 +5,6 @@ kind: Kustomization
 resources:
   - ocirepository.yaml
   - helmrelease.yaml
+  - clusterrole-flux-operator-mcp-operate.yaml
+  - clusterrolebinding-flux-operator-mcp-operate.yaml
+  - clusterrolebinding-flux-operator-mcp-view.yaml
