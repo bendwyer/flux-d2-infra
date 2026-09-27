@@ -16,6 +16,9 @@ spec:
     oidcConfigRef:
       name: kubernetes
       audience: "http://vmcp-workspaces.toolhive.svc.cluster.local:4483/mcp"
+      # The operator's default names a host that does not exist (the resource
+      # name without the vmcp- Service prefix), so a 401 would point nowhere.
+      resourceUrl: "http://vmcp-workspaces.toolhive.svc.cluster.local:4483/mcp"
     authzConfigRef:
       name: mcp
   outgoingAuth:
