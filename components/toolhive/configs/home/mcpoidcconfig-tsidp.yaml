@@ -17,3 +17,8 @@ spec:
     clientSecretRef:
       name: toolhive
       key: TSIDP_CLIENT_SECRET
+    # Inside the cluster tsidp's hostname resolves to its tailnet address, which
+    # sits in 100.64.0.0/10. ToolHive's request-forgery protection counts that
+    # as private and refuses discovery and introspection without this; per the
+    # field's documentation it covers every OIDC request, not only JWKS.
+    jwksAllowPrivateIP: true
