@@ -1,0 +1,29 @@
+---
+# yaml-language-server: $schema=https://docs.stacklok.com/api-specs/toolhive-crds/mcpservers.schema.json
+apiVersion: toolhive.stacklok.dev/v1beta1
+kind: MCPServer
+metadata:
+  name: grafana
+  namespace: toolhive
+spec:
+  image: ghcr.io/bendwyer/containers/grafana-mcp:1.6@sha256:8c6b3293c092f455196d7f541065d16256304636d844f6896beab89658613b59
+  transport: stdio
+  # The image's default command is --help.
+  args:
+    - --transport
+    - stdio
+  groupRef:
+    name: mcp
+  env:
+    - name: GRAFANA_URL
+      value: "http://grafana.grafana.svc.cluster.local"
+  secrets:
+    - name: grafana-mcp
+      key: credential
+      targetEnvName: GRAFANA_SERVICE_ACCOUNT_TOKEN
+  resources:
+    requests:
+      cpu: 50m
+      memory: 128Mi
+    limits:
+      memory: 128Mi

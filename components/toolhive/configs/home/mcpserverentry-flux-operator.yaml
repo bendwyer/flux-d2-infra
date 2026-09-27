@@ -6,7 +6,7 @@
 apiVersion: toolhive.stacklok.dev/v1beta1
 kind: MCPServerEntry
 metadata:
-  name: flux-operator-mcp
+  name: flux-operator
   namespace: toolhive
 spec:
   remoteUrl: http://flux-operator-mcp.flux-operator-mcp.svc.cluster.local:9090/mcp

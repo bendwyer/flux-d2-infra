@@ -1,0 +1,16 @@
+---
+# yaml-language-server: $schema=https://docs.stacklok.com/api-specs/toolhive-crds/mcpserverentries.schema.json
+# Server-side Code Mode: a search and execute pair covers the whole API, so
+# product-specific entries are not needed.
+apiVersion: toolhive.stacklok.dev/v1beta1
+kind: MCPServerEntry
+metadata:
+  name: cloudflare-api
+  namespace: toolhive
+spec:
+  remoteUrl: https://mcp.cloudflare.com/mcp
+  transport: streamable-http
+  externalAuthConfigRef:
+    name: cloudflare-api
+  groupRef:
+    name: mcp

@@ -1,0 +1,14 @@
+---
+# yaml-language-server: $schema=https://docs.stacklok.com/api-specs/toolhive-crds/mcpserverentries.schema.json
+apiVersion: toolhive.stacklok.dev/v1beta1
+kind: MCPServerEntry
+metadata:
+  name: ovh
+  namespace: toolhive
+spec:
+  remoteUrl: https://mcp.eu.ovhcloud.com/mcp
+  transport: streamable-http
+  externalAuthConfigRef:
+    name: ovh
+  groupRef:
+    name: mcp

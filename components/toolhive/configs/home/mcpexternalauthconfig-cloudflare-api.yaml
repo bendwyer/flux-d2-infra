@@ -1,0 +1,16 @@
+---
+# yaml-language-server: $schema=https://docs.stacklok.com/api-specs/toolhive-crds/mcpexternalauthconfigs.schema.json
+# The header value is sent verbatim, so the 1Password field holds the whole
+# "Bearer <token>" string. headerForward cannot do this: it refuses Authorization.
+apiVersion: toolhive.stacklok.dev/v1beta1
+kind: MCPExternalAuthConfig
+metadata:
+  name: cloudflare-api
+  namespace: toolhive
+spec:
+  type: headerInjection
+  headerInjection:
+    headerName: Authorization
+    valueSecretRef:
+      name: cloudflare-api-mcp
+      key: authorization_header
