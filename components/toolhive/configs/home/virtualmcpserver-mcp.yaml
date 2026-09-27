@@ -28,7 +28,9 @@ spec:
           - 'permit(principal, action == Action::"list_tools", resource);'
           - 'permit(principal, action == Action::"call_tool", resource);'
           # Deletes go through a human-authenticated identity, never the gateway,
-          # whatever the backend's own RBAC allows.
-          - 'forbid(principal, action == Action::"call_tool", resource == Tool::"delete_kubernetes_resource");'
+          # whatever a backend's own RBAC allows. Cedar sees the name the gateway
+          # advertises, which carries the backend prefix set by the aggregation's
+          # conflict resolution, so the pattern matches any backend's delete tool.
+          - 'forbid(principal, action == Action::"call_tool", resource) when { resource.name like "*_delete_*" };'
   outgoingAuth:
     source: discovered
