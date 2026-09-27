@@ -1,0 +1,16 @@
+---
+# Read access to ToolHive's resources for anything bound to the built-in view
+# role, the MCP server included. Kubernetes merges any ClusterRole carrying the
+# aggregate-to-view label into view, which is how CRD owners are meant to
+# extend it; the ToolHive charts do not ship one. View only: edit and admin
+# would extend write access to these resources, which nothing here needs.
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: toolhive-view
+  labels:
+    rbac.authorization.k8s.io/aggregate-to-view: "true"
+rules:
+  - apiGroups: ["toolhive.stacklok.dev"]
+    resources: ["*"]
+    verbs: ["get", "list", "watch"]
