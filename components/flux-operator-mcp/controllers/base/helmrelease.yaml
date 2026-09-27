@@ -12,6 +12,14 @@ spec:
   values:
     transport: http
     readonly: false
+    # The chart's own binding is cluster-admin; the scoped roles beside this
+    # file replace it.
+    rbac:
+      create: false
+    # On by default; set here because the Secret read in the scoped role
+    # relies on it.
+    extraArgs:
+      - --mask-secrets=true
     networkPolicy:
       ingress:
         namespaces:
