@@ -4,7 +4,9 @@ apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 resources:
   - ../base
+  - mcpoidcconfig-kubernetes.yaml
   - mcpoidcconfig-tsidp.yaml
+  - mcpauthzconfig-mcp.yaml
   - mcpgroup-mcp.yaml
   - mcpexternalauthconfig-cloudflare-api.yaml
   - mcpexternalauthconfig-context7.yaml
@@ -20,4 +22,5 @@ resources:
   - mcpserverentry-ovh.yaml
   - mcpserverentry-sidero-docs.yaml
   - virtualmcpserver-mcp.yaml
+  - virtualmcpserver-workspaces.yaml
   - ingress-toolhive.yaml

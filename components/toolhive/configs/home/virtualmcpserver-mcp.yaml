@@ -21,19 +21,7 @@ spec:
       # clients outside the cluster can neither reach nor get a token for.
       resourceUrl: "https://toolhive.tail0c49c.ts.net/mcp"
       scopes: ["openid"]
-    authzConfig:
-      type: inline
-      inline:
-        policies:
-          - 'permit(principal, action == Action::"list_tools", resource);'
-          - 'permit(principal, action == Action::"call_tool", resource);'
-          # Deletes go through a human-authenticated identity, never the gateway,
-          # whatever a backend's own permissions allow. Cedar sees the name the
-          # gateway advertises, backend prefix included. Backends separate words
-          # with underscores or hyphens and may end a name with delete, so the
-          # pattern matches the bare word.
-          - 'forbid(principal, action == Action::"call_tool", resource) when { resource.name like "*delete*" };'
-          # Sidero's docs server sends feedback to Sidero; nothing here should.
-          - 'forbid(principal, action == Action::"call_tool", resource) when { resource.name == "sidero-docs_submit_feedback" };'
+    authzConfigRef:
+      name: mcp
   outgoingAuth:
     source: discovered

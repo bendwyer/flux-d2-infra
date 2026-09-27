@@ -1,0 +1,22 @@
+---
+# yaml-language-server: $schema=https://docs.stacklok.com/api-specs/toolhive-crds/virtualmcpservers.schema.json
+# In-cluster gateway for Coder workspaces. Workspaces send a projected
+# ServiceAccount token minted for this audience, so they need no browser
+# sign-in. It has no ingress and serves the same backends as mcp.
+apiVersion: toolhive.stacklok.dev/v1beta1
+kind: VirtualMCPServer
+metadata:
+  name: workspaces
+  namespace: toolhive
+spec:
+  groupRef:
+    name: mcp
+  incomingAuth:
+    type: oidc
+    oidcConfigRef:
+      name: kubernetes
+      audience: "http://vmcp-workspaces.toolhive.svc.cluster.local:4483/mcp"
+    authzConfigRef:
+      name: mcp
+  outgoingAuth:
+    source: discovered
