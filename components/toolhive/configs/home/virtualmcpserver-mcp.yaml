@@ -28,10 +28,11 @@ spec:
           - 'permit(principal, action == Action::"list_tools", resource);'
           - 'permit(principal, action == Action::"call_tool", resource);'
           # Deletes go through a human-authenticated identity, never the gateway,
-          # whatever a backend's own RBAC allows. Cedar sees the name the gateway
-          # advertises, which carries the backend prefix set by the aggregation's
-          # conflict resolution, so the pattern matches any backend's delete tool.
-          - 'forbid(principal, action == Action::"call_tool", resource) when { resource.name like "*_delete_*" };'
+          # whatever a backend's own permissions allow. Cedar sees the name the
+          # gateway advertises, backend prefix included. Backends separate words
+          # with underscores or hyphens and may end a name with delete, so the
+          # pattern matches the bare word.
+          - 'forbid(principal, action == Action::"call_tool", resource) when { resource.name like "*delete*" };'
           # Sidero's docs server sends feedback to Sidero; nothing here should.
           - 'forbid(principal, action == Action::"call_tool", resource) when { resource.name == "sidero-docs_submit_feedback" };'
   outgoingAuth:
