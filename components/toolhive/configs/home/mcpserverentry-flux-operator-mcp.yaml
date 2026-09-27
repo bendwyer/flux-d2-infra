@@ -1,0 +1,15 @@
+---
+# flux-operator-mcp is deployed by its own component; this entry only points
+# the gateway at its Service. allowPrivateEndpoint is required for a
+# cluster.local address, which ToolHive otherwise refuses.
+apiVersion: toolhive.stacklok.dev/v1beta1
+kind: MCPServerEntry
+metadata:
+  name: flux-operator-mcp
+  namespace: toolhive
+spec:
+  remoteUrl: http://flux-operator-mcp.flux-operator-mcp.svc.cluster.local:9090/mcp
+  transport: streamable-http
+  allowPrivateEndpoint: true
+  groupRef:
+    name: mcp

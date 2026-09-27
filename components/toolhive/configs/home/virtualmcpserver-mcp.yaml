@@ -1,0 +1,29 @@
+---
+# The audience is this server's public URL. tsidp issues a token for that
+# audience only to users its tailnet grant lists under resources, so the
+# audience check is what limits who can use the gateway at all.
+apiVersion: toolhive.stacklok.dev/v1beta1
+kind: VirtualMCPServer
+metadata:
+  name: mcp
+  namespace: toolhive
+spec:
+  groupRef:
+    name: mcp
+  incomingAuth:
+    type: oidc
+    oidcConfigRef:
+      name: tsidp
+      audience: "https://toolhive.tail0c49c.ts.net/mcp"
+      scopes: ["openid"]
+    authzConfig:
+      type: inline
+      inline:
+        policies:
+          - 'permit(principal, action == Action::"list_tools", resource);'
+          - 'permit(principal, action == Action::"call_tool", resource);'
+          # Deletes go through a human-authenticated identity, never the gateway,
+          # whatever the backend's own RBAC allows.
+          - 'forbid(principal, action == Action::"call_tool", resource == Tool::"delete_kubernetes_resource");'
+  outgoingAuth:
+    source: discovered
