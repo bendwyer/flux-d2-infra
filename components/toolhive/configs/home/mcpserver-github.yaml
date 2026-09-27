@@ -14,9 +14,21 @@ spec:
     - name: github-mcp
       key: credential
       targetEnvName: GITHUB_PERSONAL_ACCESS_TOKEN
+  # Sizes the proxy container only; the MCP server's own container is sized
+  # through podTemplateSpec, which ToolHive merges by the container name mcp.
   resources:
     requests:
       cpu: 50m
       memory: 128Mi
     limits:
       memory: 128Mi
+  podTemplateSpec:
+    spec:
+      containers:
+        - name: mcp
+          resources:
+            requests:
+              cpu: 50m
+              memory: 128Mi
+            limits:
+              memory: 128Mi
