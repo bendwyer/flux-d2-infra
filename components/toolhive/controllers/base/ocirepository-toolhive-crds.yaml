@@ -1,0 +1,16 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/fluxcd-community/flux2-schemas/refs/heads/main/ocirepository-source-v1.json
+apiVersion: source.toolkit.fluxcd.io/v1
+kind: OCIRepository
+metadata:
+  name: toolhive-crds
+  namespace: toolhive
+spec:
+  interval: 1h
+  url: oci://ghcr.io/stacklok/toolhive/toolhive-operator-crds
+  ref:
+    tag: "0.51.3"
+    digest: "sha256:43f0e16b8a5a35a6e1c6e1b6a9b6849ddaad849d40d02d175b46fc9a09cea984"
+  layerSelector:
+    mediaType: "application/vnd.cncf.helm.chart.content.v1.tar+gzip"
+    operation: copy

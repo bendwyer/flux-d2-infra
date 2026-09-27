@@ -1,0 +1,18 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/fluxcd-community/flux2-schemas/refs/heads/main/helmrelease-helm-v2.json
+# The CRDs ship as a chart of their own, installed ahead of the operator
+# (see dependsOn in helmrelease.yaml). They sit under templates/ rather than
+# crds/, so Helm upgrades them with the chart and no ArtifactGenerator is needed.
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: toolhive-crds
+  namespace: toolhive
+spec:
+  interval: 1h
+  chartRef:
+    kind: OCIRepository
+    name: toolhive-crds
+  install:
+    remediation:
+      retries: 3

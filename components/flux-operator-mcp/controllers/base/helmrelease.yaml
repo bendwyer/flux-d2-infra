@@ -25,6 +25,7 @@ spec:
         namespaces:
           - tailscale
           - agentgateway
+          - toolhive
     resources:
       requests:
         cpu: 50m

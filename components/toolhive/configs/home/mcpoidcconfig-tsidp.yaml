@@ -1,0 +1,19 @@
+---
+# yaml-language-server: $schema=https://docs.stacklok.com/api-specs/toolhive-crds/mcpoidcconfigs.schema.json
+# tsidp issues opaque access tokens rather than JWTs, so ToolHive validates each
+# one by calling tsidp's RFC 7662 introspection endpoint, which it finds in
+# tsidp's discovery document. tsidp only answers introspection for a registered
+# client, which is what the client ID and secret are for.
+apiVersion: toolhive.stacklok.dev/v1beta1
+kind: MCPOIDCConfig
+metadata:
+  name: tsidp
+  namespace: toolhive
+spec:
+  type: inline
+  inline:
+    issuer: "https://idp.tail0c49c.ts.net"
+    clientId: "${TSIDP_CLIENT_ID}"
+    clientSecretRef:
+      name: toolhive
+      key: TSIDP_CLIENT_SECRET

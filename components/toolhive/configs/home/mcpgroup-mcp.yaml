@@ -1,0 +1,9 @@
+---
+# yaml-language-server: $schema=https://docs.stacklok.com/api-specs/toolhive-crds/mcpgroups.schema.json
+apiVersion: toolhive.stacklok.dev/v1beta1
+kind: MCPGroup
+metadata:
+  name: mcp
+  namespace: toolhive
+spec:
+  description: Backends federated by VirtualMCPServer/mcp
