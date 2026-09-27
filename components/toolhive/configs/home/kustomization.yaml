@@ -23,4 +23,6 @@ resources:
   - mcpserverentry-sidero-docs.yaml
   - virtualmcpserver-mcp.yaml
   - virtualmcpserver-workspaces.yaml
+  - mcpremoteproxy-workspaces-auth.yaml
+  - networkpolicy-workspaces.yaml
   - ingress-toolhive.yaml

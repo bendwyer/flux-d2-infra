@@ -2,7 +2,8 @@
 # yaml-language-server: $schema=https://docs.stacklok.com/api-specs/toolhive-crds/mcpoidcconfigs.schema.json
 # Validates projected ServiceAccount tokens from Coder workspaces. Any
 # ServiceAccount's token passes this check, so MCPAuthzConfig/mcp limits access
-# by subject. The issuer is compared as a string, never fetched: it is the
+# by subject. Used by MCPRemoteProxy workspaces-auth, whose key fetch carries its
+# own token as the API server requires. The issuer is compared as a string, never fetched: it is the
 # cluster's service-account issuer, which Omni sets to an internal address kept
 # out of git. Setting the JWKS URL skips discovery at that address.
 apiVersion: toolhive.stacklok.dev/v1beta1

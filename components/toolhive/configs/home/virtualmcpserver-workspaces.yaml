@@ -1,8 +1,11 @@
 ---
 # yaml-language-server: $schema=https://docs.stacklok.com/api-specs/toolhive-crds/virtualmcpservers.schema.json
-# In-cluster gateway for Coder workspaces. Workspaces send a projected
-# ServiceAccount token minted for this audience, so they need no browser
-# sign-in. It has no ingress and serves the same backends as mcp.
+# Aggregates the mcp group for Coder workspaces behind MCPRemoteProxy
+# workspaces-auth, which checks their ServiceAccount tokens. It cannot check them
+# itself: a VirtualMCPServer fetches the cluster's signing keys without
+# credentials, and Talos refuses anonymous API requests. NetworkPolicy
+# workspaces admits only that proxy. The shared policy still applies here,
+# with every request seen as sub=anonymous.
 apiVersion: toolhive.stacklok.dev/v1beta1
 kind: VirtualMCPServer
 metadata:
@@ -12,13 +15,7 @@ spec:
   groupRef:
     name: mcp
   incomingAuth:
-    type: oidc
-    oidcConfigRef:
-      name: kubernetes
-      audience: "http://vmcp-workspaces.toolhive.svc.cluster.local:4483/mcp"
-      # The operator's default names a host that does not exist (the resource
-      # name without the vmcp- Service prefix), so a 401 would point nowhere.
-      resourceUrl: "http://vmcp-workspaces.toolhive.svc.cluster.local:4483/mcp"
+    type: anonymous
     authzConfigRef:
       name: mcp
   outgoingAuth:

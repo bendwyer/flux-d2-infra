@@ -1,8 +1,8 @@
 ---
 # yaml-language-server: $schema=https://docs.stacklok.com/api-specs/toolhive-crds/mcpauthzconfigs.schema.json
-# Shared by both gateways so the forbid rules cannot drift between them. Each
-# gateway accepts only its own issuer's tokens: tsidp users on mcp, workspace
-# ServiceAccounts on workspaces. Cedar sees the token's sub as claim_sub.
+# Shared by every entry point so the forbid rules cannot drift between them:
+# tsidp users on mcp, workspace ServiceAccounts on workspaces-auth, and the
+# anonymous hop behind it. Cedar sees the token's sub as claim_sub.
 apiVersion: toolhive.stacklok.dev/v1beta1
 kind: MCPAuthzConfig
 metadata:
@@ -13,11 +13,13 @@ spec:
   config:
     policies:
       - 'permit(principal, action == Action::"list_tools", resource);'
-      # tsidp users. A ServiceAccount token is only ever valid on workspaces.
-      # The has guard keeps a response without sub from denying every call.
+      # tsidp users, and the proxied calls VirtualMCPServer workspaces sees as
+      # sub=anonymous. The has guard keeps a response without sub from denying
+      # every call.
       - 'permit(principal, action == Action::"call_tool", resource) when { !(principal has claim_sub) || !(principal.claim_sub like "system:serviceaccount:*") };'
-      # Workspace tiers only. Every other ServiceAccount's token passes token
-      # validation on workspaces, so the subject is what keeps them out.
+      # Workspace tiers only, at MCPRemoteProxy workspaces-auth. Every other
+      # ServiceAccount's token passes token validation, so the subject is what
+      # keeps them out.
       - 'permit(principal, action == Action::"call_tool", resource) when { principal.claim_sub == "system:serviceaccount:coder-workspaces:coder-workspace-operator" || principal.claim_sub == "system:serviceaccount:coder-workspaces:coder-workspace-dev" };'
       # The dev tier has no cluster access, so no flux-operator either.
       - 'forbid(principal, action == Action::"call_tool", resource) when { principal.claim_sub == "system:serviceaccount:coder-workspaces:coder-workspace-dev" && resource.name like "flux-operator_*" };'
