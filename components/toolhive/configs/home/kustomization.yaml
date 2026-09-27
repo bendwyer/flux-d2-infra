@@ -26,4 +26,4 @@ resources:
   - virtualmcpserver-workspaces-operator.yaml
   - networkpolicy-workspaces-dev.yaml
   - networkpolicy-workspaces-operator.yaml
-  - ingress-toolhive.yaml
+  - ingress-mcp.yaml
