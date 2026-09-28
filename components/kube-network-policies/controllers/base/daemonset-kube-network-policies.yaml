@@ -34,7 +34,11 @@ spec:
       serviceAccountName: kube-network-policies
       containers:
         - name: kube-network-policies
-          image: registry.k8s.io/networking/kube-network-policies:v1.1.2@sha256:c671f98e444825d57c590c92da1b5e66070917c4d3dff1f9279775e6b73254fe
+          # The suffix selects the binary: only an npa build carries the
+          # ClusterNetworkPolicy evaluator, and the unsuffixed one ignores those
+          # objects rather than refusing them. Renovate keeps updates inside the
+          # suffix, so a renamed build family reads as no updates at all.
+          image: registry.k8s.io/networking/kube-network-policies:v1.1.2-npa-v1alpha2@sha256:fc3e24ac7c1778828ef58a7b0d63fe0538f736c73d03b94af2243b6baf111087
           command:
             - /bin/netpol
           args:
