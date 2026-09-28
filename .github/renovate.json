@@ -51,6 +51,11 @@
   ],
   "packageRules": [
     {
+      "description": "Variant tag: the suffix selects which binary runs, and only an npa build enforces ClusterNetworkPolicy. docker versioning keeps updates inside the suffix, while semver-coerced reads it as a prerelease and offers the unsuffixed build as a patch.",
+      "matchPackageNames": ["registry.k8s.io/networking/kube-network-policies"],
+      "versioning": "docker"
+    },
+    {
       "description": "Use semver-coerced versioning for all sources",
       "matchDatasources": ["docker", "helm", "git-refs", "github-tags"],
       "versioning": "semver-coerced",
