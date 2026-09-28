@@ -36,8 +36,8 @@ spec:
         	forward_to      = [prometheus.remote_write.default.receiver]
         }
 
-        // Network flow metrics only, with every network setting at Beyla's default,
-        // including the socket_filter event source.
+        // Network flow metrics only, with every network setting except the destination
+        // buckets at Beyla's default, including the socket_filter event source.
         beyla.ebpf "default" {
         	attributes {
         		kubernetes {
@@ -46,7 +46,8 @@ spec:
         		}
 
         		// Beyla's default flow attributes, plus the transport and the endpoint
-        		// types, which separate pod traffic from node-to-node traffic.
+        		// types, which separate pod traffic from node-to-node traffic, and the
+        		// destination bucket.
         		select {
         			attr    = "beyla_network_flow_bytes"
         			include = [
@@ -58,12 +59,30 @@ spec:
         				"transport",
         				"k8s.src.type",
         				"k8s.dst.type",
+        				"dst.cidr",
         			]
         		}
         	}
 
         	metrics {
         		features = ["network"]
+
+        		// Without buckets, every unmappable destination shares one empty label value.
+        		network {
+        			cidrs = [
+        				"10.244.0.0/16",
+        				"10.96.0.0/12",
+        				"100.64.0.0/10",
+        				"192.168.10.0/24",
+        				"192.168.99.0/24",
+        				"192.168.188.0/24",
+        				"192.168.200.0/24",
+        				"192.168.0.0/16",
+        				"172.16.0.0/12",
+        				"10.0.0.0/8",
+        				"0.0.0.0/0",
+        			]
+        		}
         	}
         }
 
