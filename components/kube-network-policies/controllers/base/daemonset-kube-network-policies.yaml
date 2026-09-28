@@ -34,7 +34,7 @@ spec:
       serviceAccountName: kube-network-policies
       containers:
         - name: kube-network-policies
-          image: registry.k8s.io/networking/kube-network-policies:v1.1.1-npa-v1alpha2@sha256:3d7ba4bbf5cd9774b3562ee36a5c6860b071f5a25d73b75982d1b5a807c07d42
+          image: registry.k8s.io/networking/kube-network-policies:v1.1.2@sha256:c671f98e444825d57c590c92da1b5e66070917c4d3dff1f9279775e6b73254fe
           command:
             - /bin/netpol
           args:
