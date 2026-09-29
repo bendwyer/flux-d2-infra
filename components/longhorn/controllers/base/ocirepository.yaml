@@ -9,8 +9,8 @@ spec:
   interval: 1h
   url: oci://ghcr.io/bendwyer/d2-mirror/charts/longhorn
   ref:
-    tag: "1.12.1"
-    digest: "sha256:fcf914abcdc1a86e465eb9c0cc62554271d61cc38769bd8a09262030ee78a4fd"
+    tag: "1.13.0"
+    digest: "sha256:269a946241564d54dbc5dfc92ed70e3ecd7753cea908ec6e887f7b6cf8c25670"
   layerSelector:
     mediaType: "application/vnd.cncf.helm.chart.content.v1.tar+gzip"
     operation: copy
