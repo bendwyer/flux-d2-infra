@@ -9,8 +9,8 @@ spec:
   interval: 1h
   url: oci://ghcr.io/bendwyer/d2-mirror/charts/external-dns
   ref:
-    tag: "1.22.0"
-    digest: "sha256:2591abfa272806d61abf46539e058ad7dc9c8a4349ab245e2e36484cd3fc645d"
+    tag: "1.23.0"
+    digest: "sha256:140e6ca07b91ccadda6de07c3379bed5e3d5ffb022112f72b27a5e67fdf8318f"
   layerSelector:
     mediaType: "application/vnd.cncf.helm.chart.content.v1.tar+gzip"
     operation: copy
