@@ -6,7 +6,7 @@ metadata:
   name: paperless
   namespace: toolhive
 spec:
-  image: ghcr.io/bendwyer/containers/paperless-mcp:0.6@sha256:b2978ad75386e9135edbad9cd6a2dee28ee4903bfaffd43522dfc606083c03c2
+  image: ghcr.io/bendwyer/containers/paperless-mcp:0.6@sha256:80687bcb207ef46468a3eeebd1bc702625be390cf07a7a9e33400254ba0bdce1
   transport: stdio
   # Without it the server listens for HTTP instead.
   args:
