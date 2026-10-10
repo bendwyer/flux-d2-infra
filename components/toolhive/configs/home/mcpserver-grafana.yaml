@@ -6,7 +6,7 @@ metadata:
   name: grafana
   namespace: toolhive
 spec:
-  image: ghcr.io/bendwyer/containers/grafana-mcp:1.6@sha256:8c6b3293c092f455196d7f541065d16256304636d844f6896beab89658613b59
+  image: ghcr.io/bendwyer/containers/grafana-mcp:2@sha256:ff4e74ba9bf47a1d4b01c994949ba110d37a07282f24087a369035da262c8125
   transport: stdio
   # The image's default command is --help.
   args:
