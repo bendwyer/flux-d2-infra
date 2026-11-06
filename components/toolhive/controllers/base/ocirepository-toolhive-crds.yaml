@@ -9,8 +9,8 @@ spec:
   interval: 1h
   url: oci://ghcr.io/stacklok/toolhive/toolhive-operator-crds
   ref:
-    tag: "0.51.4"
-    digest: "sha256:29f0ff2eaff4be5909dca66db18b355d7356640591deac359bd9b3a76c339633"
+    tag: "0.63.0"
+    digest: "sha256:88d683797fdd9c76cb8171e2c4962bf3b0c43f8da21a6d2ad22cff250eb04163"
   layerSelector:
     mediaType: "application/vnd.cncf.helm.chart.content.v1.tar+gzip"
     operation: copy
