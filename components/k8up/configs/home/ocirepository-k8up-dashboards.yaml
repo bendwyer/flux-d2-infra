@@ -10,4 +10,4 @@ spec:
   url: oci://ghcr.io/bendwyer/k8s-monitoring/k8up
   ref:
     tag: "1.3.3"
-    digest: "sha256:7ab194e342d4a796a45d1672b375d4857d10e300432bb81120487dc95d7ca343"
+    digest: "sha256:66527f783e68992db245838ca25425df15136af2a9be2e88cc74a79aa644a404"
