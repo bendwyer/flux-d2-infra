@@ -10,4 +10,4 @@ spec:
   url: oci://ghcr.io/bendwyer/k8s-monitoring/kube-state-metrics-mixin
   ref:
     tag: "2.20.0"
-    digest: "sha256:835fcac2c688f511590a1a17f892437a18058e232050c90f7e5d3f47dfaa217b"
+    digest: "sha256:441fa99bcb74d5d9a3704be6c0ba7576a507d88a8ec615202a1aa0f48f7e559b"
