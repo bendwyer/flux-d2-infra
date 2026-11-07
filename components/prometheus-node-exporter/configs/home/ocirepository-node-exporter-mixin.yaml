@@ -10,4 +10,4 @@ spec:
   url: oci://ghcr.io/bendwyer/k8s-monitoring/node-exporter-mixin
   ref:
     tag: "1.12.1"
-    digest: "sha256:973c40c60c7d1d2d4a58b646a13479413c79fc01c5a1176e0ef28a74544da044"
+    digest: "sha256:9395360eb28b94f058c2da5ccb7fdb400275f446fb19124ce83d22f572848672"
