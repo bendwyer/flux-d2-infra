@@ -32,7 +32,7 @@ spec:
           app:
             image:
               repository: ghcr.io/tailscale/tsidp
-              tag: "v0.0.15@sha256:cae91835375efcbf75ecb8f9520e3472cda946e3ca9af1df3bce9540902f289e"
+              tag: "v0.0.18@sha256:3b39de93c1dd1a6bd6923b8871957ab938d049128035634b2b7204a900fb4661"
               pullPolicy: IfNotPresent
             env:
               TAILSCALE_USE_WIP_CODE: "1"
