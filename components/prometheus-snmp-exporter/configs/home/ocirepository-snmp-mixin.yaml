@@ -10,4 +10,4 @@ spec:
   url: oci://ghcr.io/bendwyer/k8s-monitoring/snmp-mixin
   ref:
     tag: "2026.5.18"
-    digest: "sha256:3bc7ec9aed2be8840e99dce6a15b4e8f842021c8061dd8146f08e5bc277d813f"
+    digest: "sha256:3458535677ca9584c9596e93cc6bc5141f439d2400515d85d1c866d6a791b1a9"
