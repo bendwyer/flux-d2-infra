@@ -9,8 +9,8 @@ spec:
   interval: 1h
   url: oci://ghcr.io/bendwyer/d2-mirror/charts/metallb
   ref:
-    tag: "0.16.1"
-    digest: "sha256:fce8488843290973447cc7a2f74bb00eec4573a63f9f84141b0cfd5ac4b1629a"
+    tag: "0.16.2"
+    digest: "sha256:2709a92d69f89d6344813d703d3ef4bb4c53a74f8757f175921c65b232cae231"
   layerSelector:
     mediaType: "application/vnd.cncf.helm.chart.content.v1.tar+gzip"
     operation: copy
