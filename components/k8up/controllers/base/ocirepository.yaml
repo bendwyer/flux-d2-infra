@@ -9,8 +9,8 @@ spec:
   interval: 1h
   url: oci://ghcr.io/bendwyer/d2-mirror/charts/k8up
   ref:
-    tag: "4.10.0"
-    digest: "sha256:59bf9c3977389331d5cf4e1a9712eda1ab0700057aad3d16682a8d16a30f9b40"
+    tag: "4.10.1"
+    digest: "sha256:57945b0f1b316938676a2c900832ff16c07155032693cc2dc4f5eae2e49e26d3"
   layerSelector:
     mediaType: "application/vnd.cncf.helm.chart.content.v1.tar+gzip"
     operation: copy
