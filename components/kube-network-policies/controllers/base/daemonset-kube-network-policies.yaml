@@ -38,7 +38,7 @@ spec:
           # ClusterNetworkPolicy evaluator, and the unsuffixed one ignores those
           # objects rather than refusing them. Renovate keeps updates inside the
           # suffix, so a renamed build family reads as no updates at all.
-          image: registry.k8s.io/networking/kube-network-policies:v1.1.2-npa-v1alpha2@sha256:fc3e24ac7c1778828ef58a7b0d63fe0538f736c73d03b94af2243b6baf111087
+          image: registry.k8s.io/networking/kube-network-policies:v1.1.3@sha256:d9350ce205a63ba85c67795191304cef0318d084422ca44da49c4655eeba300d
           command:
             - /bin/netpol
           args:
