@@ -9,8 +9,8 @@ spec:
   interval: 1h
   url: oci://ghcr.io/bendwyer/d2-mirror/charts/vpa
   ref:
-    tag: "5.1.0"
-    digest: "sha256:4ea514c955e851c0db231e130281cc511f39ccc05d408e6b8e814eb4d13ccc2e"
+    tag: "5.2.0"
+    digest: "sha256:9204a2ab34a204375e09d118060d91cf011eac76c4c0994b836da9d60e487351"
   layerSelector:
     mediaType: "application/vnd.cncf.helm.chart.content.v1.tar+gzip"
     operation: copy
