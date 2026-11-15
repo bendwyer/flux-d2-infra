@@ -9,8 +9,8 @@ spec:
   interval: 1h
   url: oci://ghcr.io/prometheus-community/charts/prometheus-pushgateway
   ref:
-    tag: "3.9.1"
-    digest: "sha256:a1ce3f84aa12190b3b37ad4379bd3329592c79db5e022c02b820f2e50af0b11b"
+    tag: "3.11.2"
+    digest: "sha256:6aab37de293a5e5394e97e6868ebd26bf3bdad6d1d217fb4d0b461ea207bd1b4"
   layerSelector:
     mediaType: "application/vnd.cncf.helm.chart.content.v1.tar+gzip"
     operation: copy
