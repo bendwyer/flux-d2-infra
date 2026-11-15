@@ -8,6 +8,10 @@ metadata:
 spec:
   interval: 1h
   values:
+    grafana.ini:
+      server:
+        # Grafana builds every absolute link and redirect from this; it defaults to localhost:3000.
+        root_url: https://grafana.tail0c49c.ts.net
     datasources:
       datasources.yaml:
         apiVersion: 1
