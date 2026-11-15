@@ -9,5 +9,5 @@ spec:
   interval: 1h
   url: oci://ghcr.io/bendwyer/k8s-monitoring/alloy-mixin
   ref:
-    tag: "1.20.1"
-    digest: "sha256:45627110a9df9e7517ad251a45a694c3c3d6807be27a68479aa8742180b38cc2"
+    tag: "1.22.0"
+    digest: "sha256:d01d327a06b930a88a4f2f04626417a0dbf37a32971dcb72e4b898644c00abd4"
