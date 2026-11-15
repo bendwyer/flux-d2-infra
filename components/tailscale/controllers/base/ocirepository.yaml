@@ -9,8 +9,8 @@ spec:
   interval: 1h
   url: oci://ghcr.io/bendwyer/d2-mirror/charts/tailscale-operator
   ref:
-    tag: "1.102.4"
-    digest: "sha256:14092e24eb667b104b6237558970836ca6bc9eb593befe5d58724bff684f581c"
+    tag: "1.104.7"
+    digest: "sha256:34d7d5de329c7d6a1bd29b43401c9f3ef036b25dfb17705b2106f51357ad5319"
   layerSelector:
     mediaType: "application/vnd.cncf.helm.chart.content.v1.tar+gzip"
     operation: copy
