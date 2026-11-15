@@ -8,7 +8,7 @@ spec:
   interval: 6h
   url: https://github.com/kubernetes-sigs/network-policy-api
   ref:
-    tag: v0.2.1
+    tag: v0.3.0
   ignore: |
     /*
     !/config/crd
