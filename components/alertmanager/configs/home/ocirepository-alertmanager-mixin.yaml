@@ -9,5 +9,5 @@ spec:
   interval: 1h
   url: oci://ghcr.io/bendwyer/k8s-monitoring/alertmanager-mixin
   ref:
-    tag: "0.34.2"
-    digest: "sha256:1f3c6be60d176e50e43aacdd4ed5125cd99f6d6faf89a858163af39eb5b8d228"
+    tag: "0.35.0"
+    digest: "sha256:60fd1e5b2f35bfbf44935d841d279f9adcdab7d909662d0563029d2cc6a9d4ab"
