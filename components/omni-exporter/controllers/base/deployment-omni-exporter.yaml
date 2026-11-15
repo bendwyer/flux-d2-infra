@@ -30,7 +30,7 @@ spec:
           type: RuntimeDefault
       containers:
         - name: omni-exporter
-          image: ghcr.io/siderolabs/omni_exporter:v0.1.0@sha256:584ea21f2078673e0aa3a552491718affe6f75a84fbbe5651f5649d21056563c
+          image: ghcr.io/siderolabs/omni_exporter:v0.2.0@sha256:cb56cc8afdc52c744672640f4a5644c1a9dcb83664dfe72246f67170e98ecde9
           args:
             # Upstream advises the file over OMNI_SERVICE_ACCOUNT_KEY, which exposes
             # the key to anything that can read the process environment.
