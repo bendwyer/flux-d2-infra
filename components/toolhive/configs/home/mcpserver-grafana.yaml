@@ -12,6 +12,8 @@ spec:
   args:
     - --transport
     - stdio
+    # v2 reports tool usage to Grafana Labs unless told not to.
+    - --usage-stats=disabled
   groupRef:
     name: mcp
   env:
