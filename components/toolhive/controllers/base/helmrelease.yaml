@@ -19,3 +19,9 @@ spec:
     cleanupOnFail: true
     remediation:
       retries: 3
+  values:
+    operator:
+      env:
+        # The operator passes this on to every MCPServer, proxy and gateway it deploys.
+        - name: TOOLHIVE_USAGE_METRICS_ENABLED
+          value: "false"
