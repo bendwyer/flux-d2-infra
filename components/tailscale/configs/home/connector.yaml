@@ -1,15 +1,17 @@
-# ---
-# # yaml-language-server: $schema=https://raw.githubusercontent.com/CustomResourceDefinition/catalog/refs/heads/main/schema/tailscale.com/connector_v1alpha1.json
-# apiVersion: tailscale.com/v1alpha1
-# kind: Connector
-# metadata:
-#   name: k8s-exit-node-home
-# spec:
-#   replicas: 1
-#   hostnamePrefix: k8s-exit-node-home
-#   exitNode: true
-#   tags:
-#     - "tag:${EXIT_NODE_TAG}"
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/CustomResourceDefinition/catalog/refs/heads/main/schema/tailscale.com/connector_v1alpha1.json
+apiVersion: tailscale.com/v1alpha1
+kind: Connector
+metadata:
+  name: k8s-exit-node-home
+spec:
+  replicas: 1
+  hostnamePrefix: k8s-exit-node-home
+  proxyClass: unprivileged
+  # Internet only: no advertised routes, and the tailnet policy decides what users may reach through it
+  exitNode: true
+  tags:
+    - tag:exit
 ---
 # yaml-language-server: $schema=https://raw.githubusercontent.com/CustomResourceDefinition/catalog/refs/heads/main/schema/tailscale.com/connector_v1alpha1.json
 apiVersion: tailscale.com/v1alpha1
@@ -22,6 +24,6 @@ spec:
   proxyClass: unprivileged
   subnetRouter:
     advertiseRoutes:
-      - "${SUBNET_1_CIDR}"
+      - 192.168.10.0/24
   tags:
-    - "tag:${SUBNET_1_TAG}"
+    - tag:subnet-home-k8s
