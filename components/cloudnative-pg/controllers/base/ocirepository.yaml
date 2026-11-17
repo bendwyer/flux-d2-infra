@@ -9,8 +9,8 @@ spec:
   interval: 1h
   url: oci://ghcr.io/bendwyer/d2-mirror/charts/cloudnative-pg
   ref:
-    tag: "0.29.1"
-    digest: "sha256:3b6ed409ecdfadab4919a280eb55c7c0b78c6d9dbba8736ab525b8c4b24d26a3"
+    tag: "0.29.2"
+    digest: "sha256:27b9fe000e8d77df941ef45c88ef53b8ec6bbdeaf7511bae664104ddb2a5df92"
   layerSelector:
     mediaType: "application/vnd.cncf.helm.chart.content.v1.tar+gzip"
     operation: copy
