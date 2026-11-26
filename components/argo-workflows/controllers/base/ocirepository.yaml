@@ -9,8 +9,8 @@ spec:
   interval: 1h
   url: oci://ghcr.io/bendwyer/d2-mirror/charts/argo-workflows
   ref:
-    tag: "2.0.18"
-    digest: "sha256:c6e088663be7ba7d57fc55b5238f388b1cffae15b3dbf952e52a06e0fc917f7b"
+    tag: "2.0.19"
+    digest: "sha256:3bbbd59e99b55c7fac4563d005f3d4a56de0110da8b032ee97f599b3c368bb91"
   layerSelector:
     mediaType: "application/vnd.cncf.helm.chart.content.v1.tar+gzip"
     operation: copy
