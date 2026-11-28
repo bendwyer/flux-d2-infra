@@ -9,8 +9,8 @@ spec:
   interval: 1h
   url: oci://ghcr.io/stacklok/toolhive/toolhive-operator
   ref:
-    tag: "0.66.0"
-    digest: "sha256:4841bbaf6bfe1456d9a4a223abccbf13ee3e50b9ff17d69541fef7d86712e4ce"
+    tag: "0.70.1"
+    digest: "sha256:645f02072fdf419d4e15959ddd83e206ef75db6e8bfeaff669d1afec0820020c"
   layerSelector:
     mediaType: "application/vnd.cncf.helm.chart.content.v1.tar+gzip"
     operation: copy
